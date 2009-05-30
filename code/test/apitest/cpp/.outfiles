@@ -1,0 +1,18 @@
+# Copyright (c) 2005-2009 Jaroslav Gresula
+#
+# Distributed under the MIT license (See accompanying file
+# LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+#
+
+annots.pdf
+basic.pdf
+docoutline.pdf
+docoutline13.pdf
+docoutline_enc.pdf
+docoutline_failed.pdf
+docoutline_generic.pdf
+docoutline_invalid_dest.pdf
+basic_extstream.pdf
+textshow.pdf
+jagpdf_doc_hello.pdf
+

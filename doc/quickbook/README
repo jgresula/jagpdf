@@ -1,0 +1,124 @@
+Documentation README
+====================
+
+Overview
+--------
+
+The JagPDF documentation toolchain is:
+
+  QuickBook -> BoostBook -> DocBook -> Target Format
+
+
+* QuicBook is a WikiWiki style documentation tool using simple rules and markup
+  for simple formatting tasks.
+
+* BoostBook is a DocBook extension which augments DocBook with semantic markup
+  that aids in the documentation of C++ libraries.
+
+
+
+Environment Setup
+-----------------
+Currently, only Linux is supported.
+
+QuickBook
+~~~~~~~~~
+Consult the documention at <http://www.boost.org/doc/html/quickbook.html>. Make
+sure, your QuickBook copy has revision >= r53018 (should be present in Boost
+releases > 1.39), otherwise importing Python and C code snippets won't work.
+
+BoostBook & DocBook
+~~~~~~~~~~~~~~~~~~~
+BoostBook documentation is at <http://www.boost.org/doc/html/boostbook.html>.
+The following commands put BoostBook and DocBook to the proper location:
+
+ $ mkdir -p jagpdf-M.m.p/external/doc
+ $ cd !$
+ $ wget http://jagpdf.org/downloads/extra/docbook.tar.bz2
+ $ tar -xjf docbook.tar.bz2
+ $ wget http://jagpdf.org/downloads/extra/boostbook.tar.bz2
+ $ tar -xjf boostbook.tar.bz2
+
+GCC-XML, Doxygen
+~~~~~~~~~~~~~~~~
+They are used to build a reference.
+
+* GCC-XML - required version 0.9.0 <http://www.gccxml.org>
+* Doxygen - version 1.5.5 is known to work <http://doxygen.org>
+ 
+
+
+Build
+-----
+ $ cd <directory containing jagpdf-M.m.p/>
+ $ mkdir jagpdf-M.m.p-docbuild
+ $ cd jagpdf-M.m.p-docbuild
+ $ cmake -DDOCUMENTATION_ONLY=ON \
+         -DCMAKE_INSTALL_PREFIX=`pwd`/html \
+         ../jagpdf-M.m.p
+ $ make doc
+
+Now, ./html directory should contain the generated documentation.
+
+
+
+Diagram
+-------
+
+The documentation is built from serveral sources. The following diagram depicts
+the situation.
+
+
++----------------------------------------+
+|         MAIN DOCUMENTATION FILE        |
+|                                        +----------------------------+
+|        doc/quickbook/main/qbk.in       |                            |
++----------------------------------------+                            |
+                                                                      |
+                                                                      |
++----------------------------------------+                            |
+|         INTERFACE DOCUMENTATION        |     doxygen, gccxml        |
+|                                        +----------------------------+
+|        various *.h in code/include/    |                            |
++----------------------------------------+                            |
+                                                                      |
+                                                                      |
++----------------------------------------+                            |
+|            CODE SNIPPETS               |                            |
+|                                        |                            |
+| code/test/apitest/c/helloworld.c       |    quickbook [import]      |
+| code/test/apitest/cpp/helloworld.cpp   +----------------------------+
+| code/test/apitest/py/docexamples.py    |                            |
+| code/test/apitest/java/helloworld.java |                            |
++----------------------------------------+                            |
+                                                                      |
+                                                                      |
+                                                                      |
+                                                                      v
+                                                                +-----------+
+                                                                | Quickbook |
+                                                                |  Format   |
+                                                                +-----+-----+
+                                                                      |
+                                            quickbook transformation  |
+                                                                      v
+                                                                +-----------+
+                                                                | Boostbook |
+                                                                |  Format   |
+                                                                +-----+-----+
+                                                                      |
+                       XSL transformation using Boostbook styleheet   |
+                                                                      v
+                                                                 +---------+
+                                                                 | Docbook |
+                                                                 | Format  |
+                                                                 +----+----+
+                                                                      |
+                       XSL transformation using Docbook stylesheet    |
+                                                                      v
+                                                              +---------------+
+                                                              | Target Format |
+                                                              +---------------+
+
+
+

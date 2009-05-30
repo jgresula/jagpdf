@@ -1,0 +1,30 @@
+// -*- coding:windows-1252 -*-
+
+// Copyright (c) 2005-2009 Jaroslav Gresula
+//
+// Distributed under the MIT license (See accompanying file
+// LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+//
+
+
+
+
+#include "winresrc.h"
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION ${JAGPDF_VERSION_MAJOR}, ${JAGPDF_VERSION_MINOR}, ${JAGPDF_VERSION_PATCH}
+PRODUCTVERSION ${JAGPDF_VERSION_MAJOR}, ${JAGPDF_VERSION_MINOR}, ${JAGPDF_VERSION_PATCH}
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "Jaroslav Grešula"
+            VALUE "FileVersion", "${JAGPDF_VERSION_MAJOR}, ${JAGPDF_VERSION_MINOR}, ${JAGPDF_VERSION_PATCH}"
+            VALUE "LegalCopyright", "Copyright (C) 2005-2009 Jaroslav Grešula"
+            VALUE "ProductName", "JagPDF library, http://jagpdf.org"
+            VALUE "FileDescription", "${JAGPDF_RC_DESCRIPTION}"
+            VALUE "ProductVersion", "${JAGPDF_VERSION_MAJOR}, ${JAGPDF_VERSION_MINOR}, ${JAGPDF_VERSION_PATCH}"
+        END
+    END
+END

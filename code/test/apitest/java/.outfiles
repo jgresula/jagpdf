@@ -1,0 +1,13 @@
+# Copyright (c) 2005-2009 Jaroslav Gresula
+#
+# Distributed under the MIT license (See accompanying file
+# LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+#
+
+basic.pdf
+jagpdf_doc_hello.pdf
+basic_extstream.pdf
+basic_text.pdf
+basic_image.pdf
+encrypted.pdf
+jagpdf_doc_java_strings.pdf

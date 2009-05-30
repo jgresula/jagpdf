@@ -1,0 +1,1629 @@
+/*
+ *  Copyright (c) 2005-2009 Jaroslav Gresula
+ *
+ *  Distributed under the MIT license (See accompanying file
+ *  LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+ */
+#include "precompiled.h"
+#include "capiruntime.h"
+using namespace jag;
+
+JAG_EXPORT jag_Document JAG_CALLSPEC jag_create_file(jag_Char const* file_path, jag_Profile profile)
+{
+    try {
+        boost::intrusive_ptr<jag::IProfile> const& local__1(handle2ptr<jag::IProfile>(profile));
+        boost::intrusive_ptr<jag::IDocument> const& result__ = create_file(file_path, local__1);
+        return ptr2handle<jag_Document>(result__.get());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return 0;
+    }
+}
+
+JAG_EXPORT jag_Document JAG_CALLSPEC jag_create_stream(jag_streamout const* stream, jag_Profile profile)
+{
+    try {
+        boost::intrusive_ptr<jag::IProfile> const& local__1(handle2ptr<jag::IProfile>(profile));
+        boost::intrusive_ptr<jag::IDocument> const& result__ = create_stream(stream, local__1);
+        return ptr2handle<jag_Document>(result__.get());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return 0;
+    }
+}
+
+JAG_EXPORT jag_Profile JAG_CALLSPEC jag_create_profile()
+{
+    try {
+        boost::intrusive_ptr<jag::IProfile> const& result__ = create_profile();
+        return ptr2handle<jag_Profile>(result__.get());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return 0;
+    }
+}
+
+JAG_EXPORT jag_Profile JAG_CALLSPEC jag_create_profile_from_file(jag_Char const* fname)
+{
+    try {
+        boost::intrusive_ptr<jag::IProfile> const& result__ = create_profile_from_file(fname);
+        return ptr2handle<jag_Profile>(result__.get());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return 0;
+    }
+}
+
+JAG_EXPORT jag_Profile JAG_CALLSPEC jag_create_profile_from_string(jag_Char const* str)
+{
+    try {
+        boost::intrusive_ptr<jag::IProfile> const& result__ = create_profile_from_string(str);
+        return ptr2handle<jag_Profile>(result__.get());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return 0;
+    }
+}
+
+JAG_EXPORT jag_UInt JAG_CALLSPEC jag_version()
+{
+    try {
+        
+        return static_cast<jag_UInt>(version());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_UInt();
+    }
+}
+
+JAG_EXPORT jag_Canvas JAG_CALLSPEC jag_Document_canvas_create(jag_Document hobj)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        jag::ICanvas* result__ = this__->canvas_create();
+        return ptr2handle<jag_Canvas>(result__);
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return 0;
+    }
+}
+
+JAG_EXPORT jag_Canvas JAG_CALLSPEC jag_Page_canvas(jag_Page hobj)
+{
+    try {
+        jag::IPage* this__(handle2ptr<jag::IPage>(hobj));
+        jag::ICanvas* result__ = this__->canvas();
+        return ptr2handle<jag_Canvas>(result__);
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return 0;
+    }
+}
+
+JAG_EXPORT jag_Char const* JAG_CALLSPEC jag_Font_family_name(jag_Font hobj)
+{
+    try {
+        jag::IFont* this__(handle2ptr<jag::IFont>(hobj));
+        return static_cast<jag_Char const*>(this__->family_name());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return 0;
+    }
+}
+
+JAG_EXPORT jag_ColorSpace JAG_CALLSPEC jag_Document_color_space_load(jag_Document hobj, jag_Char const* spec)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        return static_cast<jag_ColorSpace>(this__->color_space_load(spec));
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_ColorSpace();
+    }
+}
+
+JAG_EXPORT jag_Destination JAG_CALLSPEC jag_Document_destination_define(jag_Document hobj, jag_Char const* dest)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        return static_cast<jag_Destination>(this__->destination_define(dest));
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Destination();
+    }
+}
+
+JAG_EXPORT jag_Destination JAG_CALLSPEC jag_Document_destination_reserve(jag_Document hobj)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        return static_cast<jag_Destination>(this__->destination_reserve());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Destination();
+    }
+}
+
+JAG_EXPORT jag_DocumentOutline JAG_CALLSPEC jag_Document_outline(jag_Document hobj)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        jag::IDocumentOutline* result__ = this__->outline();
+        return ptr2handle<jag_DocumentOutline>(result__);
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return 0;
+    }
+}
+
+JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_advance(jag_Font hobj, jag_Char const* txt_u)
+{
+    try {
+        jag::IFont* this__(handle2ptr<jag::IFont>(hobj));
+        return static_cast<jag_Double>(this__->advance(txt_u));
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Double();
+    }
+}
+
+JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_ascender(jag_Font hobj)
+{
+    try {
+        jag::IFont* this__(handle2ptr<jag::IFont>(hobj));
+        return static_cast<jag_Double>(this__->ascender());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Double();
+    }
+}
+
+JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_bbox_xmax(jag_Font hobj)
+{
+    try {
+        jag::IFont* this__(handle2ptr<jag::IFont>(hobj));
+        return static_cast<jag_Double>(this__->bbox_xmax());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Double();
+    }
+}
+
+JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_bbox_xmin(jag_Font hobj)
+{
+    try {
+        jag::IFont* this__(handle2ptr<jag::IFont>(hobj));
+        return static_cast<jag_Double>(this__->bbox_xmin());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Double();
+    }
+}
+
+JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_bbox_ymax(jag_Font hobj)
+{
+    try {
+        jag::IFont* this__(handle2ptr<jag::IFont>(hobj));
+        return static_cast<jag_Double>(this__->bbox_ymax());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Double();
+    }
+}
+
+JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_bbox_ymin(jag_Font hobj)
+{
+    try {
+        jag::IFont* this__(handle2ptr<jag::IFont>(hobj));
+        return static_cast<jag_Double>(this__->bbox_ymin());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Double();
+    }
+}
+
+JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_descender(jag_Font hobj)
+{
+    try {
+        jag::IFont* this__(handle2ptr<jag::IFont>(hobj));
+        return static_cast<jag_Double>(this__->descender());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Double();
+    }
+}
+
+JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_height(jag_Font hobj)
+{
+    try {
+        jag::IFont* this__(handle2ptr<jag::IFont>(hobj));
+        return static_cast<jag_Double>(this__->height());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Double();
+    }
+}
+
+JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_size(jag_Font hobj)
+{
+    try {
+        jag::IFont* this__(handle2ptr<jag::IFont>(hobj));
+        return static_cast<jag_Double>(this__->size());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Double();
+    }
+}
+
+JAG_EXPORT jag_Double JAG_CALLSPEC jag_Image_dpi_x(jag_Image hobj)
+{
+    try {
+        jag::IImage* this__(handle2ptr<jag::IImage>(hobj));
+        return static_cast<jag_Double>(this__->dpi_x());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Double();
+    }
+}
+
+JAG_EXPORT jag_Double JAG_CALLSPEC jag_Image_dpi_y(jag_Image hobj)
+{
+    try {
+        jag::IImage* this__(handle2ptr<jag::IImage>(hobj));
+        return static_cast<jag_Double>(this__->dpi_y());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Double();
+    }
+}
+
+JAG_EXPORT jag_Font JAG_CALLSPEC jag_Document_font_load(jag_Document hobj, jag_Char const* fspec)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        jag::IFont* result__ = this__->font_load(fspec);
+        return ptr2handle<jag_Font>(result__);
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return 0;
+    }
+}
+
+JAG_EXPORT jag_Function JAG_CALLSPEC jag_Document_function_2_load(jag_Document hobj, jag_Char const* fun)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        return static_cast<jag_Function>(this__->function_2_load(fun));
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Function();
+    }
+}
+
+JAG_EXPORT jag_Function JAG_CALLSPEC jag_Document_function_3_load(jag_Document hobj, jag_Char const* fun, jag_Function const* array_in, jag_UInt length)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        return static_cast<jag_Function>(this__->function_3_load(fun, array_in, length));
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Function();
+    }
+}
+
+JAG_EXPORT jag_Function JAG_CALLSPEC jag_Document_function_4_load(jag_Document hobj, jag_Char const* fun)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        return static_cast<jag_Function>(this__->function_4_load(fun));
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Function();
+    }
+}
+
+JAG_EXPORT jag_Image JAG_CALLSPEC jag_Document_image_load(jag_Document hobj, jag_ImageDef image)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        jag::IImageDef* local__0(handle2ptr<jag::IImageDef>(image));
+        jag::IImage* result__ = this__->image_load(local__0);
+        return ptr2handle<jag_Image>(result__);
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return 0;
+    }
+}
+
+JAG_EXPORT jag_Image JAG_CALLSPEC jag_Document_image_load_file(jag_Document hobj, jag_Char const* image_file_path, jag_ImageFormat image_format)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        jag::IImage* result__ = this__->image_load_file(image_file_path, static_cast<jag::ImageFormat>(image_format));
+        return ptr2handle<jag_Image>(result__);
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return 0;
+    }
+}
+
+JAG_EXPORT jag_ImageDef JAG_CALLSPEC jag_Document_image_definition(jag_Document hobj)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        jag::IImageDef* result__ = this__->image_definition();
+        return ptr2handle<jag_ImageDef>(result__);
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return 0;
+    }
+}
+
+JAG_EXPORT jag_ImageMask JAG_CALLSPEC jag_Document_define_image_mask(jag_Document hobj)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        boost::intrusive_ptr<jag::IImageMask> const& result__ = this__->define_image_mask();
+        return ptr2handle<jag_ImageMask>(result__.get());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return 0;
+    }
+}
+
+JAG_EXPORT jag_ImageMaskID JAG_CALLSPEC jag_Document_register_image_mask(jag_Document hobj, jag_ImageMask image_mask)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        boost::intrusive_ptr<jag::IImageMask> const& local__0(handle2ptr<jag::IImageMask>(image_mask));
+        return static_cast<jag_ImageMaskID>(this__->register_image_mask(local__0));
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_ImageMaskID();
+    }
+}
+
+JAG_EXPORT jag_Int JAG_CALLSPEC jag_Document_page_number(jag_Document hobj)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        return static_cast<jag_Int>(this__->page_number());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Int();
+    }
+}
+
+JAG_EXPORT jag_Int JAG_CALLSPEC jag_Document_version(jag_Document hobj)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        return static_cast<jag_Int>(this__->version());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Int();
+    }
+}
+
+JAG_EXPORT jag_Int JAG_CALLSPEC jag_Font_is_bold(jag_Font hobj)
+{
+    try {
+        jag::IFont* this__(handle2ptr<jag::IFont>(hobj));
+        return static_cast<jag_Int>(this__->is_bold());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Int();
+    }
+}
+
+JAG_EXPORT jag_Int JAG_CALLSPEC jag_Font_is_italic(jag_Font hobj)
+{
+    try {
+        jag::IFont* this__(handle2ptr<jag::IFont>(hobj));
+        return static_cast<jag_Int>(this__->is_italic());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Int();
+    }
+}
+
+JAG_EXPORT jag_Page JAG_CALLSPEC jag_Document_page(jag_Document hobj)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        jag::IPage* result__ = this__->page();
+        return ptr2handle<jag_Page>(result__);
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return 0;
+    }
+}
+
+JAG_EXPORT jag_Pattern JAG_CALLSPEC jag_Document_shading_pattern_load(jag_Document hobj, jag_Char const* pattern, jag_ColorSpace color_space, jag_Function func)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        return static_cast<jag_Pattern>(this__->shading_pattern_load(pattern, color_space, func));
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Pattern();
+    }
+}
+
+JAG_EXPORT jag_Pattern JAG_CALLSPEC jag_Document_shading_pattern_load_n(jag_Document hobj, jag_Char const* pattern, jag_ColorSpace cs, jag_Function const* array_in, jag_UInt length)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        return static_cast<jag_Pattern>(this__->shading_pattern_load_n(pattern, cs, array_in, length));
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Pattern();
+    }
+}
+
+JAG_EXPORT jag_Pattern JAG_CALLSPEC jag_Document_tiling_pattern_load(jag_Document hobj, jag_Char const* pattern, jag_Canvas canvas)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        jag::ICanvas* local__1(handle2ptr<jag::ICanvas>(canvas));
+        return static_cast<jag_Pattern>(this__->tiling_pattern_load(pattern, local__1));
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Pattern();
+    }
+}
+
+JAG_EXPORT jag_UInt JAG_CALLSPEC jag_Image_bits_per_component(jag_Image hobj)
+{
+    try {
+        jag::IImage* this__(handle2ptr<jag::IImage>(hobj));
+        return static_cast<jag_UInt>(this__->bits_per_component());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_UInt();
+    }
+}
+
+JAG_EXPORT jag_UInt JAG_CALLSPEC jag_Image_height(jag_Image hobj)
+{
+    try {
+        jag::IImage* this__(handle2ptr<jag::IImage>(hobj));
+        return static_cast<jag_UInt>(this__->height());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_UInt();
+    }
+}
+
+JAG_EXPORT jag_UInt JAG_CALLSPEC jag_Image_width(jag_Image hobj)
+{
+    try {
+        jag::IImage* this__(handle2ptr<jag::IImage>(hobj));
+        return static_cast<jag_UInt>(this__->width());
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_UInt();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_alpha(jag_Canvas hobj, jag_Char const* op, jag_Double alpha)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->alpha(op, alpha);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_alpha_is_shape(jag_Canvas hobj, jag_Int bool_val)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->alpha_is_shape(bool_val);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_arc(jag_Canvas hobj, jag_Double cx, jag_Double cy, jag_Double rx, jag_Double ry, jag_Double start_angle, jag_Double sweep_angle)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->arc(cx, cy, rx, ry, start_angle, sweep_angle);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_arc_to(jag_Canvas hobj, jag_Double x, jag_Double y, jag_Double rx, jag_Double ry, jag_Double angle, jag_Int large_arc_flag, jag_Int sweep_flag)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->arc_to(x, y, rx, ry, angle, large_arc_flag, sweep_flag);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_bezier_to(jag_Canvas hobj, jag_Double x1, jag_Double y1, jag_Double x2, jag_Double y2, jag_Double x3, jag_Double y3)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->bezier_to(x1, y1, x2, y2, x3, y3);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_bezier_to_1st_ctrlpt(jag_Canvas hobj, jag_Double x1, jag_Double y1, jag_Double x3, jag_Double y3)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->bezier_to_1st_ctrlpt(x1, y1, x3, y3);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_bezier_to_2nd_ctrlpt(jag_Canvas hobj, jag_Double x2, jag_Double y2, jag_Double x3, jag_Double y3)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->bezier_to_2nd_ctrlpt(x2, y2, x3, y3);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_circle(jag_Canvas hobj, jag_Double x, jag_Double y, jag_Double radius)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->circle(x, y, radius);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_color1(jag_Canvas hobj, jag_Char const* op, jag_Double ch1)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->color1(op, ch1);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_color3(jag_Canvas hobj, jag_Char const* op, jag_Double ch1, jag_Double ch2, jag_Double ch3)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->color3(op, ch1, ch2, ch3);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_color4(jag_Canvas hobj, jag_Char const* op, jag_Double ch1, jag_Double ch2, jag_Double ch3, jag_Double ch4)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->color4(op, ch1, ch2, ch3, ch4);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_color_space(jag_Canvas hobj, jag_Char const* op, jag_ColorSpace cs)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->color_space(op, cs);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_color_space_pattern(jag_Canvas hobj, jag_Char const* op)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->color_space_pattern(op);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_color_space_pattern_uncolored(jag_Canvas hobj, jag_Char const* op, jag_ColorSpace cs)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->color_space_pattern_uncolored(op, cs);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_image(jag_Canvas hobj, jag_Image img, jag_Double x, jag_Double y)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        jag::IImage* local__0(handle2ptr<jag::IImage>(img));
+        this__->image(local__0, x, y);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_line_cap(jag_Canvas hobj, jag_LineCapStyle style)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->line_cap(static_cast<jag::LineCapStyle>(style));
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_line_dash(jag_Canvas hobj, jag_UInt const* array_in, jag_UInt length, jag_UInt phase)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->line_dash(array_in, length, phase);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_line_join(jag_Canvas hobj, jag_LineJoinStyle style)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->line_join(static_cast<jag::LineJoinStyle>(style));
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_line_miter_limit(jag_Canvas hobj, jag_Double limit)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->line_miter_limit(limit);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_line_to(jag_Canvas hobj, jag_Double x, jag_Double y)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->line_to(x, y);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_line_width(jag_Canvas hobj, jag_Double width)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->line_width(width);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_move_to(jag_Canvas hobj, jag_Double x, jag_Double y)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->move_to(x, y);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_path_close(jag_Canvas hobj)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->path_close();
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_path_paint(jag_Canvas hobj, jag_Char const* cmd)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->path_paint(cmd);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_pattern(jag_Canvas hobj, jag_Char const* op, jag_Pattern patt)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->pattern(op, patt);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_pattern1(jag_Canvas hobj, jag_Char const* op, jag_Pattern patt, jag_Double ch1)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->pattern1(op, patt, ch1);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_pattern3(jag_Canvas hobj, jag_Char const* op, jag_Pattern patt, jag_Double ch1, jag_Double ch2, jag_Double ch3)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->pattern3(op, patt, ch1, ch2, ch3);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_pattern4(jag_Canvas hobj, jag_Char const* op, jag_Pattern patt, jag_Double ch1, jag_Double ch2, jag_Double ch3, jag_Double ch4)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->pattern4(op, patt, ch1, ch2, ch3, ch4);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_rectangle(jag_Canvas hobj, jag_Double x, jag_Double y, jag_Double width, jag_Double height)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->rectangle(x, y, width, height);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_rotate(jag_Canvas hobj, jag_Double alpha)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->rotate(alpha);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_scale(jag_Canvas hobj, jag_Double sx, jag_Double sy)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->scale(sx, sy);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_scaled_image(jag_Canvas hobj, jag_Image image, jag_Double x, jag_Double y, jag_Double sx, jag_Double sy)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        jag::IImage* local__0(handle2ptr<jag::IImage>(image));
+        this__->scaled_image(local__0, x, y, sx, sy);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_shading_apply(jag_Canvas hobj, jag_Pattern pattern)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->shading_apply(pattern);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_skew(jag_Canvas hobj, jag_Double alpha, jag_Double beta)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->skew(alpha, beta);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_state_restore(jag_Canvas hobj)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->state_restore();
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_state_save(jag_Canvas hobj)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->state_save();
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text(jag_Canvas hobj, jag_Char const* txt_u)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->text(txt_u);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_character_spacing(jag_Canvas hobj, jag_Double spacing)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->text_character_spacing(spacing);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_end(jag_Canvas hobj)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->text_end();
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_font(jag_Canvas hobj, jag_Font font)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        jag::IFont* local__0(handle2ptr<jag::IFont>(font));
+        this__->text_font(local__0);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_horizontal_scaling(jag_Canvas hobj, jag_Double scaling)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->text_horizontal_scaling(scaling);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_o(jag_Canvas hobj, jag_Char const* txt_u, jag_Double const* offsets, jag_UInt offsets_length, jag_Int const* positions, jag_UInt positions_length)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->text_o(txt_u, offsets, offsets_length, positions, positions_length);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_r(jag_Canvas hobj, jag_Char const* start, jag_Char const* end)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->text_r(start, end);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_rendering_mode(jag_Canvas hobj, jag_Char const* mode)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->text_rendering_mode(mode);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_rise(jag_Canvas hobj, jag_Double rise)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->text_rise(rise);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_ro(jag_Canvas hobj, jag_Char const* start, jag_Char const* end, jag_Double const* offsets, jag_UInt offsets_length, jag_Int const* positions, jag_UInt positions_length)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->text_ro(start, end, offsets, offsets_length, positions, positions_length);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_simple(jag_Canvas hobj, jag_Double x, jag_Double y, jag_Char const* txt_u)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->text_simple(x, y, txt_u);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_simple_o(jag_Canvas hobj, jag_Double x, jag_Double y, jag_Char const* txt_u, jag_Double const* offsets, jag_UInt offsets_length, jag_Int const* positions, jag_UInt positions_length)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->text_simple_o(x, y, txt_u, offsets, offsets_length, positions, positions_length);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_simple_r(jag_Canvas hobj, jag_Double x, jag_Double y, jag_Char const* start, jag_Char const* end)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->text_simple_r(x, y, start, end);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_simple_ro(jag_Canvas hobj, jag_Double x, jag_Double y, jag_Char const* start, jag_Char const* end, jag_Double const* offsets, jag_UInt offsets_length, jag_Int const* positions, jag_UInt positions_length)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->text_simple_ro(x, y, start, end, offsets, offsets_length, positions, positions_length);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_start(jag_Canvas hobj, jag_Double x, jag_Double y)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->text_start(x, y);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_translate_line(jag_Canvas hobj, jag_Double tx, jag_Double ty)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->text_translate_line(tx, ty);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_transform(jag_Canvas hobj, jag_Double a, jag_Double b, jag_Double c, jag_Double d, jag_Double e, jag_Double f)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->transform(a, b, c, d, e, f);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_translate(jag_Canvas hobj, jag_Double tx, jag_Double ty)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->translate(tx, ty);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_DocumentOutline_color(jag_DocumentOutline hobj, jag_Double red, jag_Double green, jag_Double blue)
+{
+    try {
+        jag::IDocumentOutline* this__(handle2ptr<jag::IDocumentOutline>(hobj));
+        this__->color(red, green, blue);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_DocumentOutline_item(jag_DocumentOutline hobj, jag_Char const* title)
+{
+    try {
+        jag::IDocumentOutline* this__(handle2ptr<jag::IDocumentOutline>(hobj));
+        this__->item(title);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_DocumentOutline_item_destination(jag_DocumentOutline hobj, jag_Char const* title, jag_Char const* dest)
+{
+    try {
+        jag::IDocumentOutline* this__(handle2ptr<jag::IDocumentOutline>(hobj));
+        this__->item_destination(title, dest);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_DocumentOutline_item_destination_obj(jag_DocumentOutline hobj, jag_Char const* title, jag_Destination dest)
+{
+    try {
+        jag::IDocumentOutline* this__(handle2ptr<jag::IDocumentOutline>(hobj));
+        this__->item_destination_obj(title, dest);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_DocumentOutline_level_down(jag_DocumentOutline hobj)
+{
+    try {
+        jag::IDocumentOutline* this__(handle2ptr<jag::IDocumentOutline>(hobj));
+        this__->level_down();
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_DocumentOutline_level_up(jag_DocumentOutline hobj)
+{
+    try {
+        jag::IDocumentOutline* this__(handle2ptr<jag::IDocumentOutline>(hobj));
+        this__->level_up();
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_DocumentOutline_state_restore(jag_DocumentOutline hobj)
+{
+    try {
+        jag::IDocumentOutline* this__(handle2ptr<jag::IDocumentOutline>(hobj));
+        this__->state_restore();
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_DocumentOutline_state_save(jag_DocumentOutline hobj)
+{
+    try {
+        jag::IDocumentOutline* this__(handle2ptr<jag::IDocumentOutline>(hobj));
+        this__->state_save();
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_DocumentOutline_style(jag_DocumentOutline hobj, jag_Int val)
+{
+    try {
+        jag::IDocumentOutline* this__(handle2ptr<jag::IDocumentOutline>(hobj));
+        this__->style(val);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Document_destination_define_reserved(jag_Document hobj, jag_Destination id, jag_Char const* dest)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        this__->destination_define_reserved(id, dest);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Document_finalize(jag_Document hobj)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        this__->finalize();
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Document_page_end(jag_Document hobj)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        this__->page_end();
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Document_page_start(jag_Document hobj, jag_Double width, jag_Double height)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        this__->page_start(width, height);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_alternate_for_printing(jag_ImageDef hobj, jag_Image image)
+{
+    try {
+        jag::IImageDef* this__(handle2ptr<jag::IImageDef>(hobj));
+        jag::IImage* local__0(handle2ptr<jag::IImage>(image));
+        this__->alternate_for_printing(local__0);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_bits_per_component(jag_ImageDef hobj, jag_UInt bpc)
+{
+    try {
+        jag::IImageDef* this__(handle2ptr<jag::IImageDef>(hobj));
+        this__->bits_per_component(bpc);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_color_key_mask(jag_ImageDef hobj, jag_UInt const* array_in, jag_UInt length)
+{
+    try {
+        jag::IImageDef* this__(handle2ptr<jag::IImageDef>(hobj));
+        this__->color_key_mask(array_in, length);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_color_space(jag_ImageDef hobj, jag_ColorSpace cs)
+{
+    try {
+        jag::IImageDef* this__(handle2ptr<jag::IImageDef>(hobj));
+        this__->color_space(cs);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_data(jag_ImageDef hobj, jag_Byte const* array_in, jag_UInt length)
+{
+    try {
+        jag::IImageDef* this__(handle2ptr<jag::IImageDef>(hobj));
+        this__->data(array_in, length);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_decode(jag_ImageDef hobj, jag_Double const* array_in, jag_UInt length)
+{
+    try {
+        jag::IImageDef* this__(handle2ptr<jag::IImageDef>(hobj));
+        this__->decode(array_in, length);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_dimensions(jag_ImageDef hobj, jag_UInt width, jag_UInt height)
+{
+    try {
+        jag::IImageDef* this__(handle2ptr<jag::IImageDef>(hobj));
+        this__->dimensions(width, height);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_dpi(jag_ImageDef hobj, jag_Double xdpi, jag_Double ydpi)
+{
+    try {
+        jag::IImageDef* this__(handle2ptr<jag::IImageDef>(hobj));
+        this__->dpi(xdpi, ydpi);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_file_name(jag_ImageDef hobj, jag_Char const* file_name)
+{
+    try {
+        jag::IImageDef* this__(handle2ptr<jag::IImageDef>(hobj));
+        this__->file_name(file_name);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_format(jag_ImageDef hobj, jag_ImageFormat format)
+{
+    try {
+        jag::IImageDef* this__(handle2ptr<jag::IImageDef>(hobj));
+        this__->format(static_cast<jag::ImageFormat>(format));
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_gamma(jag_ImageDef hobj, jag_Double val)
+{
+    try {
+        jag::IImageDef* this__(handle2ptr<jag::IImageDef>(hobj));
+        this__->gamma(val);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_image_mask(jag_ImageDef hobj, jag_ImageMaskID image_mask)
+{
+    try {
+        jag::IImageDef* this__(handle2ptr<jag::IImageDef>(hobj));
+        this__->image_mask(image_mask);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_interpolate(jag_ImageDef hobj, jag_Int flag)
+{
+    try {
+        jag::IImageDef* this__(handle2ptr<jag::IImageDef>(hobj));
+        this__->interpolate(flag);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_rendering_intent(jag_ImageDef hobj, jag_RenderingIntentType intent)
+{
+    try {
+        jag::IImageDef* this__(handle2ptr<jag::IImageDef>(hobj));
+        this__->rendering_intent(static_cast<jag::RenderingIntentType>(intent));
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageMask_bit_depth(jag_ImageMask hobj, jag_UInt bps)
+{
+    try {
+        jag::IImageMask* this__(handle2ptr<jag::IImageMask>(hobj));
+        this__->bit_depth(bps);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageMask_data(jag_ImageMask hobj, jag_Byte const* array_in, jag_UInt length)
+{
+    try {
+        jag::IImageMask* this__(handle2ptr<jag::IImageMask>(hobj));
+        this__->data(array_in, length);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageMask_decode(jag_ImageMask hobj, jag_Double lbound, jag_Double ubound)
+{
+    try {
+        jag::IImageMask* this__(handle2ptr<jag::IImageMask>(hobj));
+        this__->decode(lbound, ubound);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageMask_dimensions(jag_ImageMask hobj, jag_UInt width, jag_UInt height)
+{
+    try {
+        jag::IImageMask* this__(handle2ptr<jag::IImageMask>(hobj));
+        this__->dimensions(width, height);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageMask_file_name(jag_ImageMask hobj, jag_Char const* file_name)
+{
+    try {
+        jag::IImageMask* this__(handle2ptr<jag::IImageMask>(hobj));
+        this__->file_name(file_name);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageMask_interpolate(jag_ImageMask hobj, jag_Int val)
+{
+    try {
+        jag::IImageMask* this__(handle2ptr<jag::IImageMask>(hobj));
+        this__->interpolate(val);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageMask_matte(jag_ImageMask hobj, jag_Double const* array_in, jag_UInt length)
+{
+    try {
+        jag::IImageMask* this__(handle2ptr<jag::IImageMask>(hobj));
+        this__->matte(array_in, length);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Page_annotation_goto(jag_Page hobj, jag_Double x, jag_Double y, jag_Double width, jag_Double height, jag_Char const* dest, jag_Char const* style)
+{
+    try {
+        jag::IPage* this__(handle2ptr<jag::IPage>(hobj));
+        this__->annotation_goto(x, y, width, height, dest, style);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Page_annotation_goto_obj(jag_Page hobj, jag_Double x, jag_Double y, jag_Double width, jag_Double height, jag_Destination dest, jag_Char const* style)
+{
+    try {
+        jag::IPage* this__(handle2ptr<jag::IPage>(hobj));
+        this__->annotation_goto_obj(x, y, width, height, dest, style);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Page_annotation_uri(jag_Page hobj, jag_Double x, jag_Double y, jag_Double width, jag_Double height, jag_Char const* uri, jag_Char const* style)
+{
+    try {
+        jag::IPage* this__(handle2ptr<jag::IPage>(hobj));
+        this__->annotation_uri(x, y, width, height, uri, style);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Profile_save_to_file(jag_Profile hobj, jag_Char const* fname)
+{
+    try {
+        jag::IProfile* this__(handle2ptr<jag::IProfile>(hobj));
+        this__->save_to_file(fname);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Profile_set(jag_Profile hobj, jag_Char const* option, jag_Char const* value)
+{
+    try {
+        jag::IProfile* this__(handle2ptr<jag::IProfile>(hobj));
+        this__->set(option, value);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+

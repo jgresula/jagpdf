@@ -1,0 +1,43 @@
+# Copyright (c) 2005-2009 Jaroslav Gresula
+#
+# Distributed under the MIT license (See accompanying file
+# LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+#
+
+
+[messages=1]
+1 invalid_operation              Invalid operation.
+2 invalid_object_handle          Invalid object handle.
+3 invalid_argument               Invalid argument.
+4 null_pointer                   Null pointer.
+7 internal_error                 Internal error. Jagpdf has encountered an unexpected situation.
+8 internal_error_s               Internal error. Jagpdf has encountered an unexpected situation: %1s%.
+9 internal_error_si              Internal error. Jagpdf has encountered an unexpected situation: %1s%(%2i%).
+10 virtual_fun_not_implemented_s Virtual function %1s% not implemented.
+
+100 option_out_of_range          Value of option %1s% is out of range.
+101 option_invalid_value         Value of option %1s% is invalid.
+104 option_not_found_ex          Required option %1s% not present.
+
+#should go to crtplatform/toolbox
+501 cannot_open_file             Cannot open file.
+502 cannot_write_to_file         Cannot write to file.
+503 cannot_flush_file            Cannot flush file.
+504 cannot_close_file            Cannot close file.
+505 invalid_openning_mode        Invalid opening mode specified.
+506 cannot_get_file_offset       Cannot retrieve the current offset.
+507 cannot_seek_file             Cannot seek in file.
+508 cannot_read_from_file        Cannot read from file.
+509 cannot_mmap_file             Cannot map file to memory.
+510 cannot_unmmap_file           Cannot unmap file from memory.
+511 cannot_write_stream          Cannot write to a stream.
+512 cannot_close_stream          Cannot close a stream.
+513 cannot_get_filesize          Cannot get file size.
+
+
+550 zlib_deflate_init_failed     Initialization of zlib's deflate failed.
+551 zlib_deflate_failed          Zlib's deflate method failed.
+552 zlib_deflate_end             Zlib's deflatEnd method failed.
+553 zlib_inflate_init_failed     Initialization of zlib's inflate failed.
+554 zlib_inflate_no_more_data_available         No other data available, inflate has not finished yet.
+555 zlib_inflate_failed          Zlib's inflate method failed.

@@ -1,0 +1,53 @@
+Release checklist
+=================
+
+MMP=<current-version>
+REV=<current-revision>
+
+Spellchecking
+-------------
+htmlfilt.py filters out strings matching regular expressions defined in
+htmlfilt.conf.  The matching is logged to /tmp/htmlfilt.log.
+
+Documentation Spellcheck
+~~~~~~~~~~~~~~~~~~~~~~~~
+$ cd ~/code
+$ jagbase/build/release-scripts/make_release.sh doc
+$ jagbase/build/release-scripts/spellcheck.sh jagbase.build.doc/distribution
+
+Web Spellcheck
+~~~~~~~~~~~~~~
+$ jagbase/build/release-scripts/make_release.sh web
+$ jagbase/build/release-scripts/spellcheck.sh jagpdf-www.build/html/
+
+Code Check and Spellcheck
+~~~~~~~~~~~~~~~~~~~~~~~~~
+$ jagbase/build/release-scripts/spellcheck.sh *.txt
+$ cd jagbase ; build/scripts/source_check.sh
+
+
+Build
+-----
+mkdir release-$MMP
+cd release-$MMP
+~/code/jagbase/build/release-scripts/make_release.sh init
+
+Win:
+# takes cca 1h
+(date && jagbase/build/release-scripts/make_release.sh code test-pkg && date) 2>&1 | tee log
+
+Linux:
+cp /mnt/win/c/home/jarda/code/release-$MMP/release.out/binaries/* release.out/binaries/
+# takes cca 1h 45m
+(date && jagbase/build/release-scripts/make_release.sh code test-pkg doc web deploy-all && date) 2>&1 | tee log
+
+Check
+-----
+(cd release.out/public_html/www && http-server) 
+svn copy svn://jarda-home/trunk/jagbase  svn://jarda-home/tags/release/jagpdf-$MMP -r $REV -m "$MMP release - revision $REV"
+
+Deploy
+------
+rsync --dry-run --progress --stats -r -v -e ssh release.out/public_html/www/ jagpdf.org@klenot.cz:public_html/www
+linklint -doc /mnt/win/c/home/jarda/tmp/linklint -net -http -host www.jagpdf.org /@ 
+

@@ -1,0 +1,778 @@
+/*=============================================================================
+
+  Copyright (c) 2005-2009 Jaroslav Gresula
+
+  Distributed under the MIT license (See accompanying file
+  LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+
+  Acknowledgments:
+
+  This css is based on ideas from stylesheets from Joel de Guzman
+  Rene Rivera and Matias Capeletto.
+
+=============================================================================*/
+@import url("base.css");
+
+
+#footer,
+#body 
+{
+    margin: 2.0em 1.5em 1.5em 1.5em;
+}
+
+body, td {
+    font-size:   90%;
+    line-height: 125%;
+}
+
+h1, h2, h3, b, a {
+    color: #1240AB; 
+    text-decoration: none;
+}
+
+a:hover {
+    color: #1240AB;
+    text-decoration: underline;
+}
+
+
+/*=============================================================================
+                                    Footnotes
+*/
+.footnotes
+{
+    margin-top: 3em;
+    border-top: 1pt solid #afafaf;
+    font-size: 80%;
+}
+
+
+/*=============================================================================
+                                    Headings
+*/
+
+h1, h2, h3, h4, h5, h6
+{
+    margin: 1em 0em 0.5em 0em;
+}
+
+
+
+/* Top page titles */
+title,
+h1.title,
+h2.title
+h3.title,
+h4.title,
+h5.title,
+h6.title,
+.refentrytitle
+{
+    font-weight: bold;
+    margin-top: 2pc;
+    margin-bottom: 1pc;
+}
+
+
+h1.title { font-size: 200% }
+h2.title { font-size: 160% }
+h3.title { font-size: 140% }
+h4.title { font-size: 120% }
+h5.title { font-size: 110% }
+h6.title { font-size: 100% }
+
+/* .section h1 */
+/* { */
+/*     margin: 0em 0em 0.5em 0em; */
+/*     font-size: 140%; */
+/* } */
+/* .section h2 { font-size: 140% } */
+/* .section h3 { font-size: 130% } */
+/* .section h4 { font-size: 120% } */
+/* .section h5 { font-size: 110% } */
+/* .section h6 { font-size: 100% } */
+/*  */
+/* /\* Code on titles *\/ */
+/* h1 tt.computeroutput { font-size: 140% } */
+/* h2 tt.computeroutput { font-size: 140% } */
+/* h3 tt.computeroutput { font-size: 130% } */
+/* h4 tt.computeroutput { font-size: 120% } */
+/* h5 tt.computeroutput { font-size: 110% } */
+/* h6 tt.computeroutput { font-size: 100% } */
+
+
+
+/*=============================================================================
+                                      Lists
+*/
+
+li
+{
+/*         font-size: 10pt; */
+/*         line-height: 1.3; */
+}
+
+/* Unordered lists */
+ul
+{
+    text-align: left;
+}
+
+/* Ordered lists */
+ol
+{
+    text-align: left;
+}
+
+
+/*=============================================================================
+                                        Tables
+*/
+
+.table-title,
+div.table p.title
+{
+    margin-left: 4%;
+    padding-right: 0.5em;
+    padding-left: 0.5em;
+}
+
+.table p,
+.informaltable p
+{
+    margin: 0.25em 0.5em;
+/*     padding: 0; */
+}
+
+.informaltable table,
+.table table
+{
+    margin-left: 4%;
+    margin-right: 4%;
+    border-collapse: collapse;
+}
+
+/*     div.informaltable table, */
+/*     div.table table */
+/*     { */
+/*         padding: 4px; */
+/*     } */
+
+/* Table Cells */
+div.informaltable table tr td,
+div.table table tr td
+{
+/*    padding: 0.5em;*/
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    text-align: left;
+/*     font-size: 9pt; */
+    font-size: 90%;
+}
+
+/* Table headers */
+div.informaltable table tr th,
+div.table table tr th
+{
+    padding: 0.5em 0.5em 0.5em 0.5em;
+    border: 1pt solid white;
+    font-size: 90%;
+}
+
+table.simplelist
+{
+    width: auto !important;
+    margin: 0em !important;
+    padding: 0em !important;
+    border: none !important;
+}
+table.simplelist td
+{
+    margin: 0em !important;
+    padding: 0em !important;
+    text-align: left !important;
+    font-size: 9pt !important;
+    border: none !important;
+}
+
+
+/*=============================================================================
+                              Variable Lists
+*/
+
+/* Make the terms in definition lists bold */
+div.variablelist dl dt,
+span.term
+{
+/*     font-weight: bold; */
+    font-style: italic;
+/*     font-size: 10pt; */
+}
+
+div.variablelist table tbody tr td p,
+div.variablelist dl dd p
+{
+    margin: 0em 0em 0.5em 0em;
+    line-height: 1;
+}
+
+div.variablelist table tbody tr td
+{
+    text-align: left;
+    vertical-align: top;
+    padding: 0em 2em 0em 0em;
+/*     font-size: 10pt; */
+    margin: 0em 0em 0.5em 0em;
+    line-height: 1;
+}
+
+div.variablelist dl dt
+{
+    margin-bottom: 0.2em;
+}
+
+div.variablelist dl dd
+{
+    margin: 0em 0em 0.5em 2em;
+    font-size: 10pt;
+}
+
+
+
+/*=============================================================================
+                                Blurbs & Admonitions
+*/
+
+
+/* /\* padding, margins *\/ */
+/* div.note, */
+/* div.tip, */
+/* div.important, */
+/* div.caution, */
+/* div.warning, */
+/* p.blurb */
+/* { */
+/*     display: block; */
+/*     margin: 1pc 4% 0pc 4%; */
+/*     padding: 0.5pc 0.5pc 0.5pc 0.5pc; */
+/* } */
+/*  */
+/* /\* paragraph stuff *\/ */
+/* div.note p, */
+/* div.tip p, */
+/* div.important p, */
+/* div.caution p, */
+/* div.warning p, */
+/* p.blurb */
+/* { */
+/*     font-size: 90%; /\* A little bit smaller than the main text *\/ */
+/*     line-height: 110%; */
+/*     padding-left: 0.5pc; */
+/* } */
+/*  */
+/*  */
+/* p.blurb img */
+/* { */
+/*     padding: 1pt; */
+/* } */
+
+.note,
+.tip,
+.important,
+.caution,
+.warning,
+.sidebar
+{
+    font-size: 10pt;
+    line-height: 1.2;
+    display: block;
+    margin: 1pc 4% 0pc 4%;
+}
+
+.sidebar .box-inner-wrapper
+{
+    padding-left: 28px;
+}
+
+.sidebar .box-inner-wrapper img
+{
+    padding: 1pt;
+}
+
+.admonition-body
+{
+    padding-left: 50px;
+}
+
+.admonition-graphic
+{
+    float: left;
+    display: inline;
+    padding-left: 5px;
+}
+
+.admonition-title
+{
+    font-weight: bold;
+}
+
+.admonition-content
+{
+
+}
+
+.admonition-icon
+{
+    border: none;
+}
+
+.note-icon      { background: url(images/note.png)
+                  no-repeat center;
+                  height: 24px; width: 24px;                }
+
+.warning-icon   { background: url(images/warning.png)
+                  no-repeat center;
+                  height: 24px; width: 24px;                }
+
+.caution-icon   { background: url(images/caution.png)
+                  no-repeat center;
+                  height: 24px; width: 24px;                }
+
+.tip-icon       { background: url(images/tip.png)
+                  no-repeat center;
+                  height: 24px; width: 24px;                }
+
+.important-icon { background: url(images/important.png)
+                  no-repeat center;
+                  height: 24px; width: 24px;                }
+
+
+    /* --- IE6 patch using the star hack --- */
+
+* html body .note-icon  { background: url(images/solid/note.png)
+                          no-repeat center;            }
+
+* html body .warning-icon  { background: url(images/solid/warning.png)
+                             no-repeat center;            }
+
+* html body .caution-icon  { background: url(images/solid/caution.png)
+                             no-repeat center;            }
+
+* html body .tip-icon  { background: url(images/solid/tip.png)
+                         no-repeat center;            }
+
+* html body .important-icon  { background: url(images/solid/important.png)
+                               no-repeat center;            }
+
+
+
+/*----------------------------------------------------------------------------
+                            Spirit Navigation
+-----------------------------------------------------------------------------*/
+
+/* icons are 19x19 */
+.spirit-nav
+{
+    margin-top: 10px;
+    float: right;
+    margin-right: 1.5em;
+}
+
+
+
+
+/*=============================================================================
+                                Table of contents
+*/
+
+.toc
+{
+    margin: 1pc 4% 0pc 4%;
+    padding: 0.1pc 1pc 0.1pc 1pc;
+    font-size: 90%;
+    line-height: 1.15;
+}
+
+/* .boost-toc */
+/* { */
+/*     float: right; */
+/*     padding: 0.5pc; */
+/* } */
+
+
+
+
+/*=============================================================================
+                                Program listings
+*/
+
+/* Code on paragraphs */
+p tt.computeroutput
+{
+    font-size: 9pt;
+}
+
+pre.synopsis
+{
+    font-size: 90%;
+    margin: 1pc 4% 0pc 4%;
+    padding: 0.5pc 0.5pc 0.5pc 0.5pc;
+}
+
+.programlisting,
+.screen
+{
+    line-height: 100%;
+    display: block;
+    margin: 1pc 4% 0pc 4%;
+    padding: 0pc 0.5pc 0pc 0.5pc;
+}
+
+/* Program listings in tables don't get borders */
+td .programlisting,
+td .screen
+{
+    line-height: 110%;
+    margin: 0pc 0pc 0pc 0pc;
+    padding:  0pc 0pc 0pc 0pc;
+}
+
+
+
+/*=============================================================================
+                           Author, Copyright
+*/
+h3.author
+{
+    font-size: 100%
+}
+
+.copyright
+{
+    font-size: 90%;
+}
+
+
+
+/*=============================================================================
+                                Copyright footer & Revised
+*/
+
+#footer #copyright
+{
+    margin-top: 50px;
+    text-align: center;
+    font-size: 75%;
+    color: #7f7f7f;
+}
+
+#footer #revised
+{
+    text-align: left;
+    font-size: 75%;
+}
+
+
+/*=============================================================================
+                                     Misc
+*/
+
+/* Title of books and articles in bibliographies */
+span.title
+{
+    font-style: italic;
+}
+
+span.underline
+{
+    text-decoration: underline;
+}
+
+span.strikethrough
+{
+    text-decoration: line-through;
+}
+
+/* Copyright, Legal Notice */
+div div.legalnotice p
+{
+    text-align: left
+}
+
+
+
+/* ----------------------------------------------------------------------
+   ----------------------------------------------------------------------
+                        jagpdf reference
+
+*/
+
+/* ====================================================================== 
+                         function documentation                                                 
+
+*/
+
+/* top right bottom left */
+
+/* signatures for individual languages */
+#section_functions .programlisting,
+#section_classes .programlisting
+{
+/* Validator: You have some absolute and relative lengths in
+margin. This is not a robust style sheet. */
+    margin: 0pc 4% .5pc 0%;
+    padding: 0.1pc 0.0pc 0pc 0.5pc;
+    border: none;
+    line-height: 110%;
+}
+
+/* method name above its signatures */
+#section_functions h4 .jag_funtitle,
+#section_classes .jag_funtitle
+{
+    display: block;
+    margin: 1.5pc 4% 0pc 0pc;
+    padding: 0.2pc 0.2pc 0.2pc 0.2pc;
+    background-color: #ECECEC;
+    border-top: 1px solid #DCDCDC;
+    border-bottom: 1px solid #DCDCDC;
+    font-weight: bold;
+    font-size: 100%;
+}
+
+
+/* /\* class name above its synopsis *\/ */
+/* h4 span.jag_classtitle */
+/* { */
+/*     display: block; */
+/* /\* Validator: You have some absolute and relative lengths in */
+/* margin. This is not a robust style sheet. *\/ */
+/*     margin: 2pc 4% 0pc 0pc; */
+/*     padding: 0.2pc 0.2pc 0.2pc 0.2pc; */
+/*     background-color: #ECECEC; */
+/*     border-top: 2px solid #DCDCDC; */
+/*     border-bottom: 2px solid #DCDCDC; */
+/* } */
+
+/* /\* class synopsis *\/ */
+/* span.jag_synopsis .programlisting */
+/* { */
+/* /\* Validaor: You have some absolute and relative lengths in */
+/* margin. This is not a robust style sheet. *\/ */
+/*     margin: 1pc 4% 0pc 1pc; */
+/*     padding: 0.5pc 0.5pc 0.5pc 0.5pc; */
+/*     line-height: 100%; */
+/*     font-size: 100%; */
+/* } */
+
+span.jag_callable_name a,
+span.jag_callable_name span.identifier
+{
+    color: #663366;
+}
+
+/* Effect, Parameters, See, Version, .... */
+#section_classes .jag_doc_item,
+#section_functions .jag_doc_item
+{
+    font-weight: bold;
+    font-style: italic;
+    color: #4f4f4f;
+}
+
+
+#section_classes .variablelist,
+#section_functions .variablelist
+{
+    margin: 0pc 4% 0pc 1pc;
+    font-size: 100%;
+    line-height: 80%;
+}
+
+#section_classes .variablelist dl dt,
+#section_classes .term,
+#section_functions .variablelist dl dt,
+#section_functions .term
+{
+/*    font-size: 100%;*/
+}
+
+#section_classes
+{
+    margin: 1em;
+}
+
+
+
+/* ----------------------------------------------------------------------
+   ----------------------------------------------------------------------
+                        media & colors
+*/
+
+
+/* ----------------------------------------------------------------------
+                            screen
+*/
+@media screen
+{
+    /* Syntax Highlighting */
+    .keyword        { color: #0000AA; }
+    .identifier     { color: #000000; }
+    .special        { color: #707070; }
+    .preprocessor   { color: #402080; }
+    .char           { color: teal; }
+    .comment        { color: #800000; }
+    .string         { color: teal; }
+    .number         { color: teal; }
+    .white_bkd      { background-color: #FFFFFF; }
+    .dk_grey_bkd    { background-color: #999999; }
+
+    /* Copyright, Legal Notice */
+    .copyright,
+    div div.legalnotice p
+    {
+        color: #666666;
+    }
+
+    /* Program listing */
+    pre.synopsis
+    {
+        border: 1px solid #DCDCDC;
+    }
+
+    .programlisting,
+    .screen
+    {
+        border: 1px solid #DCDCDC;
+        background-color: #f0f0f0;
+    }
+
+    td .programlisting,
+    td .screen
+    {
+        border: 0px solid #DCDCDC;
+    }
+
+    /* Blurbs */
+    div.note,
+    div.tip,
+    div.important,
+    div.caution,
+    div.warning,
+    p.blurb
+    {
+        border: 1px solid #DCDCDC;
+    }
+
+    /* Table of contents */
+    .toc
+    {
+        border: 1px solid #DCDCDC;
+    }
+
+    /* Tables */
+    div.informaltable table tr td,
+    div.table table tr td
+    {
+        border: 1px solid #DCDCDC;
+    }
+
+    div.informaltable table tr th,
+    div.table table tr th
+    {
+        background-color: #F0F0F0;
+        border: 1px solid #DCDCDC;
+    }
+
+    .copyright-footer
+    {
+        color: #8F8F8F;
+    }
+
+    /* Misc */
+    span.highlight
+    {
+        color: #00A000;
+    }
+}
+
+
+/* ----------------------------------------------------------------------
+                            print
+*/
+
+
+@media print
+{
+    /* Links */
+    a
+    {
+        color: black;
+    }
+
+    a:visited
+    {
+        color: black;
+    }
+
+    .spirit-nav
+    {
+        display: none;
+    }
+
+    /* Program listing */
+    pre.synopsis
+    {
+        border: 1px solid gray;
+    }
+
+    .programlisting,
+    .screen
+    {
+        border: 1px solid gray;
+    }
+
+    td .programlisting,
+    td .screen
+    {
+        border: 0px solid #DCDCDC;
+    }
+
+    /* Table of contents */
+    .toc
+    {
+        border: 1px solid gray;
+    }
+
+    .informaltable table,
+    .table table
+    {
+        border: 1px solid gray;
+        border-collapse: collapse;
+    }
+
+    /* Tables */
+    div.informaltable table tr td,
+    div.table table tr td
+    {
+        border: 1px solid gray;
+    }
+
+    div.informaltable table tr th,
+    div.table table tr th
+    {
+        border: 1px solid gray;
+    }
+
+    table.simplelist tr td
+    {
+        border: none !important;
+    }
+
+    /* Misc */
+    span.highlight
+    {
+        font-weight: bold;
+    }
+}
+

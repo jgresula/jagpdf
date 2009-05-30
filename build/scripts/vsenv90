@@ -1,0 +1,19 @@
+# -*- mode:shell-script -*-
+
+# Copyright (c) 2005-2009 Jaroslav Gresula
+# 
+# Distributed under the MIT license (See accompanying file
+# LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+#
+# $Id$
+
+export CC=cl
+export CXX=cl
+export BOOST_ROOT="c:\home\jarda\code\external\boost\boost_1_35_0"
+
+export PATH=/cygdrive/c/Program\ Files/Microsoft\ Visual\ Studio\ 9.0/Common7/IDE:/cygdrive/c/Program\ Files/Microsoft\ Visual\ Studio\ 9.0/VC/BIN:/cygdrive/c/Program\ Files/Microsoft\ Visual\ Studio\ 9.0/Common7/Tools:/cygdrive/c/WINDOWS/Microsoft.NET/Framework/v3.5:/cygdrive/c/WINDOWS/Microsoft.NET/Framework/v2.0.50727:/cygdrive/c/Program\ Files/Microsoft\ Visual\ Studio\ 9.0/VC/VCPackages:/cygdrive/c/Program\ Files/Microsoft\ SDKs/Windows/v6.0A/bin:/cygdrive/c/Program\ Files/CMake\ 2.6/bin/:/cygdrive/c/programs/GNU/emacs/bin/:${PATH}
+export INCLUDE="C:\Program Files\Microsoft Visual Studio 9.0\VC\INCLUDE;C:\Program Files\Microsoft SDKs\Windows\v6.0A\include"
+export LIB="C:\Program Files\Microsoft Visual Studio 9.0\VC\LIB;C:\Program Files\Microsoft SDKs\Windows\v6.0A\lib"
+export LIBPATH="C:\WINDOWS\Microsoft.NET\Framework\v3.5;C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727;C:\Program Files\Microsoft Visual Studio 9.0\VC\LIB"
+
+

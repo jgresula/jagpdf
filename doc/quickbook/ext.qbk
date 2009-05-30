@@ -1,0 +1,26 @@
+[/
+Copyright 2006 Rene Rivera
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[/  i[ref alt]
+    Image element with alternate text.
+    
+    ref := Reference to image.
+    alt := Alternate text data.
+]
+[template i[ref alt]'''<inlinemediaobject><imageobject><imagedata fileref="'''[ref]'''"></imagedata></imageobject><textobject><phrase role="alt">'''[alt]'''</phrase></textobject></inlinemediaobject>''']
+
+[/  phrase[role text]
+    Demarcate a section of text with a given role.
+    
+    role := The role for the text, this is added as the role property.
+    text := The text to mark.
+]
+[template phrase[role text]'''<phrase role="'''[role]'''">'''[text]'''</phrase>''']
+
+[/  download[link]
+    Indicate the download link of a download or news item.
+]
+[template download[link]'''<download><![CDATA['''[`link]''']]></download>''']

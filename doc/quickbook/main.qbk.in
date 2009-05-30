@@ -1,0 +1,2712 @@
+[/ -*- coding: utf-8 -*- ]
+
+[/
+Copyright (c) 2005-2009 Jaroslav Gresula
+
+Distributed under the MIT license (See accompanying file
+LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+]
+
+[article JagPDF Handbook
+    [quickbook 1.4]
+    [version @JAGPDF_VERSION_MAJOR@.@JAGPDF_VERSION_MINOR@]
+    [id jagpdf]
+    [authors [Grešula, Jaroslav]]
+    [copyright 2005-2009 Jaroslav Grešula]
+    [purpose JagPDF library documentation]
+    [license
+        Distributed under the MIT license (See accompanying file LICENSE.txt or copy at
+        [@http://jagpdf.org/LICENSE.txt])
+    ]
+]
+
+
+
+[/
+..., as shown below
+..., as demonstrated below
+..., as follows
+Now let's look at ..... shown below
+Thus we write:
+This example will create ...
+Now that we have created ...
+Now that we have something, we can ...
+Let us do ....
+Finally, here is our ...
+To illustrate, consider ...
+The following code snippet shows ...
+Here is an example of a ...
+An example should make it clear
+
+Note that ..
+Take note that
+Notice ... . It is ..
+]
+
+
+[include ext.qbk]
+[@JAG_REFERENCE_LINKS_QBK@]
+
+[/ === DEFINITIONS =================================== ]
+
+[template chapter[id Name]
+'''
+<chapter id="[id]">
+  <title>[Name]</title>
+'''
+]
+
+[template endchapter </endchapter>]
+
+[template libver[]\ 1.0]
+[template lib[] JagPDF]
+
+[/ === names of distributed files === ]
+
+[template lib_java_jar[]\ jagpdf-@JAGPDF_VERSION_MAJOR@.@JAGPDF_VERSION_MINOR@.jar]
+[template lib_java_native_win[]\ jagpdf_java-@JAGPDF_VERSION_MAJOR@.@JAGPDF_VERSION_MINOR@.dll]
+[template lib_java_native_linux[]\ libjagpdf_java-@JAGPDF_VERSION_MAJOR@.@JAGPDF_VERSION_MINOR@.so]
+
+
+[template lib_python_py[]\ jagpdf.py]
+[template lib_python_dll_linux[]\ _jagpdf.so]
+[template lib_python_dll_win[]\ _jagpdf.pyd]
+
+[template libcore_win\ jagpdf-@JAGPDF_VERSION_MAJOR@.@JAGPDF_VERSION_MINOR@.dll]
+[template libcore_lin\ jagpdf.so.@JAGPDF_VERSION_MAJOR@.@JAGPDF_VERSION_MINOR@.@JAGPDF_VERSION_PATCH@]
+
+[template libcore_linkname_win\ jagpdf-@JAGPDF_VERSION_MAJOR@.@JAGPDF_VERSION_MINOR@.lib]
+[template libcore_linkname_lin\ jagpdf.so]
+
+
+
+[template pylib[]\ [lib] for Python]
+[template clib[]\ [lib] for C/C++]
+
+[template pymodule[] jagpdf.py]
+[template pyextlinux[] _jagpdf.so]
+[template pyextwin[] _jagpdf.pyd]
+
+[/ === INTERNAL LINKS ================================ ]
+
+[template ref_install[] [link jagpdf.installation Installation]]
+[template ref_apiref[] [link jagpdf.reference Reference]]
+
+[template ref_hello_py_t[t]\ [link jagpdf.usersguide.quick_start.hello_world.python [t]]]
+[template ref_hello_java_t[t]\ [link jagpdf.usersguide.quick_start.hello_world.java [t]]]
+[template ref_hello_cpp_t[t]\ [link jagpdf.usersguide.quick_start.hello_world.c__ [t]]]
+[template ref_hello_c_t[t]\ [link jagpdf.usersguide.quick_start.hello_world.c [t]]]
+
+[template ref_usersguide[]\ [link jagpdf.usersguide User's Guide]]
+[template ref_clipping_paths[]\ [link jagpdf.usersguide.graphics.clipping_paths Clipping Paths]]
+[template ref_paths[]\ [link jagpdf.usersguide.graphics.paths Paths]]
+[template ref_line_attrs[]\ [link jagpdf.usersguide.graphics.line_attributes Line Attributes]]
+[template ref_coord_systems[]\ [link jagpdf.usersguide.graphics.coordinate_systems Coordinate Systems]]
+[template ref_color_spaces[]\ [link jagpdf.usersguide.graphics.color_spaces Color Spaces]]
+[template ref_graphics_state[t]\ [link jagpdf.usersguide.graphics.state [t]]]
+[template ref_guide_images[] \ [link jagpdf.usersguide.graphics.images Images]]
+[template ref_guide_functions[] \ [link jagpdf.usersguide.functions Functions]]
+
+[template ref_patterns[]\ [link jagpdf.usersguide.graphics.patterns Patterns]]
+[template ref_patterns_shading[]\ [link jagpdf.usersguide.graphics.patterns.shading_patterns Shading Patterns]]
+[template ref_patterns_tiling[]\ [link jagpdf.usersguide.graphics.patterns.tiling_patterns Tiling Patterns]]
+[template ref_patterns_t[t]\ [link jagpdf.usersguide.graphics.patterns [t]]]
+
+[template ref_install_source_t[t]\ [link jagpdf.installation.install_from_source [t]]]
+[template ref_install_embed_t[t]\ [link jagpdf.installation.embed [t]]]
+[template ref_install_options_t[t]\ [link jagpdf.installation.install_from_source.customization [t]]]
+[template ref_install_notes_t[t]\ [link jagpdf.installation.install_from_source.notes [t]]]
+
+[template ref_errorhandling[] [link jagpdf.usersguide.error_handling Error Handling]]
+[template ref_errorhandling_t[t] [link jagpdf.usersguide.error_handling [t]]]
+[template ref_customstreams[] [link jagpdf.usersguide.custom_output_streams Custom Output Streams]]
+[template ref_customstreams_t[t] [link jagpdf.usersguide.custom_output_streams [t]]]
+[template ref_versioning[] [link jagpdf.usersguide.misc.versioning [lib] Versioning]]
+[template ref_c_errhandling[] [link jagpdf.usersguide.error_handling.c error handling in C]]
+[template ref_profile[] [link jagpdf.usersguide.profile Profile]]
+[template ref_profile_t[t] [link jagpdf.usersguide.profile [t]]]
+[template ref_profile_info[] [link jagpdf.usersguide.profile.reference.info Info]]
+[template ref_tuttext[]\ [link jagpdf.usersguide.text Text]]
+[template ref_tuttext_state[t]\ [link jagpdf.usersguide.text.state [t]]]
+[template ref_tuttext_fontinfo\ [link jagpdf.usersguide.text.info Font Information]]
+[template ref_langspecific[] [link jagpdf.reference.langspec Language Specific Notes]]
+[template ref_langspecific_t[t] [link jagpdf.reference.langspec [t]]]
+[template ref_options_string[] [link jagpdf.usersguide.misc.opt_string options string]]
+[template ref_tuttext_textobject[]\ [link jagpdf.usersguide.text.text_object Text Object]]
+[template ref_java_strings_t[t] [link jagpdf.reference.langspec.java.strings [t]]]
+[template ref_python_strings_t[t] [link jagpdf.reference.langspec.python.strings [t]]]
+
+
+
+[template ref_guide_interactive_docoutline[]\ [link jagpdf.usersguide.interactive.doc_outline Document Outline]]
+[template ref_guide_interactive_docoutline_t[t]\ [link jagpdf.usersguide.interactive.doc_outline [t]]]
+[template ref_guide_interactive_annots[]\ [link jagpdf.usersguide.interactive.annotations Annotations]]
+[template ref_guide_interactive_destref[]\ [link jagpdf.usersguide.interactive.dest_syntax Destination Syntax]]
+[template ref_guide_interactive_dest_t[t]\ [link jagpdf.usersguide.interactive.destinations [t]]]
+[template ref_guide_enc_perm[]\ [link jagpdf.usersguide.encryption.enc_reference Encryption Options Reference]]
+[template ref_guide_enc[]\ [link jagpdf.usersguide.encryption Encryption]]
+
+[def __languages__  [link jagpdf.languages Languages]]
+[def __quickstart__ [link jagpdf.usersguide.quick_start Quick Start]]
+[def __pdficon_small [$images/pdficon_small.png]]
+
+[/ === EXTERNAL LINKS ================================ ]
+[template url_homepage[] [@http://jagpdf.org JagPDF homepage]]
+[template url_lib_download[] [@http://jagpdf.org/downloads.htm]]
+[template url_lib_samples_www[] [@http://jagpdf.org/samples.htm http://jagpdf.org/samples.htm]]
+[template url_lib_download_t[t] [@http://jagpdf.org/downloads.htm [t]]]
+[template url_maillist[] [@http://groups.google.com/group/jagpdf]]
+[template url_github_t[t] [@http://github.com/jgresula/jagpdf/tree/master [t]]]
+
+[template url_pdfref[] [@http://www.adobe.com/devnet/pdf/pdf_reference.html]]
+[template url_pdfref_chapter[c] [@http://www.adobe.com/devnet/pdf/pdf_reference.html the PDF Reference], chapter ['[c]]]
+[template url_windll_search_order[] [@http://msdn.microsoft.com/en-us/library/ms682586(VS.85,loband).aspx Dynamic-Link Library Search Order]]
+[template url_shlib_howto[] [@http://www.tldp.org/HOWTO/Program-Library-HOWTO/shared-libraries.html Shared Libraries HOWTO]]
+[template url_coord_system[t] [@http://en.wikipedia.org/wiki/Coordinate_system [t]]]
+[template url_py_array[] [@http://docs.python.org/lib/module-array.html array.array]]
+[template url_codepoints[] [@http://en.wikipedia.org/wiki/Code_point code points]]
+[template url_icu_converter[t] [@http://demo.icu-project.org/icu-bin/convexp?s=IANA here]]
+[template url_wiki_jni[t] [@http://en.wikipedia.org/wiki/Java_Native_Interface [t]]]
+[template url_cmake[] [@http://cmake.org CMake]]
+[template url_cmake_doc_t[t] [@http://cmake.org/cmake/help/documentation.html [t]]]
+
+
+[def __py_search_path_url__  [@http://docs.python.org/tutorial/modules.html#the-module-search-path the module search path]]
+[def __py_site_specifi_hook__ [@http://docs.python.org/library/site.html site-specific configuration hook]]
+
+[template url_UTF_8[] [@http://demo.icu-project.org/icu-bin/convexp?conv=UTF-8&s=IANA UTF-8]]
+[template url_windows_1250[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-5346_P100-1998&s=IANA windows-1250]]
+[template url_windows_1251[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-5347_P100-1998&s=IANA windows-1251]]
+[template url_windows_1252[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-5348_P100-1997&s=IANA windows-1252]]
+[template url_windows_1253[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-5349_P100-1998&s=IANA windows-1253]]
+[template url_windows_1254[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-5350_P100-1998&s=IANA windows-1254]]
+[template url_windows_1255[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-9447_P100-2002&s=IANA windows-1255]]
+[template url_windows_1256[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-9448_X100-2005&s=IANA windows-1256]]
+[template url_windows_1257[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-9449_P100-2002&s=IANA windows-1257]]
+[template url_windows_1258[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-5354_P100-1998&s=IANA windows-1258]]
+[template url_macintosh[] [@http://demo.icu-project.org/icu-bin/convexp?conv=macos-0_2-10.2&s=IANA macintosh]]
+[template url_Adobe_Standard_Encoding[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-1276_P100-1995&s=IANA Adobe-Standard-Encoding]]
+[template url_ISO_8859_1[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ISO-8859-1&s=IANA ISO-8859-1]]
+[template url_ISO_8859_2[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-912_P100-1995&s=IANA ISO-8859-2]]
+[template url_ISO_8859_3[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-913_P100-2000&s=IANA ISO-8859-3]]
+[template url_ISO_8859_4[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-914_P100-1995&s=IANA ISO-8859-4]]
+[template url_ISO_8859_5[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-915_P100-1995&s=IANA ISO-8859-5]]
+[template url_ISO_8859_6[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-1089_P100-1995&s=IANA ISO-8859-6]]
+[template url_ISO_8859_7[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-9005_X110-2007&s=IANA ISO-8859-7]]
+[template url_ISO_8859_8[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-5012_P100-1999&s=IANA ISO-8859-8]]
+[template url_ISO_8859_9[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-920_P100-1995&s=IANA ISO-8859-9]]
+[template url_ISO_8859_10[] [@http://demo.icu-project.org/icu-bin/convexp?conv=iso-8859_10-1998&s=IANA ISO-8859-10]]
+[template url_ISO_8859_13[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-921_P100-1995&s=IANA ISO-8859-13]]
+[template url_ISO_8859_14[] [@http://demo.icu-project.org/icu-bin/convexp?conv=iso-8859_14-1998&s=IANA ISO-8859-14]]
+[template url_ISO_8859_15[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-923_P100-1998&s=IANA ISO-8859-15]]
+
+
+
+[/ === TEMPLATES === ]
+[template path[fname]\ ['[fname]]]
+[template envvar[var] [^[var]] environment variable]
+
+
+[/ [template pdf_spec_quote[t] 
+[note [*PDF specs quote.] [t]]
+]]
+
+[template pdf_spec_quote[t] [t]]
+
+
+
+[/ ====================================================================== ]
+[section Introduction]
+[/ ====================================================================== ]
+
+[heading Overview]
+
+The [lib] library adds PDF generation capability to your application.
+
+JagPDF can be used in a variety of scenarios, ranging from server applications
+like on-demand document generation or high-volume document processing, to
+desktop applications requiring output to PDF.
+
+The library is able to produce various document types. You can create invoices,
+reports, complex vector drawings, textual documents, etc. The library provides
+metrics for fonts and images which allows advanced text formatting. Have a look
+at samples at [url_lib_samples_www].
+
+[heading Document organization]
+
+This handbook is divided into three main parts:
+
+* The [ref_install] section describes how to install [lib].
+
+* The [ref_usersguide] provides a [lib] functionality walk-through.
+
+* The [ref_apiref] section contains documentation of the [lib] API for
+  each language.
+
+Knowledge of basic computer graphics and typography concepts is assumed.
+
+[tip
+The PDF format is described in the PDF Reference which is publicly available at
+[url_pdfref]. It is recommended to keep that document handy as this document
+refers to it whenever a PDF concept needs to be introduced or specified.
+]
+
+You can post [lib] related questions to the [lib] mailing list. See
+[url_homepage] for support details.
+
+
+[endsect]
+
+
+[/ ====================================================================== ]
+[section:installation Installation]
+[/ ====================================================================== ]
+
+[template runtime_tips[]
+* Linux - [url_shlib_howto]
+* Windows - [url_windll_search_order]
+]
+
+Follow these steps to create PDF documents from your application:
+
+# Obtain the library. You can either [ref_install_source_t build from source] or
+  [url_lib_download_t download] prebuilt libraries. The prebuilt libraries do
+  not have any dependencies, they should just work on any supported platform.
+
+# [ref_install_embed_t Embed] it into your application.
+
+# Run your application. In runtime, the [lib] shared library is loaded
+  statically (C/C++) or dynamically (Java) into your application. It must reside
+  in a directory which is searched by the OS program loader.
+
+
+[tip 
+The following provide more information about shared libraries on individual
+platforms.
+[runtime_tips]
+] 
+
+
+[/ -------------------------------------------------- ]
+[section:install_from_source Installation From Source]
+[/ -------------------------------------------------- ]
+
+Installation from source is currently supported on x86/Linux and x86/Windows
+platforms. More recent versions of GCC and MSVC are supported.
+
+You can either [url_lib_download_t download] the latest stable release or
+retrieve the development branch. The development branch is mirrored on
+[url_github_t GitHub]. To clone the repository, do
+
+[pre git clone git://github.com/jgresula/jagpdf.git]
+
+[section Prerequisites]
+
+[template url_python[] [@http://python.org Python]]
+[template url_gccxml[] [@http://gccxml.org GCC-XML]]
+[template url_swig[] [@http://www.swig.org SWIG]]
+[template url_freetype[] [@http://freetype.sourceforge.net/index2.html FreeType]]
+[template url_boost[] [@http://boost.org Boost]]
+[template url_icu[] [@http://icu-project.org ICU]]
+[template url_zlib[] [@http://www.zlib.net/ zlib]]
+[template url_libpng[] [@http://www.libpng.org/pub/png/libpng.html libpng]]
+[template url_javajdk[] [@http://java.sun.com/javase/downloads/index.jsp Java JDK]]
+
+* [url_cmake], a cross-platform, open-source build system.
+* [url_freetype], a free, high-quality, and portable font engine.
+* [url_boost], free peer-reviewed portable C++ source libraries.
+* [url_icu], a collaborative open source software development project,
+  delivering Unicode support on a wide variety of platforms.
+* [url_zlib], a lossless data-compression library.
+* [url_libpng], the official PNG reference library.
+
+Optional
+
+* [url_python]
+* [url_swig], a software development tool that connects programs
+  written in C and C++ with a variety of high-level programming
+  languages. Required for [lib] for Python or Java.
+* [url_gccxml], an XML output extension to GCC. Required only if you
+  intend to change the public API.
+* [url_javajdk]
+
+[endsect]
+
+[section Installation]
+
+[lib] uses the CMake build system. A typical sequence of commands
+installing [lib] looks like this:
+
+[heading Linux]
+
+[pre
+$ tar -xjf jagpdf-@JAGPDF_VERSION@.src.tar.bz2
+$ mkdir jagpdf-@JAGPDF_VERSION@-build
+$ cd jagpdf-@JAGPDF_VERSION@-build
+$ cmake [[ref_install_options_t options]\] ../jagpdf-@JAGPDF_VERSION@
+$ make 
+$ make install
+]
+
+[heading Windows]
+
+[pre
+> unzip jagpdf-@JAGPDF_VERSION@.src.zip
+> mkdir jagpdf-@JAGPDF_VERSION@-build
+> cd jagpdf-@JAGPDF_VERSION@-build
+> /path/to/visual-studio/VC/bin/vcvars32.bat
+> cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release [[ref_install_options_t options]\] ../jagpdf-@JAGPDF_VERSION@
+> nmake
+> nmake install
+]
+
+[endsect]
+
+
+[section:customization Customization]
+
+The installation can be customized by passing options to [^cmake]. The following
+sections describe variables defined by [lib] as well as the most common standard
+CMake variables. Refer to [url_cmake_doc_t CMake Documentation] for complete
+description of CMake features.
+
+Use the following syntax to specify a variable on the [^cmake] command line:
+
+[pre -DVARIABLE=VALUE]
+
+For instance the following command generates makefiles which build a debug
+version of [lib], and disable support for Python and Java.
+
+[pre $ cmake -DBUILD_PYTHON=OFF -DBUILD_JAVA=OFF -DCMAKE_BUILD_TYPE=Debug .]
+
+
+[/ ---------------]
+[heading Languages]
+
+The following variables enable or disable [lib] libraries for individual
+languages. The library is not built if development libraries and files for a
+particular language is not found.
+
+[table
+ [[Variable][Description][Default Value]]
+ [[BUILD_C]      [build [lib] for C/C++] [ON]]
+ [[BUILD_PYTHON] [build [lib] for Python] [ON]]
+ [[BUILD_JAVA]   [build [lib] for Java] [ON]]
+]
+
+[/ ------------------]
+[heading Installation]
+
+The following variables control the [lib] installation location.
+
+[table
+ [[Variable][Description][Default Value]]
+
+ [[CMAKE_INSTALL_PREFIX] [installation prefix, prepended onto INCLUDE_INSTALL_DIR and LIB_INSTALL_DIR variables] 
+  [['/usr/local] on Linux, ['%ProgramFiles%\\[lib]] on Windows.]
+ ]
+
+ [[INCLUDE_INSTALL_DIR][where to install [lib] C/C++ include files][['include]]]
+ [[LIB_INSTALL_DIR]    [where to install [lib] C/C++ and Java libraries][['lib]]]
+ [[PYTHON_INSTALL_DIR] [where to install [lib] Python modules][detected during configuration]]
+]
+
+[/ -------------------]
+[heading Configuration]
+
+The following variables specify paths to development libraries and files for
+supported languages. Use these variables if they are installed in non-standard
+locations.
+
+[table
+ [[Variable][Description][Default Value]] 
+ [[JAVA_HOME]           [path to Java JDK] [detected during configuration]]
+ [[PYTHON_HOME]         [path to Python] [detected during configuration]]
+]
+
+[/ -------------------]
+[heading Miscellaneous]
+
+[table
+ [[Variable][Description][Default Value]] 
+ [[CMAKE_CXX_COMPILER] [C++ compiler] [detected during configuration]]
+ [[CMAKE_C_COMPILER] [C compiler] [detected during configuration]]
+ [[CMAKE_BUILD_TYPE]    [build type] [['Release] for Unix Makefiles and ['Debug]
+   for NMake Makefiles.]
+ ]
+]
+
+
+[endsect]
+
+[section Testing]
+
+[lib] comes with two test suites: unit tests and regression tests. Unit tests
+are part of the source tarball and are focused on [lib] internals.
+
+To run unit tests, do
+[pre $ make unit-tests]
+
+Regression tests are available as a separate download. They test the public
+API. This includes comparing generated PDF files with the known good ones.
+
+To run regression tests, do
+[pre $ make apitests]
+
+[endsect]
+
+
+[section Notes]
+
+* The supported way of installing [lib] is to run [^cmake] from the command line
+  using ['Unix Makefiles] or ['NMake Makefiles] generators. Other generators or
+  interactive CMake utilities ([^ccmake], [^cmake-gui.exe], [^cmake -i]) might work
+  but were not tested.
+
+* CMake version 2.6.3 and later is recommended as this version improves support
+  for Boost libraries.
+
+
+
+[endsect]
+
+[endsect]
+
+
+[/ ------------------------- ]
+[section:embed Embedding Into Your Application]
+[/ ------------------------- ]
+
+This section outlines how to use [lib] in your application. Additional, more
+detailed information for each language can be found in [ref_langspecific].
+
+[/ ------------------------- ]
+[section C/C++]
+[/ ------------------------- ]
+[c++]
+
+You can enable [lib] in your application by including the main header file:
+
+```
+#include <jagpdf/api.h>
+```
+
+To compile and link your application with [lib] you need to
+
+* Point the compiler to the [lib] include files.
+
+* Point the linker to [path [libcore_linkname_lin]] on Linux or [path
+  [libcore_linkname_win]] on Windows.
+
+The following table shows how to compile and link [lib] with two popular
+compilers:
+
+[table
+  [[Compiler][Command Line]]
+  [[GCC]  [[^gcc -I<jagpdf-include-dir> -L<jagpdf-lib-dir> <your-files> -ljagpdf]]]
+  [[MSVC] [[^cl.exe /I<jagpdf-include-dir> <your-files> [libcore_linkname_win] /link /LIBPATH:<jagpdf-lib-dir>]]]
+]
+
+[/
+[heading Runtime]
+
+To run your application the location of the [lib] shared library ([path
+[libcore_win]] on Windows and [path [libcore_lin]] on Linux) must be known to
+the OS program loader.
+]
+
+[heading C++ API vs. C API]
+
+[lib] provides two separate APIs - one to be used by pure C
+applications and one for C++ applications. There are no differences
+between these two as far as the feature set is concerned. The C++ API
+just offers features that are inherent to C++: object oriented
+approach with automatic object lifetime management, method
+overloading, error handling using exceptions (optional), etc. Of
+course, a C++ application can still use the C API.
+
+[note Even if you downloaded a prebuilt library you can still use any standard
+conforming C++ compiler. [lib] implements the C++ API using a C bridge between
+your C++ application and [lib]. The C bridge works around the fact that there is
+no unified C++ ABI embraced by all compiler vendors.]
+
+What next? Continue to the commented Hello World examples in [ref_hello_cpp_t
+C++] or [ref_hello_c_t C].
+
+[endsect] [/ C/C++]
+
+[/ ------------------------- ]
+[section Python]
+[/ ------------------------- ]
+[python]
+
+[lib] for Python is implemented as an extension module. The module must be
+visible to the Python interpreter. The [lib] functionality is provided in
+namespace [^jagpdf]. In case of troubles with importing [^jagpdf], consult the
+Python documentation on __py_search_path_url__ and __py_site_specifi_hook__.
+
+What next? Continue to the commented [ref_hello_py_t Hello World example].
+
+
+[endsect] [/ Python]
+
+
+[/ ------------------------- ]
+[section Java]
+[/ ------------------------- ]
+
+[lib] for Java is implemented as a [url_wiki_jni JNI module]. It is compatible
+with JDK 1.4 and later. It is known to work with Sun's JVM and should work with
+any JVM implementation with JNI support.
+
+The [lib] functionality is provided in namespace [^com.jagpdf]. To compile and
+run your application, point the classpath to [path [lib_java_jar]]:
+
+```
+javac -classpath /path/to/``[lib_java_jar]`` <your_java_files>
+java -classpath /path/to/``[lib_java_jar]`` <your_app>
+```
+
+What next? Continue to the commented [ref_hello_java_t Hello World example].
+
+[endsect] [/ Java]
+
+
+[endsect] [/ Embedding Into Your Application]
+
+[endsect] [/ Installation ]
+
+
+
+
+[/ ###################################################################### ]
+[/ ###################################################################### ]
+
+[section:usersguide User's Guide]
+
+[/ ###################################################################### ]
+[/ ###################################################################### ]
+
+[heading Overview]
+
+[python]
+
+[import @CMAKE_SOURCE_DIR@/code/test/apitest/py/docexamples.py]
+[import @CMAKE_SOURCE_DIR@/code/test/apitest/java/docexamples.java]
+
+This chapter provides a guided tour of [lib] features. The majority of code
+examples is in Python but it should be easy to deduce corresponding code for
+other languages.
+
+[py_documentation_conventions]
+
+
+[/ ###################################################################### ]
+
+[section:quick_start Quick Start]
+
+[/ ###################################################################### ]
+
+[/ -------------------------------------------------- ]
+[section Hello World]
+[/ -------------------------------------------------- ]
+In this section we will create a simple hello world PDF
+document. Let's first show the complete code for individual languages:
+
+[/~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~]
+[/       helo world examples start]
+[heading Python]
+[python]
+
+[py_example_hello_world]
+
+[heading C++]
+[import @CMAKE_SOURCE_DIR@/code/test/apitest/cpp/helloworld.cpp]
+[c++]
+[cpp_example_hello_world]
+
+[heading Java]
+[import @CMAKE_SOURCE_DIR@/code/test/apitest/java/helloworld.java]
+[java_example_hello_world]
+
+[heading C]
+[import @CMAKE_SOURCE_DIR@/code/test/apitest/c/helloworld.c]
+[c_example_hello_world]
+
+
+[/        hello world examples end]
+[/~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~]
+
+[endsect]
+
+[/ -------------------------------------------------- ]
+[section Step by Step]
+[/ -------------------------------------------------- ]
+
+All examples produce an identical PDF document. Let's take the Python
+script and explain step by step what is going on.
+
+[py_example_hello_doccreate]
+
+In the first step, we created a PDF document object. It is associated
+with a file but we could bind it to a [ref_customstreams_t custom
+stream] instead. We could also supply a document [ref_profile_t
+profile] which affects things like PDF version, encryption,
+etc. Because we did not provide any profile a default one was used.
+
+[py_example_hello_startpage]
+In the next step we created an A4 page. Note how we actually specified
+the page dimensions. PDF uses a device independent coordinate system
+called ['user space] (see section [ref_coord_systems]). The page size
+is expressed in ['default user space units] which is 1/72 inch.
+
+[py_example_hello_showtext] 
+The active page provides a [code_canvas]. A canvas is an object which
+represents visible content of a page so we place text on the
+canvas. We did not specify a font so the text is showed using a
+default font. And again, we use user space units to define the text
+position. Refer to [ref_tuttext] for more details about showing text.
+
+[py_example_hello_finalize]
+Finally, we finished the page and the document. Now, there should be
+file [@samples/jagpdf_doc_hello.pdf __pdficon_small] [path hello.pdf]
+in the current directory. 
+
+We intentionally omitted [ref_errorhandling_t error handling] in the
+examples. However, you should always check for errors in production
+code. You can find more details about language specific issues in the
+chapter [ref_langspecific].
+
+[note The [lib] API is ['driver-like]. Pages are inserted into a
+document sequentially and there can be at most one active page at a
+time. It is not possible to modify or otherwise access a page once it
+is finished by calling [code_document_page_end].
+
+You do not find functionality like random access to pages, editing
+[footnote Editing means here operations like deletion of previously
+inserted object, undo/redo, etc.] of page content, etc. in
+[lib]. These things belong to another layer (often called ['document
+object model]) which can use [lib] as one of its possible visual
+presentations.]
+
+[/ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~]
+[heading Note for C users]
+
+As you might have already noticed the C example is much more verbose
+than other examples. There are several reasons:
+
+* Firstly, [lib] is aimed at C++ and Python and possibly at other
+  ['object oriented] programming languages in the future. 
+
+* [lib] is written in C++. The C API is generated automatically from
+  C++ interfaces. The C API user friendliness certainly suffers from
+  this fact.
+
+* The verbosity stems also from the fact that [lib] internally
+  reference counts some objects. In contrast to other languages, there
+  is no construct in C that would hide it from users.
+
+On the other hand, the C API provides the same feature set as APIs for
+other languages so the facts above should not discourage you from
+using [lib].
+
+[endsect] [/ step by step]
+
+[endsect]
+
+
+[/ ###################################################################### ]
+
+[section Graphics]
+
+[/ ###################################################################### ]
+
+[/ -------------------------------------------------- ]
+[section Paths]
+[/ -------------------------------------------------- ]
+[python]
+
+Paths are used for
+
+* drawing lines
+
+* defining the shapes of filled areas
+
+* specifying boundaries for clipping other graphics
+
+A path is a sequence of curved and straight line segments. Connected
+segments form a subpath, one or more disconnected subpaths then forms
+a path.
+
+Let's show how to draw a rectangle.
+
+[py_example_line]
+
+Drawing a rectangle consists of two steps: defining the rectangle and
+then painting it. The `'s'` passed to [code_canvas_path_paint] says
+that we want to stroke the path. In the PDF terminology the first step
+is called ['path construction] and the second is ['path painting].
+
+The following example illustrates how to draw a filled shape.
+[py_example_filled_shape] 
+
+Note that this time we passed `'f'` to [code_canvas_path_paint]
+because we want to fill the path. We could also pass `'fs'` to fill
+and then stroke the path. Another option would be to use the path as a
+clipping path which is described in section [ref_clipping_paths].
+
+When a new page is [code_document_page_start_t started] there is no
+path under construction. The path construction sequence must start
+with one of [code_canvas_move_to], [code_canvas_rectangle],
+[code_canvas_circle] or [code_canvas_arc]. Once a path has been
+painted with [code_canvas_path_paint] it is no longer defined. A path
+construction sequence should not be mixed up with other operations
+than those in the Summary below and should be immediately followed by
+[code_canvas_path_paint].
+
+[heading Paths Summary]
+
+[table
+[[][]]
+[[Examples] [[@samples/jagpdf_doc_paths.pdf __pdficon_small] paths]]
+[[Path Construction Methods] [
+[code_canvas_move_to],
+[code_canvas_line_to],
+[code_canvas_circle],
+[code_canvas_arc],
+[code_canvas_arc_to],
+[code_canvas_bezier_to],
+[code_canvas_bezier_to_1st_ctrlpt],
+[code_canvas_bezier_to_2nd_ctrlpt],
+[code_canvas_path_close]
+]]
+[[Path Painting Methods] [
+[code_canvas_path_paint]
+]]
+[[PDF Reference][[url_pdfref_chapter Graphics | Path Construction and Painting]]]
+]
+
+
+[endsect]
+
+
+[/ -------------------------------------------------- ]
+[section:state Graphics State]
+[/ -------------------------------------------------- ]
+
+[/ ----------- PDF Reference quote ---------------
+A PDF consumer application maintains an internal data structure called
+the ['graphics state] that holds current graphics control
+parameters. These parameters define the global framework within which
+the graphics operators execute. The graphics state is initialized at
+the beginning of each page with default values.
+--------------------------]
+
+The graphics state is a set of parameters that control graphics
+operations. It comprises of parameters like attributes of a line used
+to stroke a path ([ref_line_attrs]), the current clipping path
+([ref_clipping_paths]), the current transformation matrix
+([ref_coord_systems]), the current color and the color space
+([ref_color_spaces]) and various attributes related to text
+([ref_tuttext]).
+
+At the beginning of each page, the graphics state is reset to default
+values. The current graphics state can be saved by
+[code_canvas_state_save] and restored later by
+[code_canvas_state_restore]. Calls to [code_canvas_state_save] can be
+nested. For each [code_canvas_state_save] there must be a
+corresponding [code_canvas_state_restore].
+
+Let's show an example illustrating the graphics state.
+[py_example_save_grstate]
+
+[heading Graphics State Summary]
+
+[table
+[[] []]
+[[Examples] [[@samples/jagpdf_doc_graphics_state.pdf __pdficon_small] graphics state]]
+[[Graphics State Methods] [
+[code_canvas_state_save], [code_canvas_state_restore]
+]]
+[[PDF Reference][[url_pdfref_chapter Graphics | Graphics State]]]
+]
+
+[endsect]
+
+
+[/ -------------------------------------------------- ]
+[section Clipping Paths]
+[/ -------------------------------------------------- ]
+
+[/ ----------- PDF_Reference_quote ---------------]
+The graphics state contains a ['current clipping path] that limits the
+regions of the page affected by painting operators. The closed
+subpaths of this path define the area that can be painted. Marks
+falling inside this area are applied to the page; those falling
+outside it are not.The initial clipping path includes the entire
+page.
+[/ ----------- PDF_Reference_quote ---------------]
+
+The graphics state maintains a ['current clipping path]. Initially it
+is the entire page. The following code snippet shows a rectangle used
+as a clipping path:
+
+[py_example_clipping_path]
+
+After the rectangle is painted, the clipping path in the graphics
+state is set to the intersection of the current clipping path (in this
+case the entire page) and the rectangle. Subsequently, we painted a
+circle and a text string which are clipped accordingly. 
+
+
+Clipping path construction differs from regular path construction just
+in the argument `'w'` passed to [code_canvas_path_paint].
+
+[py_example_clipping_path_visible]
+
+[heading Clipping Paths Summary]
+
+[table
+[[] []]
+[[Examples] [[@samples/jagpdf_doc_clipping_path.pdf __pdficon_small] clipping paths]]
+[[Clipping Path Methods] [the same as in [ref_paths]]]
+[[PDF Reference][[url_pdfref_chapter Graphics | Path Construction and Painting | Clipping Path Operators]]]
+]
+
+[endsect]
+
+
+[/ -------------------------------------------------- ]
+[section Color Spaces]
+[/ -------------------------------------------------- ]
+
+Color spaces supported by [lib] can be divided into three families.
+
+* ['Device color spaces]: DeviceGray, DeviceRGB and DeviceCMYK
+* ['CIE-based color spaces]: CalGray, CalRGB, Lab and ICC based.
+* ['Special color spaces]: Indexed
+
+The graphics state maintains parameters representing the current color
+space and the current color value - one for stroking and one for
+filling operations. A color value consists of one or more color
+components, which are usually numbers. For example, a gray level can
+be specified by a single number ranging from 0.0 (black) to 1.0
+(white).
+
+The default color space for both stroking and filling operations is
+DeviceGray. The initial color value is black.
+
+
+Let's start with a simple example.
+
+[py_example_color_spaces_basic]
+
+Device color spaces do not have any parameters so their use is quite
+straightforward. Other color spaces need to be specified before
+use. Let's show another example that defines a CalRGB color space.
+
+[py_example_color_spaces_lab]
+
+We loaded the color space by passing its specification to
+[code_document_color_space_load]. The we set it as the current color
+space for filling operations. Note that the registration is performed
+by [code_document]. Once a color space is loaded it can be used during
+the whole document lifetime.
+
+[lib] supports also ICC based color spaces. You can use either
+predefined ones or supply a file containing an ICC profile.
+
+[py_example_color_spaces_icc]
+
+The next examples shows how to define an indexed color space. It
+enables using integers as indices into a ['palette] of arbitrary
+colors in some other space. Color values are in the range 0 to 255 and
+are scaled to the range of the corresponding color component in the
+base color space; 0 is the minimum value and 255 is the maximum. A
+palette can contain up to 255 color values.
+
+[py_example_color_spaces_indexed]
+
+Here we defined an indexed color space having three color values (red,
+green, blue) which are interpreted in the sRGB color space. To use a
+color from the palette we pass its index to [code_canvas_color1].
+
+Pattern color spaces are described in a [ref_patterns_t separate
+section].
+
+
+[heading Color Spaces Summary]
+
+[table
+[[][]]
+[[Examples] [[@samples/jagpdf_doc_color_spaces.pdf   __pdficon_small] color spaces]]
+[[Color Space Methods] [
+[code_document_color_space_load],
+[code_canvas_color_space],
+[code_canvas_color1],
+[code_canvas_color3],
+[code_canvas_color4]
+]]
+[[PDF Reference][[url_pdfref_chapter Graphics | Color Spaces]]]
+]
+
+[endsect]
+
+
+
+[/ -------------------------------------------------- ]
+[section Coordinate Systems]
+[/ -------------------------------------------------- ]
+
+PDF defines several coordinate spaces. Of special importance is a
+device-independent coordinate system called ['user space]. It is
+initialized to a default state for each page of a document (['default
+user space]):
+
+* The origin corresponds to the lower-left corner of a page.
+* The user space unit is 1/72 inch.
+
+The graphics state maintains the ['current transformation matrix]
+which maps positions from user space coordinates to device
+coordinates.
+
+[tip 
+The information about coordinate systems and their transformations
+provided here is very minimalistic. The reader is encouraged to look
+at [url_pdfref_chapter Graphics | Coordinate Systems] to understand
+relationships among coordinate spaces in PDF.]
+
+[heading Common Transformation Examples]
+
+[py_example_transformations]
+
+As can be seen in the examples above [lib] provides several
+convenience methods which performs common transformations. They
+internally form a matrix with appropriate values and apply it to the
+current transformation matrix. However, we could likewise calculate a
+transformation matrix ourselves and use [code_canvas_transform].
+
+[heading Top-down Coordinate Space]
+
+We already mentioned that the origin of the default user space
+corresponds to the lower-left corner of a page. We can move it to the
+upper-left corner and reverse the orientation of the y axis like this:
+
+[py_example_topdown]
+
+However, this is not a full-blown solution as texts and images are
+shown upside-down due to the y axis orientation.
+
+[heading Coordinate Systems Summary]
+
+[table
+[[] []]
+[[Examples] [[@samples/jagpdf_doc_coord_systems.pdf __pdficon_small] transformations]]
+[[Coordinate Space Methods] [
+[code_canvas_transform],
+[code_canvas_translate],
+[code_canvas_rotate],
+[code_canvas_scale],
+[code_canvas_skew]
+]]
+[[PDF Reference][[url_pdfref_chapter Graphics | Coordinate Systems]]]
+]
+[endsect]
+
+
+[/ -------------------------------------------------- ]
+[section Images]
+[/ -------------------------------------------------- ]
+
+[lib] supports PNG and JPEG standard formats as well as a native PDF
+image format which allows painting custom images. Before painting an
+image it must be loaded first. A loaded image can be painted multiple
+times anywhere in the document.
+
+[section Standard Image Formats]
+[endsect]
+
+[py_example_image_from_file]
+
+Image DPI is taken into account when the image is painted onto a
+canvas. An image usually specifies its DPI. If it is not so a value of
+[^images.default_dpi] is used (see [ref_profile]).
+
+[section Custom Images]
+
+Refer to [url_pdfref_chapter Graphics, Images, Sample Representation]
+for description of how image sample data is represented.
+
+[py_example_custom_image]
+[endsect]
+
+
+[section Summary]
+
+[table
+[[] []]
+[[Examples] [[@samples/jagpdf_doc_images.pdf __pdficon_small] images]]
+[[Images Reference] [
+class [code_image],
+class [code_imagedef],
+[code_canvas_image],
+[code_document_image_load_file],
+[code_document_image_definition],
+[code_document_image_load]
+]]
+[[PDF Reference][[url_pdfref_chapter Graphics | Images]]]
+]
+[endsect]
+
+[endsect]
+
+
+[/ -------------------------------------------------- ]
+[section Patterns]
+[/ -------------------------------------------------- ]
+
+Pattern color space is a special type of color space which allows painting an
+area of the page with a pattern. A pattern can be either a repeating graphical
+figure or a smoothly varying gradient.
+
+Graphical objects in a pattern are interpreted in the ['pattern coordinate
+space]. Every pattern can specify its ['pattern matrix]. A pattern color space
+is defined as the concatenation of the pattern matrix and the initial coordinate
+space of the [code_canvas] the pattern is used in. Changes to canvas's
+coordinate space does not affect the pattern coordinate space.
+
+[/ -------------------------- ]
+[section:tiling_patterns Tiling Patterns]
+[/ -------------------------- ]
+
+A tiling pattern uses a [code_canvas] to define a ['pattern cell]. Painting an
+area with a tiling pattern tiles the area with the pattern cell. There are two
+categories of tiling patterns: colored and uncolored tiling patterns.
+
+[heading Colored Tiling Patterns]
+
+A colored tiling pattern is a pattern whose canvas defines color for its
+objects. A colored tiling pattern can contain objects painted in different
+colors or it can contain images.
+
+Let's show an example of a colored tiling pattern whose pattern cell comprises
+of a red circle:
+
+[py_example_colored_pattern]
+
+[heading Uncolored Tiling Patterns]
+
+An uncolored tiling pattern does not define any color information for its
+objects. An underlying color space must be specified whenever the pattern color
+space is established.  Also, a color value in the underlying color space must be
+supplied to operations which set an uncolored tiling pattern as the current
+color.
+
+In the following example we will create an uncolored tiling pattern. The pattern
+cell will comprise of a circle again but this time we will not specify any
+color:
+
+[py_example_uncolored_pattern]
+[endsect]
+
+[/ -------------------------- ]
+[section:shading_patterns Shading Patterns]
+[/ -------------------------- ]
+
+Painting an area with a shading pattern results into smooth transition of colors
+across the area. [lib] supports axial, radial and function based shadings.
+
+[py_example_shading_pattern]
+
+[heading Shading Operator]
+
+PDF offers another possibility how to apply a shading pattern. It is called
+['shading operator] and its effect differs from that of establishing the pattern
+color space and using a pattern as the current color:
+
+* the pattern coordinate space is identical to the current user space; the
+  pattern matrix is ignored
+
+* it paints the current clipping path
+
+* the current color is nor used neither altered
+
+
+[py_example_shading_operator]
+[endsect]
+
+[section Patterns Summary]
+
+[table
+[[] []]
+[[Examples] [[@samples/jagpdf_doc_patterns.pdf __pdficon_small] patterns]]
+[[Patterns Reference] [
+section [ref_guide_functions],
+[code_canvas_color_space_pattern],
+[code_canvas_color_space_pattern_uncolored],
+[code_canvas_pattern],
+[code_canvas_pattern1],
+[code_canvas_pattern3],
+[code_canvas_pattern4],
+[code_document_canvas_create],
+[code_canvas_shading_apply],
+[code_document_tiling_pattern_load],
+[code_document_shading_pattern_load],
+[code_document_shading_pattern_load_n]
+]]
+[[PDF Reference][[url_pdfref_chapter Graphics | Patterns]]]
+]
+
+[endsect]
+
+[endsect]
+
+
+[/ -------------------------------------------------- ]
+[section Transparency]
+[/ -------------------------------------------------- ]
+
+[lib] enables to specify a constant opacity value - ['alpha
+constant]. There are two separate alpha constants parameters in the
+graphics state: one for stroking and one for all other painting
+operations.
+
+[py_example_alpha]
+
+[heading Transparency Summary]
+
+[table
+[[] []]
+[[Examples] [[@samples/jagpdf_doc_transparency.pdf __pdficon_small] transparency]]
+[[Images Reference] [[code_canvas_alpha]]]
+[[PDF Reference][[url_pdfref_chapter Transparency | Specifying
+Transparency in PDF | Specifying Shape and Opacity]]]
+]
+
+
+[endsect]
+
+
+[/ -------------------------------------------------- ]
+[section Line Attributes]
+[/ -------------------------------------------------- ]
+
+In this section we will show examples of using graphics state
+parameters that can change the appearance of a stroked path.
+
+[py_example_dashed_line]
+[py_example_line_cap]
+[py_example_line_join]
+[py_example_path_close_join]
+
+[heading Line Attributes Summary]
+
+[table
+[[] []]
+[[Examples] [[@samples/jagpdf_doc_line_attributes.pdf __pdficon_small] line attributes]]
+[[Line Attribute Methods] [
+[code_canvas_line_width],
+[code_canvas_line_dash],
+[code_canvas_line_cap],
+[code_canvas_line_join],
+[code_canvas_line_miter_limit]
+]]
+[[PDF Reference][[url_pdfref_chapter Graphics | Graphics State | Details of Graphics State Parameters]]]
+]
+
+
+[endsect]
+
+
+[endsect]
+
+
+
+
+[/ ###################################################################### ]
+
+[section:text Text]
+
+[/ ###################################################################### ]
+
+[section Font Selection]
+
+[lib] supports the following font types:
+
+* ['Standard 14 Fonts] - A set of Type 1 fonts which needn't be
+  embedded into a PDF document. Using these fonts significantly
+  reduces the size of a PDF document in comparison with other font
+  types. 
+
+* ['TrueType, OpenType] - The OpenType font format is a backward
+  compatible extension to the TrueType font format. TrueType is fully
+  supported including subsetting. As far as OpenType is concerned,
+  there are two flavors:
+
+  * With TrueType outlines - fully supported including subsetting.
+
+  * With PostScript outlines - supported without subsetting.
+
+[note 
+For certain font formats, the PDF specification recommends embedding
+of font files into PDF documents. ['Font subsetting] is a technique
+that embeds only a subset of a font. A font subset is a portion of a
+regular font file that contains information only about the glyphs that
+are actually used in a document. Font subsetting results in smaller
+PDF documents.]
+
+Let's look at the following line which places a string on a page:
+
+[py_example_text_simple]
+
+The text is shown using the current font in the graphics state. As we
+did not specify a font a default one is used. The default font is
+specified by `'fonts.default'` option (see [ref_profile]). The
+following code snippet changes the current font:
+
+[py_example_text_simple_courier]
+
+Now that we have loaded a ['standard font] with
+[code_document_font_load] we can use it anywhere in the document with
+[code_canvas_text_font]. Let's look at the example of loading a font
+file:
+
+[py_example_text_simple_file]
+
+The current font is reset to a default font (i.e `'fonts.default'`) at
+the beginning of each page.
+
+[heading Font Matching]
+
+On Windows, it is possible to select a font by specifying some of its
+attributes:
+
+[py_example_font_matching]
+
+It invokes the Windows system font selection mechanism which selects a
+font from the system font database according to our font
+specification.
+
+
+[heading Font Selection Summary]
+
+[table
+ [[] []]
+ [[Examples] [
+   [@samples/jagpdf_doc_font_selection.pdf __pdficon_small] font selection,
+   [@samples/jagpdf_doc_text-windows-only.pdf __pdficon_small] Windows font matching
+ ]]
+ [[Font Selection Reference] [
+  [code_document_font_load],
+  [code_canvas_text_simple]
+ ]]
+ [[PDF Reference][[url_pdfref_chapter Text]]]
+]
+
+
+[endsect]
+
+
+[section Encoding]
+
+[section Overview]
+
+We should distinguish between the following encoding types:
+
+* ['A character encoding] encodes letters, numerals, and other symbols
+  as [url_codepoints].
+
+* ['A font encoding] is a correspondence between [url_codepoints] and
+  glyph descriptions. Every font has a built-in encoding.
+
+[/ ----------- PDF Reference quote ????? ---------------
+To show a text correctly, a character encoding of a text
+being shown must match a current font's built-in encoding. However,
+PDF allows changing a font's built-in encoding which can be valuable
+for two reasons:
+
+* It permits showing text that is encoded according to any of the
+  various existing conventions. For instance, different operating
+  systems use different standard encodings for Latin text.
+
+* It permits applications to specify how characters selected from a
+  larger character set are to be encoded. Different encodings can
+  select different subsets of the same character set.
+--------------------------]
+
+To show text correctly, the character encoding of text being shown must match
+the current font's built-in encoding. PDF allows changing the font's built-in
+encoding. This can be useful for several reasons like for instance in case of
+text which is encoded by a different encoding.
+
+When a font is loaded by [code_document_font_load] we can change the font
+built-in encoding by using the `'enc'` option. Note, that we must ensure that
+the character set (or at least the subset we use in our document) defined by the
+new encoding is a subset of the character set which is present in the font.
+
+[lib] internally supports a subset of encodings listed
+[url_icu_converter here]. For more details see
+[code_document_font_load].
+
+Refer to [ref_langspecific] for details on how [lib] handles strings passed from
+[ref_python_strings_t Python] and [ref_java_strings_t Java].
+
+[py_example_text_unicode_string]
+
+[endsect]
+
+[section Standard Type 1 Fonts]
+
+The Type 1 font format supports only 8-bit encodings. However, [lib] allows to
+use Unicode text with this type of font.
+
+[py_example_core14_latin2]
+
+[py_example_core14_utf8]
+
+[note
+
+Even though [lib] allows to change the font built-in encoding to UTF-8, we are
+in practice limited to the Latin alphabet, because of the character set used by
+the standard fonts.
+
+]
+
+If no encoding is specified then a font built-in encoding is used. Character
+sets, built-in encodings and other details about the standard 14 fonts can be
+found [@http://partners.adobe.com/public/developer/font/index.html#pcfi here].
+
+
+[endsect]
+
+
+[section TrueType and OpenType Fonts]
+
+The TrueType and OpenType formats support various encodings. We can
+specify any encoding [lib] internally supports.
+
+[py_example_text_ttf_enc8]
+
+[py_example_text_ttf_unicode]
+
+If no encoding is specified then the windows-1252 encoding is used.
+
+[endsect]
+
+
+[section Summary]
+
+[table
+[[] []]
+[[Examples] [[@samples/jagpdf_doc_font_encoding.pdf __pdficon_small] encoding]]
+[[Encoding Reference] [
+[code_document_font_load],
+[code_canvas_text_simple]
+]]
+[[PDF Reference][[url_pdfref_chapter Text]]]
+]
+
+[endsect]
+
+[endsect]
+
+
+
+[section:text_object Text Object]
+
+[section Overview]
+
+[/ ----------- PDF Reference quote partially  ---------------
+A text object consists of operators that can show text strings, move
+the text position, and set [ref_tuttext_state text state]
+parameters. In addition, there are parameters which are defined only
+within a text object and do not persist from one text object to the
+next. These are:
+
+* ['text matrix]
+* ['text line matrix]
+
+The coordinates of text are specified in ['text space]. The
+transformation from text space to user space is defined by a text
+matrix in combination with several text-related parameters. We will
+discuss details of text space in the [ref_tuttext_textspace next
+section]. 
+--------------------------]
+
+So far we have used only a simple method for showing text. We will
+generalize it by introducing a ['text object]. The following line
+should be familiar to us:
+
+[py_example_adv_text_comparison]
+
+A text object encloses a sequence of operations that show text, move
+the text position or adjust the ['text state]. The text state is
+described in detail in section [ref_tuttext_state text state]. Here we
+will mention two of its parameters which are defined only within a
+text object:
+
+* ['Text matrix] - together with some of the text state parameters
+  defines ['text space]
+
+* ['Text line matrix] - captures the value of text matrix at beginning
+  on a line of text.
+
+The text coordinates are interpreted in text space. The transformation
+from text space to user space is specified by the combination of the
+text matrix and several text state parameters. A text-showing
+operation shows the first glyph of a text string at the origin of the
+text space. Initially, the origin of text space corresponds to the
+origin of user space, just translated by values passed to
+[code_canvas_text_start]. The text matrix is updated by both
+text-showing and text position moving operations. Text space is
+described in detail in [url_pdfref_chapter Text | Text Objects | Text
+Space Details]
+
+There are certain restrictions imposed on a text object. Text objects
+cannot be nested. The following table lists canvas operations that can
+appear in a text object:
+
+[table
+[[Category][Description]]
+[[Text State] [All operations described in section [ref_tuttext_state Text State].]]
+[[Text Positioning][[code_canvas_text_translate_line]]]
+[[Text Showing]
+[Showing operations that do not specify coordinates, i.e
+[code_canvas_text], [code_canvas_text_o], [code_canvas_text_r] and
+[code_canvas_text_ro].]
+]
+[[Graphics State][ Any operations modifying graphics state except
+[code_canvas_state_save], [code_canvas_state_restore] and user space
+transformations.]]
+]
+
+[endsect]
+
+[/ ----------- PDF Reference quote partially ---------------
+[section:text_space Text Space]
+
+['Text space] is the coordinate system in which text is shown. It is
+defined by the text matrix and some of the [ref_tuttext_state text
+state parameters] which together determine the transformation from
+text space to user space. Specifically, the origin of the first glyph
+shown by a text-showing operation is placed at the origin of text
+space.
+
+At the beginnig the origin of text space is the same as that of user
+space - just translated by the values passed to
+[code_canvas_text_start]. Text position operations alter the text
+matrix and thereby control the placement of glyphs that are
+subsequently painted. Also, the text-showing operations update the
+text matrix to take into account the displacement of each glyph
+painted as well as any character or word-spacing parameters in the
+[ref_tuttext_state text state].
+
+Additionally, a text object keeps track of a text line matrix which
+captures the value of the text matrix at the beginning on a line of
+text. [code_canvas_text_translate_line] can position text by using a
+text line matrix.
+
+[endsect]
+--------------------------]
+
+
+[section Examples]
+
+So when should we use a text object? Because text operations inside a
+text object update the text matrix a text object is suitable for a
+sequence of text strings like for instance a paragraph of a text.
+
+To illustrate, let's look at the following example
+
+[py_example_adv_text_multiline]
+
+[py_example_adv_text_gr_state]
+
+See other examples of using a text object in the
+[ref_tuttext_fontinfo] section.
+
+[endsect]
+
+
+[section Summary]
+
+[table
+[[] []]
+[[Examples] [[@samples/jagpdf_doc_text_advanced.pdf __pdficon_small] text]]
+[[Text Object Reference] [
+[code_canvas_text_start],
+[code_canvas_text_end],
+[code_canvas_text_translate_line],
+[code_canvas_text], 
+[code_canvas_text_o], 
+[code_canvas_text_r],
+[code_canvas_text_ro]
+]]
+[[PDF Reference][[url_pdfref_chapter Text | Text Objects]]]
+]
+[endsect]
+
+[endsect]
+
+
+[section:state Text State]
+
+[/ ----------- PDF Reference quote ---------------
+The ['text state] comprises of those [ref_graphics_state graphics
+state] parameters that only affect text state.  The text state
+operations can appear outside text objects, and the values they set
+are retained across text objects. Like other graphics state
+parameters, these parameters are initialized to their default values a
+the beginning of each page.
+--------------------------]
+
+The ['text state] is a subset of the [ref_graphics_state graphics
+state] parameters which are related to text operations. The parameters
+are initialized with default values at the beginning of each
+page. Text state changes made by the following operations can appear
+outside a text object and are retained across text objects:
+
+[variablelist
+[[Text Font][We are already familiar with [code_canvas_text_font]
+which sets the the current font.]]
+[[Character Spacing][[py_example_text_charspace]]]
+[[Horizontal Scaling][[py_example_text_scaling]]]
+[[Text Rise][[py_example_text_rise]]]
+[[Text Rendering Mode][[py_example_text_rendering_mode]]]
+]
+
+[heading Text State Summary]
+
+[table
+[[] []]
+[[Examples] [[@samples/jagpdf_doc_text_state.pdf __pdficon_small] text state]]
+[[Text State Reference] [
+[code_canvas_text_character_spacing],
+[code_canvas_text_horizontal_scaling],
+[code_canvas_text_rendering_mode],
+[code_canvas_text_rise],
+[code_canvas_text_font],
+]]
+[[PDF Reference][[url_pdfref_chapter Text | Text State Parameters and Operators]]]
+]
+
+[endsect]
+
+
+[section Glyph Positioning]
+
+[/ ----------- PDF Reference quote ???? ---------------
+PDF allows individual glyph positioning. When showing text we can
+specify additional values for individual glyphs. These values adjust
+the text position. The value is expressed in thousandths of a unit of
+a text space. It is ['subtracted] from the current horizontal
+coordinate. In the default coordinate system, a positive adjustment
+has the effect of moving the next glyph painted to the left.
+--------------------------]
+
+PDF allows individual glyph positioning. When showing a string we can
+specify additional values for individual glyphs. These values adjust
+the text position. The value is expressed in thousandths of a unit of
+text space. It is ['subtracted] from the current horizontal
+coordinate.
+
+[py_example_text_glyph_pos]
+
+[heading Glyph Positioning Summary]
+
+[table
+[[] []]
+[[Examples] [[@samples/jagpdf_doc_glyph_positioning.pdf __pdficon_small] glyph positioning]]
+[[Individual Glyph Positioning Reference] [
+[code_canvas_text_o], 
+[code_canvas_text_ro],
+[code_canvas_text_simple_o], 
+[code_canvas_text_simple_ro]
+]]
+[[PDF Reference][[url_pdfref_chapter Text | Text Objects | Text-Showing Operators]]]
+]
+
+[endsect]
+
+
+[section:info Font Information]
+[template ref_tuttext_fontinfo_summary\ [link jagpdf.usersguide.text.info.summary Summary]]
+
+[section Overview]
+
+An instance of class [code_font] retrieved from
+[code_document_font_load] provides, besides unique font
+identification, also information about the font. Let's show an example
+which explores font properties.
+
+[py_example_text_font_info_font]
+
+[py_example_text_font_info_metrics]
+[endsect]
+
+The result of the above example can be found in the PDF file
+referenced from the [ref_tuttext_fontinfo_summary] of this section.
+
+
+[section Text Alignment]
+
+[py_example_text_font_info_advance]
+
+[endsect]
+
+[section Simple Text Formatting]
+
+In this example we will construct a very primitive text formatter
+capable of various paragraph alignment styles.
+
+[py_example_text_font_formatter_impl]
+
+[py_example_text_font_formatter_use]
+
+[endsect]
+
+[section Summary]
+
+[table
+[[] []]
+[[Examples] [[@samples/jagpdf_doc_font_info.pdf __pdficon_small] font info]]
+[[Individual Glyph Positioning Reference] [
+class [code_font]
+]]
+]
+
+[endsect]
+
+[endsect]
+
+[endsect]
+
+
+
+
+
+
+[/ ###################################################################### ]
+
+[section:interactive Interactive Features]
+
+[/ ###################################################################### ]
+
+
+[/ ---------------------------------------------------------------------- ]
+[section Destinations]
+[/ ---------------------------------------------------------------------- ]
+
+A ['destination] is a view of a document defined by a page number, a
+page location and a zoom factor. It can be associated with outline
+items (see section [ref_guide_interactive_docoutline]) or annotations
+(see section [ref_guide_interactive_annots]).
+
+Functions working with destinations accepts two types of destination:
+
+* a text string defining the destination
+
+* a destination object
+
+[py_example_destination_str]
+
+A destination definition consists of a mode and parameters related
+to that mode. For example, the destination in the example above
+specifies a view of a page with the coordinates (72, 144) positioned
+at the upper-left corner of the window and the content of the page
+magnified to 250%. Refer to [ref_guide_interactive_destref] for more
+details on the destination definition format.
+
+Sometimes a destination can be shared among multiple annotations or
+outline items. To save some space in the produced PDF document it is
+better to create a destination object with
+[code_document_destination_define]:
+
+[py_example_destination_id]
+
+Another reason for using a destination object can be forward link
+annotations (see an example in [ref_guide_interactive_annots]).
+
+
+
+In the next sections we will show how to associate a destination with
+outline items and annotations.
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+[section:doc_outline Document Outline]
+[/ ---------------------------------------------------------------------- ]
+
+A PDF document can optionally include a ['document outline]. It is a
+tree of ['outline items] (sometimes called ['bookmarks]) which allows
+the user to quickly move from one part of the document to another.
+
+[py_example_docoutline_basic]
+
+[py_example_docoutline_hierarchy]
+
+[py_example_docoutline_destinations]
+
+[py_example_docoutline_post]
+
+[heading Summary]
+
+[template docoutline_examples[]
+[@samples/jagpdf_doc_document_outline_basic.pdf __pdficon_small] basic document outline,
+[@samples/jagpdf_doc_document_outline_hierarchy.pdf __pdficon_small] hierarchical document outline,
+[@samples/jagpdf_doc_document_outline_destinations.pdf __pdficon_small] various destinations,
+[@samples/jagpdf_doc_document_outline_post.pdf __pdficon_small] reversed document outline
+]
+
+[table
+[[] []]
+[[Examples] [[docoutline_examples]]]
+[[Document Outline Reference] [
+class [code_documentoutline] 
+]]
+[[PDF Reference][
+[url_pdfref_chapter Interactive Features | Document-Level Navigation | Document Outline]
+]]
+]
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+[section:annotations Annotations]
+[/ ---------------------------------------------------------------------- ]
+
+PDF allows to ['annotate] a location on a page. Clicking such location
+invokes behavior inherent to the nature of the annotation. The
+following sections describe individual annotation types.
+
+[section Link Annotations]
+
+A ['link annotation] can be either a hypertext link to a
+[ref_guide_interactive_dest_t destination] or an action to be
+performed such as resolving a URI. The following sections presents
+examples of link annotations.
+
+[/ --------------------------------- ]
+[section Go To Destination]
+[/ --------------------------------- ]
+
+This section describes how to associate a destination with an area on
+a page. When the users clicks inside that area a PDF viewer
+application changes the document presentation according to the
+destination.
+
+[py_example_annotation_link_dest]
+[endsect]
+
+[/ --------------------------------- ]
+[section Resolve URI]
+[/ --------------------------------- ]
+
+In this section we will show how to associate a URI with an area on a
+page. When the users clicks inside that area a PDF viewer application
+attempts to resolve the URI.
+
+[py_example_annotation_link_uri]
+[endsect]
+
+[/ --------------------------------- ]
+[section Reserved Destinations]
+[/ --------------------------------- ]
+
+In certain cases a destination might not be known when we want to use
+it. For instance, when we process a long document, we want to refer to
+a heading of a section which has not been formatted yet. We do not
+know neither the page nor the location where the heading is going to
+end up. The solution is to reserve an empty destination with
+[code_document_destination_reserve] which can be used in the same way
+as a regular destination object. Later, when the formatting proceeds
+to the point when we know the destination, we can define it with
+[code_document_destination_define_reserved].
+
+[py_example_annotation_link_destfwd]
+[endsect]
+
+[endsect]
+
+
+
+[section Summary]
+
+[template annotation_examples[]
+[@samples/jagpdf_doc_annotation_link_dest.pdf __pdficon_small] destination,
+[@samples/jagpdf_doc_annotation_link_uri.pdf __pdficon_small] URI,
+[@samples/jagpdf_doc_annotation_link_destfwd.pdf __pdficon_small] reserved destination
+]
+
+[table
+[[] []]
+[[Examples] [[annotation_examples]]]
+[[Annotations Reference] [
+[code_page_annotation_uri],
+[code_page_annotation_goto],
+[code_page_annotation_goto_obj]
+]]
+[[PDF Reference][
+[url_pdfref_chapter Interactive Features | Annotations]
+]]
+]
+[endsect]
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+[section:dest_syntax Destination Syntax]
+[/ ---------------------------------------------------------------------- ]
+
+A destination is specified by a string which follows the
+[ref_options_string] format. The following table lists available
+destination modes and corresponding parameters:
+
+[table
+[[Mode][Parameters]]
+[[XYZ][left, top, zoom]]
+[[Fit][]]
+[[FitH][top]]
+[[FitV][left]]
+[[FitR][left, bottom, right, top]]
+[[FitB][]]
+[[FitBH][top]]
+[[FitBV][left]]
+]
+
+For details on individual modes see table ['Destination syntax] in
+[url_pdfref_chapter Interactive Features | Document-Level Navigation |
+Destinations | Explicit Destinations]
+
+The following are examples of valid destination specifications:
+```
+'page=0; mode=XYZ; zoom=.5'
+'mode=Fit'
+'mode=FitBH; top=100'
+```
+
+The [^mode] option is mandatory, other parameters are optional. 
+
+Coordinate values (['left], ['right], ['top] and ['bottom]) are
+expressed in default user space units. If a parameter is not specified
+then the current value of that parameter is retained unchanged. The
+only exception is the ['FitR] mode where not specifying any of the
+parameters may result in unpredictable behavior.
+
+Page numbering is zero based. If the [^page] option is not specified
+then value of [code_document_page_number] is used.
+
+[endsect]
+
+
+[endsect]
+
+
+[/ ###################################################################### ]
+
+[section Encryption]
+
+[/ ###################################################################### ]
+
+[/ ---------------------------------------------------------------------- ]
+[section Overview]
+[/ ---------------------------------------------------------------------- ]
+
+[/ ----------- PDF Reference quote ---------------
+
+A PDF document can be encrypted to protect its contents from
+unauthorized access. [lib] implements PDF's standard security
+handler. It allows ['access permissions] and up to two passwords to be
+specified for a document: an ['owner password] and a ['user
+password]. 
+
+If a user attempts to open an encrypted document that has a user
+password, the consuming application sohuld prompt for a
+password. Correctly supplying either password enables the user to open
+the document, decrypt it, and display it on the screen. If the
+document does not have a user password, no password is requested; the
+application can simply open, decrypt and display the document. Whether
+additional operations are allowed on a decrypted document depends on
+which password (if any) was supplied when the document was opened and
+on any access restrictions that were specified when the document was
+created:
+
+* Opening the document with the correct owner password (assuming it is
+  not the same as the user password) allows full (owner) access to the
+  document. This unlimited access includes the ability to change the
+  document's passwords and access permissions.
+
+* Opening the document with the correct user password (or opening a
+  document that does not have a user password) allows additional
+  operations to be performed according to the user access permissions.
+
+--------------------------]
+
+A PDF document can be encrypted to prevent unauthorized access. [lib]
+implements PDF's standard security handler which allows to specify 
+
+* ['Access permissions]. It is possible to selectively disable certain
+  operations like printing or extracting text from a document.
+
+* ['User password]. When a document has a user password, it must be
+  supplied to be able to view the document and to perform operations
+  allowed by the access permissions.
+
+* ['Owner password]. Supplying an owner password grants unlimited
+  access to the document including changing the passwords and access
+  permissions.
+
+[lib] uses 40-bit encryption keys for PDF 1.3 and lesser and 128-bit
+encryption keys since PDF 1.4. Passwords and access permissions can be
+set via [code_profile].
+
+[py_example_encryption_basic]
+
+[endsect]
+
+
+[/ ---------------------------------------------------------------------- ]
+[section Examples]
+[/ ---------------------------------------------------------------------- ]
+
+[py_example_encryption_pwd]
+
+[py_example_encryption_perm]
+
+[endsect]
+
+
+[/ ---------------------------------------------------------------------- ]
+[section:enc_reference Encryption Options Reference]
+[/ ---------------------------------------------------------------------- ]
+
+The following table lists [ref_profile] options related to
+encryption. All options default to an empty string.
+
+[template permslist[]
+
+Specifies access permissions. The following options are available:
+
+* [^no_print] - Disables printing the document.
+
+* [^no_modify] - Disables modification by operations other than
+  specified by [^no_modify_ex], [^no_forms] and [^no_assemble].
+
+* [^no_copy]
+
+  * (['PDF 1.3] and lesser) - Disables copying or extraction of text
+    and graphics (including for accessibility purposes).
+
+  * (['PDF 1.4]) - Disables copying or extraction of text
+    and graphics by operations other than [^no_extract_accessibility].
+
+* [^no_modify_ex] - Disables modification of text annotations, filling
+  in interactive form fields. If [^no_modify] is specified then it also
+  disables creation or modification of interactive form fields
+  (including signature fields).
+
+* [^no_forms] - (['PDF 1.4]) Disables filling-in of existing
+  interactive form fields (including signature fields).
+
+* [^no_extract_accessibility] - (['PDF 1.4]) Disables copying or
+  extraction for accessibility purposes.
+
+* [^no_assemble] - (['PDF 1.4]) Disables insertion, rotation or
+  deletion of pages and creation of bookmarks and thumbnail images.
+
+* [^no_hires_print] - (['PDF 1.4]) The document can be printed only in
+  150 DPI.
+
+]
+
+[table
+ [[Name][Default][Description]]
+ [[stdsh.pwd_user][no password][User password. At most 32 characters.]]
+ [[stdsh.pwd_owner][no password][Owner password. At most 32 characters.]]
+ [[stdsh.permissions][no restrictions][[permslist]]]
+]
+
+[endsect]
+
+[section Summary]
+
+[table
+[[] []]
+[[Examples] [
+[@samples/jagpdf_doc_encrypted.pdf __pdficon_small] encrypted,
+[@samples/jagpdf_doc_encrypted_pwd.pdf __pdficon_small] passwords,
+[@samples/jagpdf_doc_encrypted_perm.pdf __pdficon_small] user permissions
+]]
+[[PDF Reference][
+[url_pdfref_chapter Syntax | Encryption]
+]]
+]
+
+[endsect]
+
+
+[endsect]
+
+
+[/ ###################################################################### ]
+
+[section Functions]
+
+[/ ###################################################################### ]
+
+PDF supports several types of ['functions]. A function is a numerical
+transformation which can take any number of input numerical values and produce
+any number of output numerical values.
+
+Each function defines its ['domain] which is a set of allowed input values. Some
+functions also define its ['range] which is a set of allowed output values. If a
+value is outside the specified domain (input) or the range (output) then it is
+clipped accordingly.
+
+[lib] supports the following function types
+
+* Type 2 - exponential interpolation functions
+
+* Type 3 - stitching functions
+
+* Type 4 - PostScript calculator functions
+
+In the following sections we will show examples of individual function
+types. The detailed description can be found in [url_pdfref_chapter Syntax |
+Functions].
+
+[heading Type 2]
+[py_functions_type2]
+
+[heading Type 3]
+[Py_functions_type3]
+
+[heading Type 4]
+[py_functions_type4]
+
+For allowed PostScript operators refer to [url_pdfref_chapter Syntax | Functions
+| Type 4 (PostScript Calculator) Functions], table ['Operators in type 4
+functions].
+
+[note [lib] does not verify correctness of the PostScript code. The user is
+responsible for specifying valid PostScript code and also for ensuring that the
+operand stack will contain the correct number of output variables after
+executing the function.]
+
+
+[heading Functions Summary]
+
+[table
+[[] []]
+[[Functions Reference] [
+[code_document_function_2_load],
+[code_document_function_3_load],
+[code_document_function_4_load]
+]]
+[[PDF Reference][[url_pdfref_chapter Syntax | Functions]]]
+]
+
+[endsect]
+
+
+
+[/ ###################################################################### ]
+
+[section Profile]
+
+[/ ###################################################################### ]
+[python]
+
+[/ ---------------------------------------------------------------------- ]
+[section Overview]
+[/ ---------------------------------------------------------------------- ]
+
+A profile is a set of global options that affect the resulting PDF
+document. These options are defined prior document creation and remain
+immutable during the document lifetime. If they are not specified
+explicitly then default values are used. The options are represented
+by the [code_profile] class.
+
+A single profile object can be used for multiple PDF documents. Each
+document holds its copy of the profile so changes to a profile object
+do not affect documents that have been already created with that
+profile.
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+[section Usage]
+[/ ---------------------------------------------------------------------- ]
+[example_profile_creation]
+[example_profile_usage]
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+[section Reference]
+[/ ---------------------------------------------------------------------- ]
+The format of a string or a file passed to
+[code_create_profile_from_file] or [code_create_profile_from_string]
+is one ['keyword=value] option pair per line. Lines starting with [^#]
+are ignored.
+
+Note that the value passed to [code_profile_set] is a string.
+
+The following tables describe available options.
+
+[/ --------------]
+[section General]
+[/ --------------]
+
+[table
+ [[Name][Default][Values][Description]]
+
+ [[doc.version][[^5]][[^2], [^3], [^4], [^5], [^6]][
+   Specifies PDF version 1.[^x]. Generally, [lib] rejects operations
+   that are not supported by a particular version. However, in case of
+   external resources, [lib] performs an automatic adjustment when
+   needed. For instance it might downsample image data or convert a
+   font.
+ ]]
+
+ [[doc.encryption][][[^standard]][
+   Specifies the security handler. Other options related to PDF encryption
+   are described in section [ref_guide_enc].
+ ]]
+
+ [[doc.compressed][[^1]][[^0], [^1]][Whether to compress the document.]]
+]
+
+[endsect]
+
+[/ ------------------]
+[section Initial View]
+[/ ------------------]
+
+[template page_layout_options
+Specifies the initial page layout:
+
+* [^SinglePage] - One page is displayed at a time.
+
+* [^OneColumn] - The pages are displayed in one column (continuous).
+
+* [^TwoColumnLeft] - The pages are displayed in two columns, odd-numbered pages
+                     on the left (continuous facing).
+
+* [^TwoColumnRight] - The pages are displayed in two columns, odd-numbered pages
+                      on the right (continuous facing).
+
+
+]
+
+[template page_mode_options
+Specifies the appearance of the document when opened:
+
+* [^UseNone] - Neither document outline nor thumbnail images visible.
+
+* [^UseOutlines] - Document outline visible.
+
+* [^UseThumbs] - Thumbnail images visible.
+
+* [^FullScreen] - Full-screen mode.
+
+]
+
+[template viewer_preferences
+Controls the viewer application. A semicolon separated list of the following options:
+
+* [^HideToolbar] - Hide tool bars when the document is active.
+
+* [^HideMenubar] - Hide menu bar when the document is active.
+
+* [^HideWindowUI] - Hide user interface elements.
+
+* [^FitWindow] - Resize document's window to fit the size of the first displayed
+                 page.
+
+* [^CenterWindow] - Position the document's window in the center of the screen.
+
+* [^DisplayDocTitle] - Display the document title in the document window's title
+                       bar (see [ref_profile_info], option ['info.title]). If
+                       not specified, then the name of the PDF file is
+                       displayed.
+]
+
+
+[table
+ [[Name][Default][Description]]
+ [[doc.page_layout][[^SinglePage]][[page_layout_options]]]
+ [[doc.page_mode][[^UseNone]][[page_mode_options]]]
+ [[doc.initial_destination][][Specifies the initial document [ref_guide_interactive_dest_t destination].]]
+ [[doc.viewer_preferences][][[viewer_preferences]]]
+]
+
+[endsect]
+
+[/ --------------]
+[section Fonts]
+[/ --------------]
+
+[table
+ [[Name][Default][Values][Description]]
+
+ [[fonts.default][[^standard; name=Helvetica; size=12]][see [code_document_font_load]][
+   A font used when the user does not specify any.
+ ]]
+
+ [[fonts.embedded][[^1]][[^0], [^1]][
+   Whether to embed fonts. In some cases this flag is ignored by [lib]
+   (e.g. because of the font copyright or a PDF Reference
+   recommendation).
+ ]]
+
+ [[fonts.subset][[^1]][[^0], [^1]][Whether to subset fonts.]]
+
+ [[fonts.force_cid][[^1]][[^0], [^1]][
+  (['Advanced]). Whether to specify a font in PDF as a composite font
+  even in case it would be possible to specify it as a simple font (see
+  [url_pdfref_chapter Text | Simple Fonts/Composite Fonts].
+ ]]
+
+ [[fonts.synthesized][[^1]][[^0], [^1]][
+   (['Windows only]). Whether the font matching mechanism is allowed
+   to return a synthesized font.
+ ]]
+
+]
+
+[endsect]
+
+[/ --------------]
+[section Images]
+[/ --------------]
+
+[table
+ [[Name][Default][Values][Description]]
+
+ [[images.default_dpi][[^72]][valid DPI value][
+   DPI used when not specified in an image, see [code_imagedef_dpi].
+ ]]
+
+ [[images.interpolated][[^0]][[^0], [^1]][
+   A default setting for image interpolation. It is used if no value is
+   set by [code_imagedef_interpolate].
+ ]]
+]
+
+[endsect]
+
+[/ --------------]
+[section Info]
+[/ --------------]
+
+The following options allows specifying metadata for the document. A
+value has to be a UTF-8 encoded string. The default value is an empty
+string. For details see [url_pdfref_chapter Document Interchange |
+Metadata | Document Information Dictionary].
+
+[table
+ [[Name][Description]]
+ 
+ [[info.title][The document's title.]]
+ [[info.author][The name of the author of this document.]]
+ [[info.subject][The subject of the document]]
+ [[info.keywords][Keywords associated with the document.]]
+ [[info.creator][
+   The name of the application that created the original document from
+   which the PDF document was converted.
+ ]] 
+]
+
+[endsect] [/ Info]
+
+[endsect]
+
+[endsect]
+
+
+[/ ###################################################################### ]
+
+[section Custom Output Streams]
+
+[/ ###################################################################### ]
+Besides writing the document to a file [lib] allows clients to supply a custom
+handler which receives a stream of generated PDF data. This section describes
+how to implement such custom handler in individual languages.
+
+[heading C++]
+[c++]
+
+Derive your stream class from [^pdf::StreamOut] and implement [^write()] and
+[^close()] methods. In these methods, return non-zero value on failure. The
+final step is to pass an instance of your class to the document creation
+function.
+
+[cpp_example_custom_stream]
+
+[heading C]
+
+Implement [^write()] and [^close()] functions. These functions should return a
+non-zero value on error. Initialize an instance of [^jag_streamout] with
+pointers to these functions and with your custom data and pass it to the
+document creation function.
+
+[c_example_custom_stream]
+
+[heading Python]
+[python]
+
+Derive your stream class from [^jagpdf.StreamOut] and implement [^write()] and
+[^close()] methods. In case of failure you can raise an exception in these
+functions. Pass an instance of your class to the document creation function.
+
+[py_example_custom_stream]
+
+
+[heading Java]
+[c++]
+
+Derive your stream class from [^com.jagpdf.StreamOut] and implement [^write()]
+and [^close()] methods. In case of failure you can throw an exception in these
+functions. Pass an instance of your class to the document creation function.
+
+[java_example_custom_stream]
+
+[endsect]
+
+
+[/ ====================================================================== ]
+[section Error Handling]
+[/ ====================================================================== ]
+
+Generally, there are two categories of errors. 
+
+# [*Runtime errors]. This kind of errors occurs when [lib] cannot
+  allocate an OS resource or if there are no sufficient permissions to
+  perform an operation, etc. Simply put, these errors are triggered by
+  the environment your application is running in and they are usually
+  outside your control. [lib] strives for detecting and reporting such
+  errors.
+
+# [*[lib] incorrect usage]. The basic guideline is: do not count on
+  [lib] detecting this type of errors. Violating preconditions or
+  using [lib] in an undocumented manner results in undefined behavior.
+
+[important
+Any [lib] function might fail because of a potential runtime error. It
+is important to check for runtime errors reported by [lib]. Generally,
+[lib] does not attempt to recover from runtime errors so it can be
+said that any reported error is ['fatal]. If you want to avoid
+malformed documents then absolutely no error can occur during the
+whole PDF document composition.]
+
+The following sections describe how to handle errors in the supported
+languages.
+
+[heading C++] 
+[c++]
+
+You can use either exceptions or error codes. These two variants are
+mutually exclusive - you can use one or the other but not both at
+once.
+
+# [*Exceptions.] All [lib] errors are reported by throwing an instance of
+  [^jag::pdf::Exception] which is derived from [^std::exception].
+
+[cpp_example_error_handling]
+
+# [*Error codes.] It possible to disable exceptions and use error codes
+  instead. Define [^JAG_DO_NOT_USE_EXCEPTIONS] preprocessor symbol when
+  compiling your application and refer to [ref_c_errhandling] for more
+  details. Note that support for error codes in [lib] for C++ is experimental
+  and is not thoroughly tested.
+
+[heading C]
+
+There are several categories of functions.
+
+[c_example_error_handling]
+
+If an error occurs it is stored so that it can be accessed later using
+the following functions:
+```
+jag_Char const* jag_error_msg();
+jag_error jag_error_code();
+void jag_error_reset();
+```
+
+The last non-zero error code can be retrieved from
+[^jag_error_code()]. [^jag_error_msg()] provides a human readable description of
+the problem. The information about the last error can be reset by
+[^jag_error_reset()]. This information is stored in
+[@http://en.wikipedia.org/wiki/Thread-local_storage thread local storage] so
+take this fact into the account when using these functions.
+
+[heading Python] 
+[python]
+
+All [lib] errors are reported by raising an instance of [^jagpdf.Exception]
+which is derived from [^RuntimeError] built-in exception.
+
+[py_example_error_handling]
+
+
+[heading Java]
+[c++]
+
+All [lib] errors are reported by throwing an instance of
+[^com.jagpdf.JagPDFException] which is derived from [^RuntimeException] built-in
+exception.
+
+[java_example_error_handling]
+
+[endsect]
+
+
+[/ ###################################################################### ]
+
+[section:misc Miscellaneous]
+
+[/ ###################################################################### ]
+
+[/ ---------------------------------------------------------------------- ]
+[section  Multithreaded environment]
+[/ ---------------------------------------------------------------------- ]
+
+[lib] enables parallel composition of multiple documents in a single
+process. The only limitation is that the objects returned from [lib]
+cannot be passed among threads. There is one exception to this rule -
+[code_profile] object. A single [code_profile] instance can be passed
+to multiple threads. However, [code_profile] itself does not
+internally implement any synchronization so if you intend to modify a
+[code_profile] instance concurrently you have to ensure synchronized
+access in order to prevent race conditions.
+
+[heading Python]
+
+Python uses [@http://docs.python.org/api/threads.html the Global
+Interpreter Lock] (GIL). In short, it means that only one thread that
+acquired GIL may operate on Python objects or call Python/C API
+functions.
+
+This is not a limitation for [lib]. Whenever the Python interpreter
+makes a call to [lib] it releases GIL and calls the [lib] core code
+which is written in C++ and does not interact with Python at all. When
+the call is finished the interpreter acquires GIL and continues
+executing Python code. As a result, if you are composing documents in
+a single process on multiple threads, despite GIL, the [lib] core code
+can be executed truly concurrently which can improve scalability of
+your application.
+
+[endsect]
+
+
+[/ ---------------------------------------------------------------------- ]
+[section:versioning [lib] Versioning]
+[/ ---------------------------------------------------------------------- ]
+
+[heading Overview]
+
+Versions are denoted using a standard triplet of integers:
+MAJOR.MINOR.PATCH. The basic intent is that MAJOR versions are
+incompatible, large-scale upgrades of the API. MINOR versions retain
+binary compatibility with older minor versions, and changes in the
+PATCH level are perfectly compatible, forwards and backwards.
+
+[heading Run-time Checks]
+
+Use [code_version] to determine the [lib] version at run-time.
+
+[heading Compile-time Checks]
+
+A C/C++ application can be compiled with a different [lib] version
+than it will be actually used in run-time. For that reason,
+compile-time constants are provided.
+
+[heading C/C++ Compile-time Version Constants]
+
+[table 
+[[version][C][C++][Java]]
+[[major][[^jag_this_version_major]][[^jag::pdf::this_version_major]][[^com.jagpdf.this_version_major]]]
+[[minor][[^jag_this_version_minor]][[^jag::pdf::this_version_minor]][[^com.jagpdf.this_version_minor]]]
+[[patch][[^jag_this_version_patch]][[^jag::pdf::this_version_patch]][[^com.jagpdf.this_version_patch]]]
+]
+
+
+[heading Compatibility Examples]
+
+[table
+[[Original Version][New Version][Compatible?][]]
+[[2.2.3][2.2.4][Yes][Compatibility across patch versions is guaranteed.]]
+[[2.2.3][2.2.1][Yes][Compatibility across patch versions is guaranteed.]]
+[[2.2.3][2.3.1][Yes][Compatibility with later minor versions is guaranteed.]]
+[[2.2.3][2.1.7][No][Compatibility with prior minor versions is not guaranteed.]]
+[[2.2.3][3.0.0][No][Compatibility with different major versions is not guaranteed.]]
+[[2.2.3][1.4.7][No][Compatibility with different major versions is not guaranteed.]]
+]
+
+[note While some of the cells say ['no], it is possible that the
+versions may be compatible, depending very precisely upon the
+particular APIs used by the application.]
+
+
+[endsect] [/ Versioning]
+
+[/ ---------------------------------------------------------------------- ]
+[section:opt_string Options String]
+[/ ---------------------------------------------------------------------- ]
+
+Some functions accept an ['options string]. It is a semicolon
+separated list of options. An option can be:
+
+* [^keyword=value] pair, where [^value] is either a scalar value or a
+  comma separated list of values
+
+* standalone [^value]
+
+```
+'value; keyword=value; array=1, 10, 100'
+```
+
+[endsect]
+
+
+
+[endsect]
+
+
+[endsect] [/ User's guide]
+
+
+          
+[/ ###################################################################### ]
+[/ ###################################################################### ]
+
+[section:reference Reference]
+
+[/ ###################################################################### ]
+[/ ###################################################################### ]
+
+[/ ---------------------------------------------------------------------- ]
+[section:overview Overview]
+[/ ---------------------------------------------------------------------- ]
+
+This section provides detailed reference on [lib] API. The following
+areas are described outside this section and are not documented here:
+
+* [ref_errorhandling]
+* [ref_customstreams]
+* [ref_versioning]
+
+Refer to [ref_langspecific] for more details on using [lib] from individual
+programming languages.
+
+[endsect ] [/ Overview]
+
+[/ ------------------------------------- ]
+[section:langspec Language Specific Notes]
+[/ ------------------------------------- ]
+
+Some objects returned by [lib] are reference counted. Such object is
+released when its reference count drops to zero. In some languages
+[lib] clients do not need to care about reference counting as the
+language provides constructs that can handle this task
+automatically. However, for instance C [lib] clients must maintain
+reference count manually.
+
+[section C++]
+
+* All symbols are in [^namespace jag::pdf].
+* All objects retrieved from [lib] are just lightweight proxies that
+  internally hold a reference to the actual object. So copying a [lib]
+  object is cheap.
+
+[endsect]
+
+[section C]
+
+* All symbols are prefixed with [^jag_].
+* Reference counting of objects returned from [lib] must be maintained
+  manually:
+  * Use [^jag_release(obj)] to decrement object's reference count.
+  * Use [^jag_addref(obj)] to increment object's reference count.
+  * Objects returned from [lib] have already incremented reference
+    count so there is no need to call [^jag_addref()] on the
+    retrieved object.
+
+[endsect]
+
+[section Python]
+
+[section Overview]
+
+* All symbols are defined in module [^jagpdf] module.
+* [lib] reference does not state argument types in Python
+  signatures. You can always refer to the corresponding C++ signature
+  - mapping to Python types should be obvious in most cases.
+  * The only non-trivial mapping is from a <pointer to an array,
+    length> C++ argument pair (as for instance
+    [code_canvas_line_dash_t here]) - it is mapped to a Python sequence.
+
+[endsect]
+
+[section Strings]
+[python]
+
+Text can be passed from Python to [lib] using either [^str] or [^unicode] Python
+objects. A [^unicode] object can be passed to [lib] functions which expect a
+UTF-8 encoded string. A [^str] object can be used e.g. for passing 8-bit encoded
+strings. Note that UTF-8 can be represented by [^str] as well.
+
+[py_example_string]
+
+You can check the result here [@samples/jagpdf_doc_py_strings.pdf
+__pdficon_small].
+
+[endsect]
+
+[endsect] [/ Python]
+
+[section Java]
+
+[section Overview]
+
+* All symbols are defined in [^com.jagpdf] namespace.
+  * global functions: [^com.jagpdf.jagpdf.function_name]
+  * classes: [^com.jagpdf.ClassName]
+  * enumerations: [^com.jagpdf.ENUM_TYPE.ENUM_VALUE]
+
+[endsect]
+
+[section Strings]
+[c++]
+Text is passed from Java to [lib] via the Java [^String] type. [^String]
+internally uses UTF-16. That means that currently it is not possible to pass
+e.g. 8-bit encoded text (using [^byte[]]) from Java to [lib], it is always
+UTF-16 encoded.
+
+Whenever a Java [^String] is passed to a [lib] function which expects a UTF-8
+encoded string, it is converted automatically from UTF-16 to UTF-8.
+
+There is a group of text showing functions which expect an input string whose
+encoding corresponds to that of the current font. In such cases [lib]
+automatically converts passed text so that it matches the encoding of the
+current font. The client must only ensure that the characters present in the
+passed string are representable by the font encoding and that they are present
+in the font.
+
+[java_example_string]
+
+You can check the result here [@samples/jagpdf_doc_java_strings.pdf
+__pdficon_small].
+
+[endsect]
+
+[endsect] [/ Java]
+
+[endsect] [/ Language specific Notes]
+
+
+[@JAG_REFERENCE_QBK@]
+
+[endsect]

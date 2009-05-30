@@ -1,0 +1,35 @@
+# Copyright (c) 2005-2009 Jaroslav Gresula
+#
+# Distributed under the MIT license (See accompanying file
+# LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+#
+
+
+[messages=3]
+1 std_sec_handler_rev_perm_clash              The revision of the standard security handler and the permission settings are not compatible.
+2 std_sec_handler_rev_key_len_clash           The revision of the standard security handler and the lenght of the encoding key are not compatible.
+5 page_already_started                        A page has been already started.
+6 page_not_started                            No page has been started. Cannot close.
+7 doc_already_finalized                       The document has been already finalized.
+8 feature_not_supported                       The feature '%1s%' not supported in PDF version 1.%2i% (supported from 1.%3i%).
+9 no_graphics_state_to_pop                    There is no graphics state to restore.
+10 invalid_paint_cmd                          Invalid paint command.
+11 cid_fonts_not_supported                    Composite fonts supported since PDF 1.3.
+13 16bits_since_15                            16 bits per a color component supported since PDF 1.5.
+14 bookmark_outside_page_def                  Cannot create an outline entry outside a page definition.
+15 no_page_for_destination                    The page %1i% referenced from a destination does not exist.
+16 destination_not_defined                    The destination %1i% not defined.
+18 pattern_no_canvas                          The pattern canvas is empty.
+19 cannot_output_font                         Cannot output font %1s%.
+20 no_chars_used_from_font                    Font referenced but no characters were used.
+21 invalid_function_spec                      Invalid function specification.
+23 fn_range_not_set                           Function range not set.
+24 fn_inconsistent_c0_c1                      Inconsistent values of C0 and C1.
+25 fn_no_ps_function_specified                No PostScript function specified.
+26 invalid_shading_spec                       Invalid shading pattern specification.
+27 unknown_shading_type                       Unknown shading pattern type.
+29 shading_invalid_space                      Cannot use this color space for the shading pattern.
+30 incorrect_matrix                           Matrix requires six values.
+31 expected_colored_pattern                   A shading or colored tiling pattern expected.
+32 expected_uncolored_pattern                 An uncolored tiling pattern expected.
+33 invalid_tiling_pattern_spec                Invalid tiling pattern specification.

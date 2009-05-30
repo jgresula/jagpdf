@@ -1,0 +1,4 @@
+[jag]
+build-type = cmake_nightly_release
+srcdir = @CMAKE_SOURCE_DIR@
+

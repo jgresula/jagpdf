@@ -1,0 +1,63 @@
+# Copyright (c) 2005-2009 Jaroslav Gresula
+#
+# Distributed under the MIT license (See accompanying file
+# LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+#
+
+
+[messages=2]
+2 not_png_format                         Supplied stream is not PNG format.
+3 unsupported_image_format                 Unsupported image format.
+4 error_while_processing_png_format      An errorr occurred while processing PNG format: %1s%.
+5 error_unsupported_color_type_in_png    Unsupported color type (%1i%) in PNG format.
+6 png_interlacing_other_than_adam7_not_supported PNG interlacing other than adam7 is not supported.
+7 png_empty_palette                      PNG file has an empty palette.
+
+8 image_mask_dimension_not_defined       Image mask dimensions not defined.
+9 image_mask_bpc_not_defined             Image mask bits per component not defined.
+10 image_mask_data_not_specified         Image mask data not specified.
+13 image_data_not_specified              Image data not specified.
+14 image_dimension_not_defined           Image dimensions not defined.
+15 image_bpc_not_defined                 Image bits per component not defined.
+
+16 typeface_data_not_specified           Typeface data not specified.
+17 unknown_font_format                   Unknown font format.
+18 tt_table_not_found                    TrueType table %1s% not found.
+19 freetype_failed                       FreeType call failed with code %1i%.
+
+20 tt_required_table_missing             Required TrueType font table is missing.
+21 tt_invalid_magic_number               Invalid TrueType font magic number.
+22 tt_file_checksum_failed               Checksum of TrueType font failed.
+23 tt_zero_table_size                    Size of TrueType font table is zero.
+24 tt_wrong_table_size                   Size of TrueType font table is wrong.
+25 tt_cannot_read_table                  Cannot read TrueType font table.
+26 tt_table_checksum_failed              Checksum of TrueType font table failed.
+28 tt_cannot_read                        Reading of TrueType font failed.
+29 tt_no_postscript_name                 PostScript name not defined in TrueType font.
+30 tt_psname_invalid_chars               Invalid character(s) in Postscript name in TrueType font.
+31 tt_inconsistent_loca                  Inconsistent format of TrueType font LOCA table.
+32 tt_name_table_invalid_fmt             Invalid format of TrueType font name table.
+
+33 invalid_font_spec_str                 Error while parsing font spec string.
+34 cannot_find_font                      Cannot find typeface '%1s%'.
+35 default_typeface_not_found            Default typeface not found.
+36 font_file_not_found                   Font file not found.
+37 font_size_not_set                     Font size is not specified.
+38 face_or_name_must_be_set              Neither family name nor font file specified.
+39 face_or_name                          Either only font family or only font file must be specified (not both).
+40 unrecognized_char_enc                 Unrecognized encoding '%1s%'.
+41 enc_not_supported_by_sys_font_mapper  Encoding not supported by Windows font mapping.
+42 font_family_not_present               Font does not define a family name.
+43 invalid_cs_spec                       Invalid color space specification.
+
+44 not_jpeg_format                       Supplied stream is not supported JPEG format.
+45 corrupted_jpeg                        Corrupted JPEG format.
+46 no_color_space_spec                   Color space not specified.
+47 pattern_cs_used_for_image             An image cannot have a pattern color space.
+
+49 invalid_fn_spec                       Invalid function specification.
+50 core_font_with_unicode_enc            Cannot register Adobe core font with a Unicode encoding.
+51 failed_to_load_png                    Failed to load PNG.
+52 unknown_image_type                    Cannot recognize the image format.
+
+53 enc_no_specified_sys_font_mapper      Windows font mapping requires an encoding.

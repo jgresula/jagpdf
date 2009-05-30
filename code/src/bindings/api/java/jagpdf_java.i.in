@@ -1,0 +1,363 @@
+// -*-c++-*-
+
+// Copyright (c) 2005-2009 Jaroslav Gresula
+//
+// Distributed under the MIT license (See accompanying file
+// LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+//
+
+
+%include "@CMAKE_CURRENT_SOURCE_DIR@/../jagpdf_core_prologue.i"
+
+//
+// - A Java exceptions thrown in a director callback is not propagated to
+//   C++. Instead the exception is handled once the program flow returns to
+//   JVM. The problem is that a Java callback can retrieve another call from C++
+//   without giving JVM a chance to handle previously thrown exception.
+//
+
+
+//
+// [inserted into the intermediary JNI class]
+//
+// automatically loads the native library
+//
+%pragma(java) jniclasscode=%{
+     static {
+         String native_lib = "jagpdf_java-@JAGPDF_VERSION_MAJOR@.@JAGPDF_VERSION_MINOR@";
+         try {
+             System.loadLibrary(native_lib);
+         } catch(UnsatisfiedLinkError e) {
+             System.err.println("Native library '" + native_lib + "' failed to load.\n" + e);
+             System.exit(1);
+         }
+     }
+%}
+
+
+// ------------------------------------------------------------
+//                           strings
+//
+// In future we might want to accept other types than String through 'char
+// const*' (e.g. byte[]). For that reason, all 'char const*' arguments are
+// converted to Object.
+//
+%typemap(jni) char *               "jobject"
+%typemap(jtype) char *             "Object"
+%typemap(jstype) char *            "Object"
+
+// this RAII class prevents memory leak when the native function throws an
+// exception, see: http://thread.gmane.org/gmane.comp.programming.swig/14296
+%fragment("CharFreeArgClass", "header") {
+    class CharFreeArg {
+        JNIEnv *m_jenv;
+        const char *m_arg;
+        jstring m_jarg;
+    public:
+        CharFreeArg(JNIEnv *jenv) : m_jenv(jenv), m_arg(0), m_jarg(0) {}
+        void setup(jstring jarg, const char *arg) {
+            m_arg = arg;
+            m_jarg = jarg;
+        }
+        ~CharFreeArg() {
+            if (m_arg)
+                JCALL2(ReleaseStringUTFChars, m_jenv, m_jarg, (const char *)m_arg);
+        }
+    };
+ }
+     
+//
+%typemap(in, noblock=1, fragment="CharFreeArgClass") char * (CharFreeArg
+                                                             tmpCharFreeArg(jenv)){
+  $1 = 0;
+  if ($input) {
+      jclass string_clazz = jenv->FindClass("java/lang/String");
+      if (JNI_TRUE == jenv->IsInstanceOf($input, string_clazz))
+      {
+          $1 = ($1_ltype)JCALL2(GetStringUTFChars, jenv, (jstring)$input, 0);
+          tmpCharFreeArg.setup((jstring)$input, $1);
+          if (!$1) return $null;
+      }
+      else
+      {
+          // TBD in future
+//           jclass byte_clazz = jenv->FindClass("[B");
+//           if (JNI_TRUE == jenv->IsInstanceOf($input, byte_clazz))
+//           {
+//               // TBD
+//           }
+
+          jclass clazz = jenv->FindClass("java/lang/IllegalArgumentException");
+          jenv->ThrowNew(clazz, "String argument expected.");
+          return $null;
+      }
+  }
+}
+
+%typemap(freearg, noblock=1) char * ""
+
+
+
+// ------------------------------------------------------------
+//                      array typemaps
+//
+%include "arrays_java.i"
+%define JAVA_ARRAY_TO_C_ARRAY(ctype, type, name)
+%apply ctype[] {type const* name}
+%enddef
+
+// The following templates are copied from arrays_java.i and modified so that $1
+// is explicitly casted to signed char.
+//
+// The reason is that jag::Byte (unsigned char) is mapped to Java short (i.e it
+// represents a character). We need to use typemap for signed char which is
+// mapped to Java byte.
+%typemap(in) signed char[] (jbyte *jarr)
+%{  if (!SWIG_JavaArrayInSchar(jenv, &jarr, (signed char **)&$1, $input)) return $null; %}
+
+%typemap(argout) signed char[ANY], signed char[]
+%{ SWIG_JavaArrayArgoutSchar(jenv, jarr$argnum, (signed char*)$1, $input); %}
+
+
+// apply array typemaps
+JAVA_ARRAY_TO_C_ARRAY(double, jag::Double, array_in);
+JAVA_ARRAY_TO_C_ARRAY(unsigned int, jag::UInt, array_in);
+JAVA_ARRAY_TO_C_ARRAY(signed char, jag::Byte, array_in);
+JAVA_ARRAY_TO_C_ARRAY(int, jag::Int, array_in);
+JAVA_ARRAY_TO_C_ARRAY(unsigned int, jag::Function, array_in);
+JAVA_ARRAY_TO_C_ARRAY(int, jag::Int, positions);
+JAVA_ARRAY_TO_C_ARRAY(double, jag::Double, offsets);
+
+
+
+
+// ------------------------------------------------------------
+//                       directors
+//
+
+%module(directors="1") jagpdf
+%feature("director") jag::apiinternal::StreamOut;
+%insert("runtime") %{
+// there are threading issues with directors, see
+// - http://www.swig.org/Doc1.3/Java.html#java_directors_threading
+// - http://thread.gmane.org/gmane.comp.programming.swig/12916/focus=12923
+//
+// since swig 1.3.36, it is enough to define
+// SWIG_JAVA_ATTACH_CURRENT_THREAD_AS_DAEMON, earlier versions use the following
+// trick.
+//
+//#define AttachCurrentThread AttachCurrentThreadAsDaemon
+
+// IMPORTANT
+// ---------
+// Directors are always called on the same thread as the incoming JagPDF JNI
+// call (we do not create any native threads). JNIEnv is a pointer to a thread
+// local storage. Attaching a thread is a no-op if the thread was already
+// attached (which is always the case). So it seems there is no need to call
+// DetachCurrentThread() as some else will do it.
+//
+// do not detach the current thread as there is a bug in 1.4.2 in Linux/Windows
+#define SWIG_JAVA_NO_DETACH_CURRENT_THREAD
+%}
+
+
+//
+// When the director enters C++ we need to acquire a global reference to prevent
+// the director from being collected. When leaving C++, a weak reference is
+// acquired.
+//
+// The C++ code that gets a StreamOut instance is required to follow its
+// IRefCounted semantics. The reference counting implementation in that class
+// takes care of acquiring the appropriate java reference type.
+//
+%wrapper %{
+
+namespace
+{
+  // this class is needed in order to retrieve JNIEnv pointer from a director
+  // via its protected nested class JNIEnvWrapper
+  class MyJavaReference : public Swig::Director
+  {
+  public:
+      static void make(Swig::Director* director, bool weak)
+      {
+          // true ... weak global reference
+          // false .. global reference
+          Swig::Director::JNIEnvWrapper jnienv(director);
+          JNIEnv *env = jnienv.getJNIEnv();
+          jobject self = director->swig_get_self(env);
+          director->swig_java_change_ownership(env, self, weak);
+          if (self) env->DeleteLocalRef(self);
+      }
+
+      static void check_error(Swig::Director* director)
+      {
+          Swig::Director::JNIEnvWrapper jnienv(director);
+          JNIEnv *env = jnienv.getJNIEnv();
+
+          if (JNI_TRUE == env->ExceptionCheck())
+          {
+              throw std::runtime_error("Call to StreamOut failed.");
+          }
+      }
+  };
+}
+
+
+void jag::apiinternal::StreamOut::AddRef()
+{
+    if (m_counter.addref())
+    {
+        // director enters C++ realm
+        Swig::Director *d = dynamic_cast<Swig::Director*>(this);
+        assert(d && "should never fail");
+        MyJavaReference::make(d, false);
+    }
+}
+
+void jag::apiinternal::StreamOut::Release()
+{
+    if (m_counter.release())
+    {
+        // director leaves C++ realm
+        Swig::Director *d = dynamic_cast<Swig::Director*>(this);
+        assert(d && "should never fail");
+        MyJavaReference::make(d, true);
+    }
+}
+
+// throws a C++ exception if there is a pending java exception
+void jag::apiinternal::StreamOut::check_error()
+{
+    Swig::Director *d = dynamic_cast<Swig::Director*>(this);
+    assert(d && "should never fail");
+    MyJavaReference::check_error(d);
+}
+
+%} // %wrapper
+
+
+
+// ------------------------------------------------------------
+//                 director, write method
+
+
+%typemap(jni) (void const* data_in, jag::ULong length) "jbyteArray"
+%typemap(jtype) (void const* data_in, jag::ULong length) "byte[]"
+%typemap(jstype) (void const* data_in, jag::ULong length) "byte[]"
+%typemap(directorin,descriptor="[B") (void const* data_in, jag::ULong length)
+%{
+    $input=jenv->NewByteArray($2);
+    // NewByteArray might fail with OutOfMemoryException
+    if (JNI_TRUE == jenv->ExceptionCheck())
+    {
+        // prints the pending exception to stderr and clears it!
+        //jenv->ExceptionDescribe();
+        return $null;
+    }
+    jenv->SetByteArrayRegion($input, 0, $2, static_cast<jbyte const*>($1));
+%}
+%typemap(javadirectorin) (void const* data_in, jag::ULong length) "$jniinput"
+
+
+ // The following two typemaps are for Java -> C++ direction. The implementation
+// of callback methods in C++ throws an exception, so we do not need to do any
+// conversions here
+
+// jni -> c++
+%typemap(in) (void const* data_in, jag::ULong length)
+%{
+    $1 = 0;
+    $2 = 0;
+    // unused argument;
+    (void)$input;
+%}
+
+// java -> jni
+%typemap(javain) (void const* data_in, jag::ULong length) "null"
+
+
+// ---------------------------------------------------------------------------
+
+// we must use 'type unsafe' enums as some methods
+%include "enumtypeunsafe.swg"
+%javaconst(1);
+%rename(finalize_doc) jag::IDocument::finalize;
+
+%header
+%{
+#include <pdflib/cfgsymbols.h>
+%}
+
+%init
+%{
+    // Java String is internally UTF-16. When a JagPDF function with char const*
+    // parameter is called, String is converted automatically to UTF-8 by SWIG
+    // and the result it passed to JagPDF. That means that it is impossible (or
+    // at least very hard) to get other encodings (ISO-8859, Windows codepages),
+    // which is important for 8-bit encoded fonts.
+    //
+    // To work around this an internal global variable is set that says that
+    // every text that comes to JagPDF is UTF-8 encoded.
+    namespace
+    {
+      struct AllInTextIsUTF8
+      {
+          AllInTextIsUTF8() {
+              jag::pdf::s_default_text_encoding = "utf-8";
+          }
+      };
+
+      AllInTextIsUTF8 m_all_in_text_is_utf8;
+    }
+%}
+
+
+// ------------------------------------------------------------
+//                      exceptions
+//
+// see http://java.sun.com/docs/books/jni/html/exceptions.html
+
+%insert("runtime") %{
+    void jag_throw_java_exception(JNIEnv* jenv, char const* msg)
+    {
+        jclass clazz = jenv->FindClass("com/jagpdf/JagPDFException");
+        if (!clazz)
+            return; // there is a pending exception
+
+        jenv->ThrowNew(clazz, msg);
+        jenv->DeleteLocalRef(clazz);
+    }
+%}
+
+%exception {
+    try
+    {
+        $action
+    }
+    catch(jag::exception const& exc)
+    {
+        jag::exception_msg_formatter fmt(exc);
+        jag_throw_java_exception(jenv, fmt.c_str());
+        return $null;
+    }
+    catch (std::exception const &exc)
+    {
+        jag_throw_java_exception(jenv, exc.what());
+        return $null;
+    }
+}
+
+
+
+// ---------------------------------------------------------------------------
+%pragma(java) modulecode=%{
+    static public int this_version_major = @JAGPDF_VERSION_MAJOR@;
+    static public int this_version_minor = @JAGPDF_VERSION_MINOR@;
+    static public int this_version_patch = @JAGPDF_VERSION_PATCH@;
+%}
+
+
+
+%include "@CMAKE_CURRENT_SOURCE_DIR@/../jagpdf_core.i"
+

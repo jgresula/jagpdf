@@ -1,0 +1,72 @@
+                        JagPDF Installation
+                       =====================
+
+This file is a shortened version of the detailed installation instructions
+provided at <http://jagpdf.org/doc/jagpdf/installation.htm>.
+
+
+Installation from Source
+========================
+
+Currently supported platforms are x86/Linux and x86/Windows. More recent
+versions of GCC and MSVC are supported.
+
+
+Prerequisites
+-------------
+Required: CMake, FreeType, Boost, ICU, zlib, libpng.
+Optional: Python, SWIG, GCC-XML, Java JDK.
+
+
+Installation
+------------
+JagPDF uses the CMake build system (http://www.cmake.org).
+
+Linux:
+  tar -xjf jagpdf-M.m.p.src.tar.bz2
+  mkdir jagpdf-M.m.p-build
+  cd jagpdf-M.m.p-build
+  cmake [options] ../jagpdf-M.m.p
+  make 
+  make install
+
+
+Windows:
+  unzip jagpdf-M.m.p.src.zip
+  mkdir jagpdf-M.m.p-build
+  cd jagpdf-M.m.p-build
+  /path/to/visual-studio/VC/bin/vcvars32.bat
+  cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release [opts] ../jagpdf-M.m.p
+  nmake
+  nmake install
+
+
+Options
+-------
+
+Languages:
+ BUILD_C                 build JagPDF for C/C++ [ON]
+ BUILD_PYTHON            build JagPDF for Python [ON]
+ BUILD_JAVA              build JagPDF for Java [ON]
+
+Installation:
+ CMAKE_INSTALL_PREFIX    installation prefix
+ INCLUDE_INSTALL_DIR     where to install JagPDF C/C++ include files
+ LIB_INSTALL_DIR         where to install JagPDF C/C++ and Java libraries
+ PYTHON_INSTALL_DIR      where to install Python modules
+
+Configuration:
+ JAVA_HOME               path to Java JDK
+ PYTHON_HOME             path to Python
+
+Miscellaneous:
+ CMAKE_CXX_COMPILER      C++ compiler
+ CMAKE_C_COMPILER        C compiler
+ CMAKE_BUILD_TYPE        build type
+
+
+Testing
+-------
+  make unit-tests      # JagPDF internals
+  make apitests        # public API tests
+

@@ -1,0 +1,30 @@
+
+
+Special Images
+--------------
+<http://en.wikipedia.org/wiki/Standard_test_image>
+
+lena.jpg                 - ordinary
+lena_srgb.jpg            - sRGB specified in EXIF
+lena_uncalibrated.jpg    - no color space specified in EXIF
+lena_be_srgb.jpg         - sRGB specified in EXIF (big endian)
+lena_be_uncalibrated.jpg - no color space specified in EXIF (big endian)
+lena_alpha.png           - alpha channel
+lena_96dpi.jpg           - 96dpi, no EXIF
+lena_nodpi.jpg           - no dpi set
+lena_gray_nodpi.jpg      - grayscale, no dpi set
+mandrill_cmyk.jpg        - cmyk
+mandrill_cmyk_icc.jpg    - cmyk, embedded icc
+png_test_suite/          - <http://www.schaik.com/pngsuite/>
+
+
+Tools for EXIF manipulation
+---------------------------
+ - to extract EXIF information:
+   <http://svn.openstreetmap.org/applications/editors/pyosmeditor/EXIF.py>
+ - deletes (partially) EXIF, copy EXIF from one file to another, ..
+   jhead <http://www.sentex.net/~mwandel/jhead/>
+ - EXIF field modification TC plugin (Files|Change Attributes):
+   <http://www.totalcmd.net/plugring/wdx-jpg-comment.html>
+ - JPEG lossless Rotation, plugin for IrfanView, allows rotation, dpi change, ..
+

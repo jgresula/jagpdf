@@ -1,0 +1,94 @@
+<build xmlns:jag="http://bitten.gresula.org/tools/jag"
+       xmlns:svn="http://bitten.cmlenz.net/tools/svn"
+       xmlns:sh="http://bitten.cmlenz.net/tools/sh">
+
+
+  <step id="checkout, cleanup" description="Checkout source from repository">
+    <svn:checkout url="svn+jagbuildssh://SVNUser@jarda-home/"
+                  path="${path}" revision="${revision}" />
+    <jag:bjam targets="/root//stage-clean"/>
+  </step>
+
+
+  <step id="api generator" description="Generates public api">
+    <jag:bjam targets="/code//api-files" cfg="-a"/>
+  </step>
+  
+
+  <!-- debug configuration -->
+  <step id="[debug] build, install" description="Install debug binaries">
+    <jag:bjam targets="/root//dist-clean"/>
+    <jag:bjam targets="/code//dist-check-all" cfg="debug"/>
+  </step>
+  
+  <step id="[debug] internal c++ tests" description="Internal unit test">
+    <jag:bjam targets="/unittests" cfg="debug"/>
+  </step>
+  
+  <step id="[debug] api tests" description="Unit test of debug configuration">
+    <jag:bjam targets="/apitest//apitest-cbased"
+              cfg="debug" toolsets="all_toolsets"/>
+    <jag:bjam targets="/apitest/py" cfg="debug"/>
+  </step>
+  
+  <step id="[debug] c/c++ tarball" description="Create core tarball">
+    <jag:bjam targets="/root//dist-clean" />
+    <jag:bjam targets="/code//tarball-jagpdf" cfg="debug"/>
+  </step>
+
+  <step id="[debug] python tarball" description="Create c/c++ tarball">
+    <jag:bjam targets="/root//dist-clean" />
+    <jag:bjam targets="/code//tarball-pyjagpdf" cfg="debug"/>
+  </step>
+
+
+
+<!-- release configuration -->
+  <step id="[release] build C/C++" description="Install release binaries">
+    <jag:bjam targets="/code//build-c" cfg="release,build-type=public-build"/>
+  </step>
+
+  <step id="[release] internal c++ tests" description="Internal unit test">
+    <jag:bjam targets="/unittests" 
+              cfg="release,codecheck=memory,build-type=public-build"/>
+  </step>
+
+  <step id="[release] build Python versions" description="Install release binaries">
+    <jag:bjam targets="/code//build-py" 
+              cfg="release,python=2.5,python=2.4,python=2.6,build-type=public-build"/>
+  </step>
+
+  <step id="[release] api test" description="Unit test of release configuration">
+    <!--  test c/c++ api with codecheck -->
+    <jag:bjam targets="/root//dist-clean" />
+    <jag:bjam targets="/code//dist-check-c" cfg="release,build-type=public-build"/>
+    <jag:bjam targets="/apitest//apitest-cbased"
+              cfg="release,codecheck=memory" toolsets="all_toolsets"/>
+    <!--  test python 2.5 api with codecheck -->
+    <jag:bjam targets="/root//dist-clean" />
+    <jag:bjam targets="/code//dist-check-py" cfg="release,python=2.5,build-type=public-build"/>
+    <jag:bjam targets="/apitest/py" cfg="release,codecheck=memory"/>
+    <!--  test python 2.4, 2.6 api without codecheck -->
+    <jag:bjam targets="/root//dist-clean" />
+    <jag:bjam targets="/code//dist-check-py" cfg="release,python=2.4,build-type=public-build"/>
+    <jag:bjam targets="/apitest/py" cfg="release"/>
+    <jag:bjam targets="/root//dist-clean" />
+    <jag:bjam targets="/code//dist-check-py" cfg="release,python=2.6,build-type=public-build"/>
+    <jag:bjam targets="/apitest/py" cfg="release"/>
+  </step>
+ 
+  <step id="[release] c/c++ tarball" description="Create c/c++ tarball">
+    <jag:bjam targets="/root//dist-clean" />
+    <jag:bjam targets="/code//tarball-jagpdf" cfg="release,build-type=public-build"/>
+  </step>
+
+  <step id="[release] python tarballs" description="Create python tarballs">
+    <jag:bjam targets="/root//dist-clean" />
+    <jag:bjam targets="/code//tarball-pyjagpdf" cfg="release,python=2.5,build-type=public-build"/>
+    <jag:bjam targets="/root//dist-clean" />
+    <jag:bjam targets="/code//tarball-pyjagpdf" cfg="release,python=2.4,build-type=public-build"/>
+    <jag:bjam targets="/root//dist-clean" />
+    <jag:bjam targets="/code//tarball-pyjagpdf" cfg="release,python=2.6,build-type=public-build"/>
+  </step>
+
+</build>

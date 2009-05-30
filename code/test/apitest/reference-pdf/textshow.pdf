@@ -1,0 +1,54 @@
+%PDF-1.5
+%ØååØ
+1 0 obj<</Length 190>>stream
+/fn1 10 Tf BT 20 20 Td (classic label) Tj ET BT 20 40 Td (label as a range) Tj ET BT 20 60 Td [(label) -1000 ( with offsets)] TJ ET BT 20 80 Td [(label) -1000 ( with offsets - range)] TJ ET 
+endstream
+endobj
+
+2 0 obj<</Length 348>>stream
+BT 20 20 Td /fn1 10 Tf (this is line #1) Tj 0 12 Td (this is line #2) Tj ET BT 20 50 Td (this is line #1) Tj 0 12 Td (this is line #2) Tj ET BT 20 80 Td [(this) -1000 ( is ) -200 (line #1)] TJ 0 12 Td [(this) -1000 ( is ) -200 (line #2)] TJ ET BT 20 110 Td [(this) -1000 ( is ) -200 (line #1)] TJ 0 12 Td [(this) -1000 ( is ) -200 (line #2)] TJ ET 
+endstream
+endobj
+
+3 0 obj<</Font <</fn1 4 0 R>>>>
+endobj
+
+5 0 obj<</Type/Page/Parent 6 0 R/MediaBox[0 0 200 100]/Contents 1 0 R/Resources 3 0 R>>
+endobj
+
+7 0 obj<</Font <</fn1 4 0 R>>>>
+endobj
+
+8 0 obj<</Type/Page/Parent 6 0 R/MediaBox[0 0 140 160]/Contents 2 0 R/Resources 7 0 R>>
+endobj
+
+6 0 obj<</Type/Pages/Count 2/Kids[5 0 R 8 0 R]>>
+endobj
+
+9 0 obj<</Type/Catalog/Pages 6 0 R>>
+endobj
+
+4 0 obj<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>
+endobj
+
+10 0 obj<</CreationDate (D:20090525222936)/Producer (JagPDF 1.3.0, http://jagpdf.org            )>>
+endobj
+
+xref
+0 11
+0000000000 65535 f 
+0000000015 00000 n 
+0000000253 00000 n 
+0000000649 00000 n 
+0000001023 00000 n 
+0000000689 00000 n 
+0000000921 00000 n 
+0000000785 00000 n 
+0000000825 00000 n 
+0000000978 00000 n 
+0000001086 00000 n 
+trailer
+<</Size 11/Root 9 0 R/Info 10 0 R/ID[<c08b63f2f5332730fef6d29dc22e853a> <c08b63f2f5332730fef6d29dc22e853a>]>>
+startxref
+1194
+%%EOF

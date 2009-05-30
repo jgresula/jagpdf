@@ -1,0 +1,9 @@
+This directory contains files which are generated. The reason, that they are
+here and not in the build directory, is that this enables to build JagPDF even
+on platforms without 3rd party tools (like gccxml or python) that are required
+to generate these files.
+
+If CMake detects a required tool, then the files are generated to the build
+directory and the files here are updated only if they differ.
+
+If there isn't the required tool, the files are copied to the build directory.

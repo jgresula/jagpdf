@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Copyright (c) 2005-2009 Jaroslav Gresula
+# 
+# Distributed under the MIT license (See accompanying file
+# LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+#
+
+# inspired by KDE
+# http://websvn.kde.org/trunk/KDE/kdelibs/configure?view=markup
+
+
+echo "
+JagPDF uses the CMake (http://www.cmake.org) build system instead of configure.
+CMake uses different options than configure, but some have direct equivalents:
+
+    --prefix=<dir>       : -DCMAKE_INSTALL_PREFIX:PATH=<dir>
+    --includedir=<dir>   : -DINCLUDE_INSTALL_DIR:PATH=<dir>
+    --libdir=<dir>       : -DLIB_INSTALL_DIR:PATH=<dir>
+
+The CMake equivalent of the standard configure mechanism is
+
+ cmake [options] <src-dir>; make; make install
+
+JagPDF requires CMake 2.6+, version 2.6.3 or later is recommended. For more
+information visit http://jagpdf.org/doc/jagpdf/installation.htm."
+
+echo ""

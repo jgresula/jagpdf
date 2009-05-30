@@ -1,0 +1,127 @@
+/*=============================================================================
+
+  Copyright (c) 2005-2009 Jaroslav Gresula
+
+  Distributed under the MIT license (See accompanying file
+  LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+
+  Acknowledgments:
+
+  This css is based on ideas from stylesheets from Joel de Guzman
+  and Rene Rivera.
+
+=============================================================================*/
+
+/* http://colorschemedesigner.com/#3L11Tw0w0w0w0 */
+
+body { 
+    color: #202020; 
+    background-color: #ffffff;
+    margin: 0px;
+    padding: 0px;
+}
+
+body, td {
+    font-family: Arial, Geneva, Helvetica, sans-serif;
+}
+
+h1, h2, h3, b, a, strong {
+    color: #1240AB;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #1240AB;
+    text-decoration: underline;
+}
+
+.nobots span
+{
+    display : none;
+}
+
+
+/*=============================================================================
+                                    Page Header
+*/
+
+#heading {
+/*     margin: 0em ; */
+    margin: 0em 0em 0em 0em ;
+/*     background: #3a88cc; */
+    background: #4671d5;
+    border-bottom: #000000 solid 1px;
+    height: 50px;
+    padding: 0em 0em 0em 0em ;
+}
+
+#heading img {
+/*     margin: 8px 0px 0px 1em; */
+    margin: 0px 0px 0px 0em;
+}
+
+
+/*=============================================================================
+                                    Headings
+*/
+
+h1, h2, h3, h4, h5, h6
+{
+    text-align: left;
+
+/*     font-family: 'Trebuchet MS', sans-serif; */
+    background-color: #f2f2f2;
+    font-weight: normal;
+/*     color: #20435c; */
+    border-bottom: 1px solid #ccc;
+/*     margin: 20px -20px 10px -20px; */
+    padding: 9px 0 9px 10px;
+}
+
+/* h1 { font: bold 150% sans-serif } */
+/* h2 { font: bold 140% sans-serif } */
+/* h3 { font: bold 130% sans-serif } */
+/* h4 { font: bold 120% sans-serif } */
+/* h5 { font: bold italic 110% sans-serif } */
+/* h6 { font: bold italic 100% sans-serif } */
+/* h1 { font: bold 145% sans-serif } */
+/* h2 { font: bold 135% sans-serif } */
+/* h3 { font: bold 125% sans-serif } */
+/* h4 { font: bold 115% sans-serif } */
+/* h5 { font: bold italic 105% sans-serif } */
+/* h6 { font: bold italic 95% sans-serif } */
+
+/* h1 { font: bold 140% sans-serif } */
+/* h2 { font: bold 130% sans-serif } */
+/* h3 { font: bold 120% sans-serif } */
+/* h4 { font: bold 110% sans-serif } */
+/* h5 { font: bold 100% sans-serif } */
+/* h6 { font: bold italic 100% sans-serif } */
+
+h1 { margin-top: 0; font-size: 200%; }
+h2 { font-size: 160%; }
+h3 { font-size: 140%; }
+h4 { font-size: 120%; }
+h5 { font-size: 110%; }
+h6 { font-size: 100%; }
+
+
+
+
+
+/*=============================================================================
+                                    Images
+*/
+
+span.inlinemediaobject img
+{
+    vertical-align: middle;
+}
+
+/* no border around images */
+img
+{
+    border-width: 0px;
+}
+
+

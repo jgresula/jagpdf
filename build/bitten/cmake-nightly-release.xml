@@ -1,0 +1,29 @@
+<build xmlns:jag="http://bitten.gresula.org/tools/jag"
+       xmlns:svn="http://bitten.cmlenz.net/tools/svn"
+       xmlns:c="http://bitten.cmlenz.net/tools/c"
+       xmlns:sh="http://bitten.cmlenz.net/tools/sh">
+
+  <step id="update">
+    <svn:update revision="${revision}" dir="${jag.srcdir}"/>
+  </step>
+
+  <step id="clean">
+    <c:make args="-s" target="clean"/>
+  </step>
+
+  <step id="build and dist">
+    <c:make args="-s" target="all"/>
+  </step>
+
+  <step id="unit tests">
+    <c:make args="-s" target="unit-tests"/>
+  </step>
+
+  <step id="api tests">
+    <c:make args="-s" target="apitests-py"/>
+    <c:make args="-s" target="apitests-cpp"/>
+    <c:make args="-s" target="apitests-c"/>
+    <c:make args="-s" target="apitests-java"/>
+  </step>
+
+</build>

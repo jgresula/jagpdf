@@ -1,0 +1,28 @@
+Changes in JagPDF 1.3.0 (30 May 2009)
+- JagPDF relicensed under the MIT license.
+- Added transparent Unicode support for core fonts.
+- Added initial document view options.
+- Fixed occasional Java memory leak.
+- Fixed crash when using a pattern without setting pattern color space first.
+- Fixed crash when requesting width of core symbol font glyphs.
+
+Changes in JagPDF 1.2.0 (27 March 2009)
+- Added Java support.
+- Added several improvements related to custom output handlers.
+- [Python] Errors are now reported by raising jagpdf.Exception. To ensure backward
+  compatibility, it is derived from RuntimeError, which was used previously.
+- [C/C++] Compilation in a 64-bit address model deliberately issues a
+  compilation error.
+- Fixed race condition in the options parser.
+
+Changes in JagPDF 1.1.0 (5 November 2008)
+- Added patterns:
+  - colored, uncolored tiling patterns
+  - axial, radial and function based shading patterns
+- Added functions - Type 2, Type 3 and Type 4.
+- Added elliptical arcs (center and endpoint parametrizations).
+- Added autodetection of standard image formats.
+- Python 2.6 support.
+
+Changes in JagPDF 1.0.0 (21 September 2008)
+- Initial release

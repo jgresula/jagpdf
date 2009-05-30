@@ -1,0 +1,19 @@
+[/
+Copyright (c) 2005-2009 Jaroslav Gresula
+
+Distributed under the MIT license (See accompanying file
+LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+]
+
+The following table shows how to construct identifiers for enum values
+in various languages:
+
+[table
+[[Language][Usage]]
+[[C++][jag::pdf::ENUM_VALUE]]
+[[C][jag_ENUM_VALUE]]
+[[Python][jagpdf.ENUM_VALUE]]
+[[Java][com.jagpdf.ENUM_TYPE.ENUM_VALUE]]
+]
+
+

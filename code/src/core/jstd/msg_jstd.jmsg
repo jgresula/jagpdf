@@ -1,0 +1,24 @@
+# Copyright (c) 2005-2009 Jaroslav Gresula
+#
+# Distributed under the MIT license (See accompanying file
+# LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+#
+
+
+[messages=5]
+
+4 icu_failed                  ICU failed with code %1i%: %2s%.
+
+5 config_integer_value        Profile option '%1s%' requires an integer value.
+6 config_unknown_option       Unknown profile option '%1s%'.
+7 config_parse_error          Profile syntax error.
+8 config_unknown_value        Unknown value '%2s%' for profile option '%1s%'.
+
+
+10 opt_parser_syntax_err      Syntax error at offset %1i%.
+11 opt_parser_value_err       Unrecognized value '%1s%'.
+12 opt_not_specified          Required option not specified.
+13 opt_length_differs         Incorrect option lenght.
+
+20 opt_parser_invalid_token   Unrecognized token '%1s%'.
+

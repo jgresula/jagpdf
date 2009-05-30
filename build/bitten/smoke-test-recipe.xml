@@ -1,0 +1,36 @@
+<build xmlns:jag="http://bitten.gresula.org/tools/jag"
+       xmlns:svn="http://bitten.cmlenz.net/tools/svn"
+       xmlns:sh="http://bitten.cmlenz.net/tools/sh">
+
+
+  <step id="checkout" description="Checkout source from repository">
+    <svn:checkout url="svn+jagbuildssh://SVNUser@jarda-home/"
+        path="${path}" revision="${revision}" />
+  </step>
+
+
+  <step id="api generator" description="Generates public api">
+    <jag:bjam targets="/code//api-files" cfg="-a,debug"/>
+  </step>
+
+
+  <step id="build, install" description="Build and install binaries">
+    <jag:bjam targets="/root//dist-clean"/>
+    <jag:bjam targets="/code//dist-check-all"  cfg="debug"/>
+  </step>
+
+
+  <step id="internal c++ tests" description="Internal unit test">
+    <jag:bjam targets="/unittests" cfg="debug"/>
+  </step>
+
+  <step id="api tests" description="Regression tests">
+    <jag:bjam targets="/apitest//out-clean"/>
+    <jag:bjam targets="/apitest//apitest-cbased"
+              cfg="-a,debug" toolsets="all_toolsets"/>
+    <jag:bjam targets="/apitest/py"
+              cfg="-a,debug"/>
+  </step>
+
+</build>
+

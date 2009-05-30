@@ -1,0 +1,31 @@
+// Copyright (c) 2005-2009 Jaroslav Gresula
+//
+// Distributed under the MIT license (See accompanying file
+// LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+//
+
+//-------
+%ignore jag::IFont::style_name;
+%ignore jag::IRefCounted::AddRef;
+%ignore jag::IRefCounted::Release;
+%ignore jag::CS_COLOR_SPACE_ID_START_BIT;
+%ignore jag::CS_COLOR_SPACE_TYPE_MASK;
+%ignore jag::CS_LAST_TRIVIAL_COLOR_SPACE;
+%ignore jag::CS_PATTERN;
+%ignore jag::CS_UNDEFINED;
+%ignore jag::IMAGE_FORMAT_UNRECOGNIZED;
+%ignore jag::RI_UNDEFINED;
+//-------
+%ignore jag::IDocument;
+%ignore jag::IImageMask;
+%ignore jag::IProfile;
+%rename(Canvas) jag::ICanvas;
+%rename(DocumentOutline) jag::IDocumentOutline;
+%rename(Font) jag::IFont;
+%rename(Image) jag::IImage;
+%rename(ImageDef) jag::IImageDef;
+%rename(Page) jag::IPage;
+%template(Document) boost::intrusive_ptr<jag::IDocument>;
+%template(ImageMask) boost::intrusive_ptr<jag::IImageMask>;
+%template(Profile) boost::intrusive_ptr<jag::IProfile>;
+//-------

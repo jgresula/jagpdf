@@ -1,0 +1,247 @@
+#!/usr/bin/env python
+
+# Copyright (c) 2005-2009 Jaroslav Gresula
+#
+# Distributed under the MIT license (See accompanying file
+# LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+#
+
+
+# - generates a cpp file with differences for single-byte encodings
+# - icuucXX.dll and icuudtXX.dll must be in PATH before running this script
+#   - XX should be specified below: see ver_major and ver_minor
+
+ver_major, ver_minor = 3, 8
+
+import ctypes
+import glyphlist
+import string
+
+encodings = [ ('ENC_CP_1250' , 'cp1250'),
+              ('ENC_MAC_ROMAN' , 'macos-0_2-10.2'),
+              ('ENC_CP_1251' , 'windows-1251'),
+              ('ENC_CP_1253' , 'windows-1253'),
+              ('ENC_CP_1254' , 'windows-1254'),
+              ('ENC_CP_1255' , 'windows-1255'),
+              ('ENC_CP_1256' , 'windows-1256'),
+              ('ENC_CP_1257' , 'windows-1257'),
+              ('ENC_CP_1258' , 'windows-1258'),
+              ('ENC_ISO_8859_1' , 'ISO_8859-1:1987'),
+              ('ENC_ISO_8859_2' , 'ISO_8859-2:1987'),
+              ('ENC_ISO_8859_3' , 'ISO_8859-3:1988'),
+              ('ENC_ISO_8859_4' , 'ISO_8859-4:1988'),
+              ('ENC_ISO_8859_5' , 'ISO_8859-5:1988'),
+              ('ENC_ISO_8859_6' , 'ISO_8859-6:1987'),
+              ('ENC_ISO_8859_7' , 'ISO_8859-7:1987'),
+              ('ENC_ISO_8859_8' , 'ISO_8859-8:1988'),
+              ('ENC_ISO_8859_9' , 'ISO_8859-9:1989'),
+              ('ENC_ISO_8859_10' ,'ISO-8859-10'),
+              ('ENC_ISO_8859_11' ,'ISO-8859-11'),
+              ('ENC_ISO_8859_13' ,'ISO-8859-13'),
+              ('ENC_ISO_8859_14' ,'ISO-8859-14'),
+              ('ENC_ISO_8859_15' ,'ISO-8859-15'),
+              ('ENC_ISO_8859_16' ,'ISO-8859-16')
+              ]
+
+class icu_t:
+    def __init__( self ):
+        self.icu = getattr( ctypes.cdll, 'icuuc%d%d' % (ver_major, ver_minor) )
+        self.err_fn = self._fn_obj( "u_errorName" )
+        self.err_fn.restype = ctypes.c_char_p
+
+    def _fn_obj( self, fn, **kwds ):
+        fn_obj = getattr( self.icu, "%s_%d_%d" % (fn, ver_major, ver_minor) )
+        if 'rettype' in kwds:
+            fn_obj.restype = kwds['rettype']
+        if 'argtypes' in kwds:
+            fn_obj.argtypes = kwds['argtypes']
+        return fn_obj
+
+    def call( self, fn, *args, **kwds ):
+        fn_ = self._fn_obj( fn, kwds )
+        return fn_( *args )
+
+    def call_e( self, fn, *args, **kwds ):
+        fn_ = self._fn_obj( fn, **kwds )
+        err = ctypes.c_int(0)
+        args_ = list(args) + [ctypes.byref(err)]
+        result = fn_( *args_ )
+        if err.value != 0:
+            raise RuntimeError( "ICU failed (%s): %s" % (fn,self.err_fn(err)) )
+        return result
+
+icu = icu_t()
+
+
+def get_enc_map( encoding ):
+    cnv = icu.call_e( "ucnv_open", encoding )
+    #print "Encoding:", icu.call_e( "ucnv_getName", cnv, rettype=ctypes.c_char_p )
+    cpoints = []
+    for i in range( 0, 256 ):
+        cp_char = ctypes.c_char_p( chr(i) )
+        cp_past_char = 0x80000000         # evil hack, but don't know how to get pointer to terminating zero
+        cpoints.append( icu.call_e( "ucnv_getNextUChar", cnv, ctypes.byref( cp_char ), cp_past_char ) )
+    icu.call_e( "ucnv_close", cnv )
+    return cpoints
+
+
+def get_glyph_name( codept ):
+    try:
+        return glyphlist.unicode_to_glyph(codept)
+    except KeyError:
+        return '.notdef'
+
+
+def calc_diffs( stdenc, enc_map ):
+    d = []
+    last_diffs = []
+    last_change = 0
+    first_diff = 0
+    for i in range( 32, 256 ):
+        cp = enc_map[i]
+        gl_name = get_glyph_name( cp )
+        if cp != stdenc[i] or gl_name == '.notdef':
+            if last_change+1 == i: #?continue
+                last_diffs.append(cp)
+                last_change+=1
+            else:
+                if last_diffs:
+                    d.append( (first_diff, last_diffs) )
+                first_diff = last_change = i
+                last_diffs = [cp]
+    if last_diffs:
+        d.append( (first_diff, last_diffs) )
+    return d
+
+
+def convert_cps_to_names( diffs ):
+    res = []
+    for i in range( len(diffs) ):
+        names = []
+        cps = diffs[i][1]
+        for j in range( len(cps) ):
+            if cps[j] == 0:
+                names.append( '.notdef' )
+            else:
+                names.append( get_glyph_name(cps[j]) )
+        res.append( (diffs[i][0], names) )
+    return res
+
+
+def pdf_diffs_string( diffs ):
+    diff_lines = []
+    for i in range(len(diffs)):
+        diff_lines.append( "%d /"%diffs[i][0] + " /".join( diffs[i][1] ) )
+    result = []
+    for dl in diff_lines:
+        result += calc_linebreaks( dl, 72 )
+    return result
+
+
+
+def calc_linebreaks( txt, min_len ):
+    result = []
+    i=0
+    while i<len(txt):
+        s=i
+        i+=min_len
+        while i<len(txt) and txt[i]!=' ':
+            i += 1
+        result.append( txt[s:i] )
+    return result
+
+
+
+templ_cpp_file="""#include \"precompiled.h\"
+// $$(Copyright)
+// $$(License)
+//
+$
+#include \"encdifferences.h\"
+#include <core/generic/assert.h>
+
+// generated by encdiff2.py
+
+namespace jag {
+namespace pdf {
+
+namespace {
+
+// difference strings against WinAnsiEncoding
+
+${cpp_diff_all_defs}
+
+} //anonymous namespace
+
+${cpp_free_funs}
+
+}} // namespace jag::pdf
+
+/** EOF @file */
+"""
+
+templ_free_funs="""
+Char const* enc_differences( EnumCharacterEncoding enc )
+{
+    switch( enc )
+    {
+    $cpp_case_get_diffs_by_name
+    default:
+        JAG_INTERNAL_ERROR;
+        return 0;
+    }
+}
+
+bool supports_differences( EnumCharacterEncoding enc )
+{
+    switch( enc )
+    {
+    $cpp_case_diffs_supported
+        return true;
+    default:
+        return false;
+    }
+}
+"""
+
+
+
+def get_all_differences():
+    templ_single_diff="""
+Char const* const str_${cpp_id} =
+\"${c_str_diffs}\";
+"""
+    base_map = get_enc_map( "windows-1252" )
+    cpp_diff_defs = []
+    for cpp_id, enc in encodings:
+        enc_map = get_enc_map( enc )
+        diffs = calc_diffs( base_map, enc_map )
+        named_diffs = convert_cps_to_names( diffs )
+        pdfstr = pdf_diffs_string( named_diffs )
+        c_str_diffs = '\\n"\n"'.join( [s.strip() for s in pdfstr] )
+        cpp_diff_defs.append( string.Template( templ_single_diff ).substitute( locals() ) )
+    return cpp_diff_defs
+
+
+
+def get_free_funs():
+    cpp_case_get_diffs_by_name = "\n    ".join( ['case %-18s: return str_%s;' % (cpp_id,cpp_id) for cpp_id,i in encodings ] )
+    cpp_case_diffs_supported = "\n    ".join( ['case %s:' % cpp_id for cpp_id,i in encodings ] )
+    return string.Template(templ_free_funs).substitute(locals())
+
+
+
+def main():
+    cpp_diff_all_defs = "\n".join( get_all_differences() )
+    cpp_free_funs = get_free_funs()
+    cpp_content = string.Template( templ_cpp_file ).substitute( locals() )
+    open( '../src/pdflib/encdifferences.cpp', 'wb' ).write(cpp_content)
+
+
+if __name__ == "__main__":
+#     m = get_enc_map( "ISO_8859-1:1987" )
+#     m = get_enc_map( "windows-1252" )
+#     for i,cp in enumerate(m):
+#         print "0x%02x - %x" % ( i, cp)
+    main()
+

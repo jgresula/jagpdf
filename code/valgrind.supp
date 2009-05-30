@@ -1,0 +1,106 @@
+# Copyright (c) 2005-2009 Jaroslav Gresula
+#
+# Distributed under the MIT license (See accompanying file
+# LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+
+
+#http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=456303
+{
+  LIBC_INVALID_DELETE
+  Memcheck:Free
+  fun:free
+   ...
+  fun:_vgnU_freeres
+  fun:exit
+}
+
+
+
+# The chain for python errors can contain only libpython on the first line
+# (previously we had it on four lines), because dyn python modules like array.so
+# or pyexpat.so might appear near the front
+{
+  PYTHON_VAL
+  Memcheck:Value4
+  obj:*/libpython*
+}
+
+
+{
+  PYTHON_ADDR
+  Memcheck:Addr4
+  obj:*/libpython*
+}
+
+
+{
+  PYTHON_COND
+  Memcheck:Cond
+  obj:*/libpython*
+}
+
+{
+  LD_SO_READ
+  Memcheck:Addr4
+  obj:/lib/ld-2.3.6.so
+  obj:/lib/ld-2.3.6.so
+  obj:/lib/ld-2.3.6.so
+}
+
+{
+  LD_SO_COND
+  Memcheck:Cond
+  obj:/lib/ld-2.3.6.so
+}
+
+# see http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=270070
+{
+  ZLIB_longest_match
+  Memcheck:Cond
+  fun:longest_match
+  fun:deflate_slow
+  fun:deflate
+}
+
+{
+   PYTHON_LEAK
+   Memcheck:Leak
+   fun:malloc
+   fun:PyObject_Malloc
+   fun:_PyObject_GC_Malloc
+   fun:_PyObject_GC_NewVar
+   fun:PyFrame_New
+#   fun:PyEval_EvalCodeEx
+#    fun:function_call
+#    fun:PyObject_Call
+#    fun:instancemethod_call
+#    fun:PyObject_Call
+#    fun:slot_tp_init
+#    fun:type_call
+}
+
+{
+   PYTHON_LEAK2
+   Memcheck:Leak
+   fun:realloc
+   fun:PyObject_Realloc
+   fun:_PyObject_GC_Resize
+   fun:PyFrame_New
+   fun:PyEval_EvalFrameEx
+   fun:PyEval_EvalFrameEx
+   fun:PyEval_EvalFrameEx
+   fun:PyEval_EvalFrameEx
+   fun:PyEval_EvalFrameEx
+   fun:PyEval_EvalCodeEx
+   fun:PyEval_EvalFrameEx
+   fun:PyEval_EvalCodeEx
+}
+
+{
+   Mysterious_pthread_leak
+   Memcheck:Leak
+   fun:calloc
+   fun:*
+   fun:_dl_allocate_tls
+   fun:pthread_create@@GLIBC_2.1
+}
