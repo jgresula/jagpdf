@@ -30,7 +30,7 @@ LOCAL_GIT_MIRROR=/home/jarda/code/github-mirrors/jagbase-test.git
 SVN_URL=svn://jarda-home/trunk/jagbase
 SVN_IGNORE_PATHS=--ignore-paths=^trunk/jagbase/external
 SVN_REV=-r`latest_svn_version`
-GIT_MIRROR=git@github.com:jgresula/jagpdf.git
+GIT_MIRROR=git@githubmirror:jgresula/jagpdf.git
 LOCAL_GIT_MIRROR=/home/jarda/code/github-mirrors/jagbase.git
 
 function help
