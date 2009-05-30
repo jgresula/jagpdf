@@ -27,7 +27,7 @@ endif()
 #                           configuration
 #                           
 set(JAGPDF_VERSION_MAJOR 1)
-set(JAGPDF_VERSION_MINOR 3)
+set(JAGPDF_VERSION_MINOR 4)
 set(JAGPDF_VERSION_PATCH 0)
 set(JAGPDF_VERSION "${JAGPDF_VERSION_MAJOR}.${JAGPDF_VERSION_MINOR}.${JAGPDF_VERSION_PATCH}")
 
