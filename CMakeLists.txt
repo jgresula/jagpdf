@@ -227,6 +227,8 @@ message(STATUS "Build: ${CMAKE_BUILD_TYPE}")
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_definitions(-DJAG_DEBUG)
   add_definitions(-D_DEBUG)            # e.g. gcc does not define this
+elseif(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+  add_definitions(-DNDEBUG)
 endif()
 
 
