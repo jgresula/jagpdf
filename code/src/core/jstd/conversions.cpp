@@ -10,6 +10,8 @@
 #include <core/jstd/icumain.h>
 #include <unicode/ucnv.h>
 #include <core/generic/scopeguard.h>
+#include <string.h>
+
 namespace jag {
 namespace jstd {
 

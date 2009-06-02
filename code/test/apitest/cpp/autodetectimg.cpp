@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <string>
 #include <iostream>
+#include <stdlib.h>
 
 #include "testcommon.h"
 using namespace jag;

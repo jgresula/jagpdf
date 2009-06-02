@@ -9,6 +9,7 @@
 #include <core/jstd/memory_stream.h>
 #include <core/generic/assert.h>
 #include <core/generic/minmax.h>
+#include <string.h>
 
 namespace jag {    namespace jstd
 {

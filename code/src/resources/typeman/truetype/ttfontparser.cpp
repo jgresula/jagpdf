@@ -14,6 +14,7 @@
 #include <interfaces/streams.h>
 
 #include <cstdio>
+#include <string.h>
 
 using namespace boost::integer;
 

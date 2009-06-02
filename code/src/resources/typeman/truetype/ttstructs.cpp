@@ -8,6 +8,7 @@
 #include "precompiled.h"
 #include <resources/typeman/truetype/ttstructs.h>
 #include <interfaces/streams.h>
+#include <string.h>
 
 using namespace boost::integer;
 

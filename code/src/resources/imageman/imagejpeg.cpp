@@ -20,6 +20,7 @@
 #include <interfaces/streams.h>
 #include <resources/resourcebox/resourcepodarrays.h>
 #include <msg_resources.h>
+#include <string.h>
 
 
 

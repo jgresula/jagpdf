@@ -16,6 +16,7 @@
 #include <core/jstd/file_stream.h>
 #include <core/jstd/fileso.h>
 #include <msg_resources.h>
+#include <string.h>
 
 using namespace jag::jstd;
 

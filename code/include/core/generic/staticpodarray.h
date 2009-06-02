@@ -12,6 +12,7 @@
 #include <boost/type_traits/is_pod.hpp>
 #include <boost/static_assert.hpp>
 #include <algorithm>
+#include <string.h>
 
 namespace jag
 {

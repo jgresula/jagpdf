@@ -10,6 +10,7 @@
 #include <core/generic/assert.h>
 #include <iostream>
 #include <ctime>
+#include <string.h>
 
 namespace jag {
 namespace jstd {

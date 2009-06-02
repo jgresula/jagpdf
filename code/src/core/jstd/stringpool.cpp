@@ -7,6 +7,7 @@
 
 #include "precompiled.h"
 #include <core/jstd/stringpool.h>
+#include <string.h>
 
 namespace jag {
 namespace jstd {

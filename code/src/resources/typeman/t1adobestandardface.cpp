@@ -10,6 +10,7 @@
 #include "fontspecimpl.h"
 #include <core/errlib/errlib.h>
 #include <msg_resources.h>
+#include <string.h>
 
 using namespace boost;
 

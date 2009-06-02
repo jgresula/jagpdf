@@ -10,6 +10,7 @@
 #include <unicode/ucnv.h>
 #include <unicode/ustring.h>
 #include <assert.h>
+#include <string.h>
 
 using namespace jag::jstd;
 using namespace jag;

@@ -16,6 +16,7 @@
 #include <boost/scoped_array.hpp>
 #include <math.h>
 #include <numeric>
+#include <string.h>
 
 #if defined(_MSC_VER)
 // disabling 'possible loss of data' as a lot of low level things is

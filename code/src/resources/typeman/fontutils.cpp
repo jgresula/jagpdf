@@ -10,6 +10,7 @@
 #include <resources/interfaces/font.h>
 #include <resources/interfaces/typefaceops.h>
 #include <boost/functional/hash.hpp>
+#include <string.h>
 
 namespace jag {
 

@@ -14,6 +14,7 @@
 #define FLEX_STRING_DETAILS_INC_
 
 #include <memory>
+#include <string.h>
 
 namespace flex_string_details
 {
