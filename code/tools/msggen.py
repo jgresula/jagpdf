@@ -10,7 +10,6 @@ import StringIO
 import time
 import os
 import string
-import md5
 import re
 import sys
 
@@ -100,10 +99,17 @@ unsigned msg_${msg_name}::msg_id()
 
 """
 
+try:
+    import hashlib
+    md5_creator = hashlib.md5
+except ImportError:
+    import md5
+    md5_creator = md5.new
+
 def get_guards( fname ):
     if os.path.splitext(fname)[1]!='.h':
         return '',''
-    m = md5.new()
+    m = md5_creator()
     m.update(os.path.basename(fname))
     guard = 'JAG_' + m.hexdigest()
     return string.Template( '#ifndef ${guard}\n#define ${guard}\n' ).substitute( locals()),\
