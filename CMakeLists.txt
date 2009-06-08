@@ -157,7 +157,7 @@ if(BUILD_PYTHON)
     endif()
     #
     execute_process(
-      COMMAND ${PYTHON_EXECUTABLE} -c "import sys;print [p for p in sys.path if p.endswith('site-packages')][0]"
+      COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib;print get_python_lib()"
       OUTPUT_VARIABLE PYTHON_SITE_PACKAGES)
     string(STRIP ${PYTHON_SITE_PACKAGES} PYTHON_SITE_PACKAGES)
     set(PYTHON_INSTALL_DIR ${PYTHON_SITE_PACKAGES} CACHE PATH "Python installation path")
