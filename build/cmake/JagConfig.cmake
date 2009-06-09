@@ -127,6 +127,21 @@ if(GCCXML)
     list(APPEND _RESULT ${_GCCXML_INCLUDE_ARG})
     list(APPEND _RESULT ${_GCCXML_COMPILER_FLAGS})
     set(${_GCCXML_FLAGS} ${_RESULT})
+    # even though gccxml is available we need to check that it actually works
+    if (NOT GCCXML_TESTED)
+      execute_process(
+        COMMAND 
+        "${GCCXML}" ${_GCCXML_INCLUDE_ARG} 
+        --gccxml-compiler 
+        ${JAG_GCCXML_COMPILER} 
+        ${CMAKE_SOURCE_DIR}/code/include/pdflib/interfaces/canvas.h
+        RESULT_VARIABLE GCCXML_EXIT)
+      set(GCCXML_TESTED TRUE CACHE INTERNAL "whether gccxml santity check has been run")
+      if(NOT GCCXML_EXIT EQUAL 0)
+        message(STATUS "GCCXML does not work, disabling.")
+        set(GCCXML OFF)
+      endif()
+    endif()
   endmacro()
 else()
   message(STATUS "GCCXML not found.")
