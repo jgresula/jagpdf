@@ -122,6 +122,7 @@ if(GCCXML)
     set(_GCCXML_COMPILER_FLAGS "--gccxml-path=${GCCXML}" "--gccxml-cache=${CMAKE_BINARY_DIR}/gcccache")
     if(JAG_GCCXML_COMPILER)
       list(APPEND _GCCXML_COMPILER_FLAGS "--gccxml-compiler=${JAG_GCCXML_COMPILER}")
+      set(GCCXML_TEST_FLAG --gccxml-compiler ${JAG_GCCXML_COMPILER})
     endif()
 
     list(APPEND _RESULT ${_GCCXML_INCLUDE_ARG})
@@ -132,10 +133,10 @@ if(GCCXML)
       execute_process(
         COMMAND 
         "${GCCXML}" ${_GCCXML_INCLUDE_ARG} 
-        --gccxml-compiler 
-        ${JAG_GCCXML_COMPILER} 
-        ${CMAKE_SOURCE_DIR}/code/include/pdflib/interfaces/canvas.h
-        RESULT_VARIABLE GCCXML_EXIT)
+        ${GCCXML_TEST_FLAG}
+        "${CMAKE_SOURCE_DIR}/code/include/pdflib/interfaces/canvas.h"
+        RESULT_VARIABLE GCCXML_EXIT
+        OUTPUT_QUIET ERROR_QUIET)
       set(GCCXML_TESTED TRUE CACHE INTERNAL "whether gccxml santity check has been run")
       if(NOT GCCXML_EXIT EQUAL 0)
         message(STATUS "GCCXML does not work, disabling.")
