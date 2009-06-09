@@ -4,11 +4,9 @@
 # LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
 #
 
-
 # generate messages and rc
 jag_process_message_file(msg_pdflib)
 jag_create_rc_file(jagpdf "JagPDF library for C/C++.")
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # signal that pdflib is being built, not used
 add_definitions(-DJAGAPI_BUILDING_CPP)
@@ -17,11 +15,6 @@ add_definitions(-DJAGAPI_BUILDING_CPP)
 set(API_IMPL_DIR ${CMAKE_BINARY_DIR})
 file(MAKE_DIRECTORY ${API_HEADER_DIR})
 file(MAKE_DIRECTORY ${API_SWIG_DIR})
-# find out include directories and form them as args for the generator
-get_directory_property(INCLUDES INCLUDE_DIRECTORIES)
-foreach(INCLUDE ${INCLUDES})
-  set(INCLUDES_ARG ${INCLUDES_ARG} -I${INCLUDE})
-endforeach()
 
 set(PREBUILT_API_DIR "${CMAKE_SOURCE_DIR}/code/src/generated/api")
 if(GCCXML)

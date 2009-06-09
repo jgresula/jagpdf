@@ -4,12 +4,6 @@
 # LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
 #
 
-
-#include(FindThreads)
-# if (NOT CMAKE_THREAD_LIBS_INIT)
-#   message(FATAL_ERROR "Thread library not found")
-# endif()
-
 # sets JAG_HAVE_MEMCHECK to 'memcheck' if in Linux (should be more sophisticated
 # test)
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -17,6 +11,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 else()
   set(JAG_HAVE_MEMCHECK "")
 endif()
+
 
 #---------------------------------------------------------------------------
 #                         COMPILER VARIABLES
@@ -100,14 +95,33 @@ if(GCCXML)
   execute_process(
     COMMAND "${GCCXML}" "--version"
     OUTPUT_VARIABLE GCCXML_VERSION)
-
   string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+" GCCXML_VERSION ${GCCXML_VERSION})
   if(GCCXML_VERSION VERSION_LESS REQ_GCCXML_VERSION)
     set(GCCXML NOTFOUND CACHE FILEPATH "Path to gccxml compiler." FORCE)
     message(FATAL_ERROR "GCCXML version ${GCCXML_VERSION} found, but at least ${REQ_GCCXML_VERSION} is required")
   endif()
   message(STATUS "GCCXML version: ${GCCXML_VERSION}")
-
+  # even though gccxml is available we need to check that it actually works
+  if (NOT GCCXML_TESTED)
+    if(JAG_GCCXML_COMPILER)
+      set(GCCXML_TEST_FLAG --gccxml-compiler ${JAG_GCCXML_COMPILER})
+    endif()
+    execute_process(
+      COMMAND 
+      "${GCCXML}"
+      ${GCCXML_TEST_FLAG}
+      "${CMAKE_SOURCE_DIR}/build/cmake/tests/gccxml.cpp"
+      RESULT_VARIABLE GCCXML_EXIT
+      OUTPUT_QUIET 
+      ERROR_FILE "gccxml.cpp.err")
+    set(GCCXML_TESTED "EXIT-CODE-${GCCXML_EXIT}" 
+      CACHE INTERNAL "whether gccxml santity check has been run")
+    if(NOT GCCXML_EXIT EQUAL 0)
+      message(STATUS "GCCXML does not work, disabling.")
+      set(GCCXML OFF CACHE FILEPATH "Path to gccxml removed because of failed sanity test" FORCE)
+    endif()
+  endif()
+  # macro providing common gccxml flags for generator.py
   macro(get_gccxml_flags _GCCXML_FLAGS)
     get_directory_property(
       _GCCXML_INCLUDES
@@ -122,27 +136,10 @@ if(GCCXML)
     set(_GCCXML_COMPILER_FLAGS "--gccxml-path=${GCCXML}" "--gccxml-cache=${CMAKE_BINARY_DIR}/gcccache")
     if(JAG_GCCXML_COMPILER)
       list(APPEND _GCCXML_COMPILER_FLAGS "--gccxml-compiler=${JAG_GCCXML_COMPILER}")
-      set(GCCXML_TEST_FLAG --gccxml-compiler ${JAG_GCCXML_COMPILER})
     endif()
-
     list(APPEND _RESULT ${_GCCXML_INCLUDE_ARG})
     list(APPEND _RESULT ${_GCCXML_COMPILER_FLAGS})
     set(${_GCCXML_FLAGS} ${_RESULT})
-    # even though gccxml is available we need to check that it actually works
-    if (NOT GCCXML_TESTED)
-      execute_process(
-        COMMAND 
-        "${GCCXML}" ${_GCCXML_INCLUDE_ARG} 
-        ${GCCXML_TEST_FLAG}
-        "${CMAKE_SOURCE_DIR}/code/include/pdflib/interfaces/canvas.h"
-        RESULT_VARIABLE GCCXML_EXIT
-        OUTPUT_QUIET ERROR_QUIET)
-      set(GCCXML_TESTED TRUE CACHE INTERNAL "whether gccxml santity check has been run")
-      if(NOT GCCXML_EXIT EQUAL 0)
-        message(STATUS "GCCXML does not work, disabling.")
-        set(GCCXML OFF)
-      endif()
-    endif()
   endmacro()
 else()
   message(STATUS "GCCXML not found.")
