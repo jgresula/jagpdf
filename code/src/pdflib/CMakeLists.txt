@@ -8,6 +8,8 @@
 jag_process_message_file(msg_pdflib)
 jag_create_rc_file(jagpdf "JagPDF library for C/C++.")
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 # signal that pdflib is being built, not used
 add_definitions(-DJAGAPI_BUILDING_CPP)
 
