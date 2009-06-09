@@ -68,18 +68,6 @@ elseif(NOT ALL_IN_ONE)
 #   message(STATUS "INCL: ${THIRD_INCLUDES}")
 else()
   FIND_PACKAGE(Boost 1.36)
-  # SWIG
-  if(WIN32)
-    set(SWIG_EXECUTABLE ${CMAKE_SOURCE_DIR}/external/tools/swig-1.3.33/swig.exe)
-  else()
-    # in linux the path to the library is hard-wired into the executable; thus
-    # we encapsulate the swig binary with a script which sets SWIG_LIBRARY env
-    # variable pointing to our copy of the swig library
-    set(SWIG_EXECUTABLE "${CMAKE_BINARY_DIR}/tools/swig.sh")
-    set(JAG_SWIG_LIB "${CMAKE_SOURCE_DIR}/external/tools/swig-1.3.33/Lib")
-    configure_file("${CMAKE_SOURCE_DIR}/external/tools/swig-1.3.33/swig.sh.in" "${SWIG_EXECUTABLE}")
-  endif()
-  FIND_PACKAGE(SWIG ${REQ_SWIG_VERSION})
   # use our files
   include_directories(BEFORE ${CMAKE_SOURCE_DIR}/external/include/zlib)
   include_directories(BEFORE ${CMAKE_SOURCE_DIR}/external/include/freetype)
