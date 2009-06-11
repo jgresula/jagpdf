@@ -333,21 +333,9 @@ void DocWriterImpl::page_end()
     if (!m_pimpl->m_current_page.get())
         throw exception_invalid_operation(msg_page_not_started()) << JAGLOC;
 
-
     m_pimpl->m_current_page->page_end();
-
-//     CanvasImpl* content_stream = m_pimpl->m_current_page_writer.get();
-//     if (!content_stream->content_stream()->is_empty())
-//     {
-//         content_stream->output_definition();
-//         m_pimpl->m_current_page->add_content_stream(
-//             IndirectObjectRef(*content_stream->content_stream())
-//             , content_stream->resource_list()
-//            );
-//     }
-
     m_pimpl->m_catalog->add_page(m_pimpl->m_current_page);
-//    m_pimpl->m_current_page_writer = 0;
+    m_pimpl->m_current_page.reset(0);
 
     TRACE_INFO << "--Page " << page_number() << " done.";
 }
