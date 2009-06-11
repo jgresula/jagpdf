@@ -481,10 +481,11 @@ void ImageJPEG::parse_jpeg()
         if (marker[1] == 0xd9) // EOI - end of image
             break;
 
-        // ?start of frame
-        if (marker[1]>=0xc0 && marker[1]<=0xcf)
+        // is it start of frame?
+        if (marker[1] != 0xc4 && // denotes DHT (Huffman table specification)
+            marker[1]>=0xc0 && marker[1]<=0xcf)
         {
-            switch(marker[1])  // ? progressive frame
+            switch(marker[1])  // is it a progressive frame?
             {
             case 0xc2:
             case 0xc6:
