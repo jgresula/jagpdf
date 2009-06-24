@@ -113,6 +113,7 @@ Notice ... . It is ..
 [template ref_patterns_t[t]\ [link jagpdf.usersguide.graphics.patterns [t]]]
 
 [template ref_install_source_t[t]\ [link jagpdf.installation.install_from_source [t]]]
+[template ref_install_source[]\ [link jagpdf.installation.install_from_source Installation from Source]]
 [template ref_install_embed_t[t]\ [link jagpdf.installation.embed [t]]]
 [template ref_install_options_t[t]\ [link jagpdf.installation.install_from_source.customization [t]]]
 [template ref_install_notes_t[t]\ [link jagpdf.installation.install_from_source.notes [t]]]
@@ -172,7 +173,7 @@ Notice ... . It is ..
 
 
 [def __py_search_path_url__  [@http://docs.python.org/tutorial/modules.html#the-module-search-path the module search path]]
-[def __py_site_specifi_hook__ [@http://docs.python.org/library/site.html site-specific configuration hook]]
+[def __py_site_specific_hook__ [@http://docs.python.org/library/site.html site-specific configuration hook]]
 
 [template url_UTF_8[] [@http://demo.icu-project.org/icu-bin/convexp?conv=UTF-8&s=IANA UTF-8]]
 [template url_windows_1250[] [@http://demo.icu-project.org/icu-bin/convexp?conv=ibm-5346_P100-1998&s=IANA windows-1250]]
@@ -540,13 +541,26 @@ C++] or [ref_hello_c_t C].
 [/ ------------------------- ]
 [python]
 
-[lib] for Python is implemented as an extension module. The module must be
-visible to the Python interpreter. The [lib] functionality is provided in
-namespace [^jagpdf]. In case of troubles with importing [^jagpdf], consult the
-Python documentation on __py_search_path_url__ and __py_site_specifi_hook__.
+[lib] for Python is implemented as an extension module. To enable the [lib]
+functionality in your application, the module must be correctly installed on
+your system.
+
+If you use the source distribution, follow the instructions in the
+section [ref_install_source].
+
+The prebuilt [lib] package contains the standard [path setup.py], so you can
+install it by doing
+
+```
+$ python setup.py install
+```
+
+Or you can install the prebuilt package manually by extracting it into your
+system's built-in or optional site-packages directory. For more information,
+consult the Python documentation on __py_search_path_url__ and
+__py_site_specific_hook__.
 
 What next? Continue to the commented [ref_hello_py_t Hello World example].
-
 
 [endsect] [/ Python]
 
@@ -563,8 +577,8 @@ The [lib] functionality is provided in namespace [^com.jagpdf]. To compile and
 run your application, point the classpath to [path [lib_java_jar]]:
 
 ```
-javac -classpath /path/to/``[lib_java_jar]`` <your_java_files>
-java -classpath /path/to/``[lib_java_jar]`` <your_app>
+$ javac -classpath /path/to/``[lib_java_jar]`` <your_java_files>
+$ java -classpath /path/to/``[lib_java_jar]`` <your_app>
 ```
 
 What next? Continue to the commented [ref_hello_java_t Hello World example].

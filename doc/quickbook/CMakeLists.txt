@@ -41,7 +41,7 @@ if (DOXYGEN_EXECUTABLE AND GCCXML)
   get_gccxml_flags(GCCXML_FLAGS)
   add_custom_target(doc-from-sources
     COMMAND
-    /usr/bin/python "${CMAKE_SOURCE_DIR}/code/tools/source_parsing/generator.py" 
+    ${PYTHON_EXECUTABLE} "${CMAKE_SOURCE_DIR}/code/tools/source_parsing/generator.py" 
     ${GCCXML_FLAGS}
     -d
     --doc-dir="${GENERATED_DOC_DIR}"
