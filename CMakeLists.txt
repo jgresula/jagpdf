@@ -163,6 +163,11 @@ if(BUILD_PYTHON)
     set(PYTHON_INSTALL_DIR ${PYTHON_SITE_PACKAGES} CACHE PATH "Python installation path")
     set(JAG_PYTHON_LIB_LOCATION "${CMAKE_BINARY_DIR}/code/src/bindings/api/python/")
     set(JAG_BUILD_PYTHON ON)
+    jag_exec_pycmd("import sys; print '%d%d' % sys.version_info[:2]" PY_MmVERSION)
+    jag_exec_pycmd("import sys; print sys.hexversion" PY_HEXVERSION)
+    configure_file(
+      "${CMAKE_SOURCE_DIR}/code/src/bindings/api/python/setup.py.in"
+      "${CMAKE_BINARY_DIR}/setup.py")
   else()
     set(JAG_BUILD_PYTHON NOTFOUND)
   endif()

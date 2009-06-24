@@ -61,6 +61,17 @@ install( # other files
   DESTINATION "."
   COMPONENT pyjagpdf)
 
+install( # setup.py - requires executable permissions
+  FILES
+  ${CMAKE_BINARY_DIR}/setup.py
+  PERMISSIONS 
+  OWNER_EXECUTE OWNER_READ OWNER_WRITE
+  GROUP_EXECUTE GROUP_READ
+  WORLD_EXECUTE WORLD_READ
+  DESTINATION "."
+  COMPONENT pyjagpdf)
+
+
 #
 # Installs jagpdf for python
 #
@@ -79,11 +90,5 @@ add_custom_target(check-pyjagpdf-binaries
   COMMAND ${PYTHON_EXECUTABLE} ${JAG_TOOLS_DIR}/check_package.py ${CMAKE_CURRENT_BINARY_DIR}
   )
 
-execute_process(
-  COMMAND ${PYTHON_EXECUTABLE} -c "import sys; print '%d%d' % sys.version_info[:2]"
-  OUTPUT_VARIABLE PY_VERSION
-)
-STRING(STRIP ${PY_VERSION} PY_VERSION)
 
-
-ADD_COMPONENT_PACKAGE(pyjagpdf py${PY_VERSION})
+ADD_COMPONENT_PACKAGE(pyjagpdf py${PY_MmVERSION})

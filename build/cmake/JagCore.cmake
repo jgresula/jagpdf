@@ -23,6 +23,18 @@ else()
 endif()
 
 #
+# Executes single python command and returns stdout
+#
+macro(jag_exec_pycmd CMD OUTVAR)
+  execute_process(
+    COMMAND ${PYTHON_EXECUTABLE} -c "${CMD}"
+    OUTPUT_VARIABLE _PYOUT
+    )
+  STRING(STRIP ${_PYOUT} ${OUTVAR})
+endmacro()
+
+
+#
 # joins a list, individual items are separated by SEP
 # 
 macro(jag_list_join OUTVAR LIST SEP)

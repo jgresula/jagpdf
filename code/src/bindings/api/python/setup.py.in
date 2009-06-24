@@ -1,0 +1,52 @@
+#!/usr/bin/env python
+# -*- mode: python -*-
+#
+# Copyright (c) 2009 Jaroslav Gresula
+#
+# Distributed under the MIT license (See accompanying file
+# LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+#
+import sys
+my_hex_version= @PY_HEXVERSION@ >> 16
+if my_hex_version != (sys.hexversion >> 16):
+    print >>sys.stderr, 'Python %x.%x required.' % (my_hex_version >> 8,
+                                                    my_hex_version & 0xff)
+    sys.exit(1)
+
+from distutils.core import setup
+from distutils.sysconfig import get_python_lib
+import shutil
+import os
+
+# TBD configure python version and check that it matches when installing
+
+data_files = []
+if 'install' in sys.argv:
+    ext = sys.platform == 'win32' and '.pyd' or '.so'
+    shared_lib = 'lib/_jagpdf' + ext
+    dest = get_python_lib(plat_specific=True)
+    n = len(os.path.commonprefix([sys.exec_prefix, dest]))
+    dest = dest[n+1:]
+    data_files += [(dest, [shared_lib])]
+
+setup(name='JagPDF',
+      version='@JAGPDF_VERSION@',
+      description='A library for generating PDF documents.',
+      author='Jaroslav Gresula',
+      author_email='jarda@jagpdf.org',
+      url='http://www.jagpdf.org/',
+      license="License :: OSI Approved :: MIT License",
+      package_dir={'': 'lib'},
+      py_modules=['jagpdf'],
+      data_files=data_files,
+      classifiers=["Development Status :: 5 - Production/Stable",
+                   "License :: OSI Approved :: MIT License",
+                   "Operating System :: Microsoft :: Windows :: Windows NT/2000",
+                   "Operating System :: POSIX :: Linux",
+                   "Programming Language :: C++",
+                   "Programming Language :: Python",
+                   "Intended Audience :: Developers",
+                   "Topic :: Multimedia :: Graphics",
+                   "Topic :: Software Development :: Libraries"])
+
+
