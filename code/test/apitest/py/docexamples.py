@@ -1480,8 +1480,8 @@ def encryption(argv):
     to use the standard security handler:"""
     profile = jagpdf.create_profile()
     profile.set("doc.encryption", "standard")
-    profile.set("info.static_producer", "1")
     #<-
+    profile.set("info.static_producer", "1")
     profile.set("info.creation_date", "0")
     #->
     """` Now we will use that profile when a new document is created"""
@@ -1499,10 +1499,10 @@ def encryption(argv):
     in a profile:"""
     profile = jagpdf.create_profile()
     profile.set("doc.encryption", "standard")
-    profile.set("info.static_producer", "1")
     profile.set("stdsh.pwd_owner", "owner-pwd")
     profile.set("stdsh.pwd_user", "user-pwd")
     #<-
+    profile.set("info.static_producer", "1")
     profile.set("info.creation_date", "0")
     #->
     """` And initialize the document with that profile:"""
@@ -1518,9 +1518,9 @@ def encryption(argv):
     permissions."""
     profile = jagpdf.create_profile()
     profile.set("doc.encryption", "standard")
-    profile.set("info.static_producer", "1")
     profile.set("stdsh.permissions", "no_print; no_copy")
     #<-
+    profile.set("info.static_producer", "1")
     profile.set("info.creation_date", "0")
     #->
     """` We specified that the user is not allowed to print or extract
