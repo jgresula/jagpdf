@@ -46,6 +46,7 @@ void GraphicsStateStack::restore()
         throw exception_invalid_operation(msg_no_graphics_state_to_pop()) << JAGLOC;
 
     m_stack.pop_back();
+    m_last_commited = m_stack.back();
 }
 
 //////////////////////////////////////////////////////////////////////////
