@@ -21,6 +21,7 @@ class ObjFmtBasic;
 class GraphicsStateDictionary
 {
 public:
+    // when adding new members, do not forget to update operators
     bool   m_alpha_is_shape;
     Double m_stroking_alpha;
     Double m_nonstroking_alpha;

@@ -21,8 +21,9 @@ GraphicsStateStack::GraphicsStateStack(
 )
     : m_doc(doc)
     , m_fmt(fmt)
+    , m_last_commited(m_doc)
 {
-    m_stack.push_back(GraphicsState(m_doc));
+    m_stack.push_back(m_last_commited);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -51,7 +52,13 @@ void GraphicsStateStack::restore()
 GraphicsStateHandle GraphicsStateStack::commit()
 {
     if (!m_stack.back().is_committed())
-        return m_stack.back().commit(m_fmt);
+    {
+        if (!m_last_commited.is_equal_state(m_stack.back()))
+        {
+            m_last_commited = m_stack.back();
+            return m_stack.back().commit(m_fmt);
+        }
+    }
 
     return GraphicsStateHandle();
 }

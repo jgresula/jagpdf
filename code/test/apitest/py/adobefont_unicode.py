@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 # Copyright (c) 2009 Jaroslav Gresula
 #
@@ -106,10 +106,29 @@ def error_injection():
     doc.page_end()
     doc.finalize()
 
+def graphics_state(argv):
+    # do not send unnecessary set font operators
+    profile = testlib.test_config()
+    profile.set("doc.compressed", "0")
+    doc = testlib.create_test_doc(argv, 'adobefont_grstate.pdf', profile)
+    fnt = doc.font_load("standard; name=Helvetica; size=12; enc=utf-8")
+    doc.page_start(200, 200)
+    canvas = doc.page().canvas()
+    canvas.text_font(fnt)
+    canvas.text_start(20,50)
+    canvas.text('first')
+    canvas.text(' second')
+    canvas.text_end()
+    doc.page_end()
+    doc.finalize()
+
+    
+
 def test_main(argv=None):
     basic_test(argv)
     font_reuse(argv)
     error_injection()
+    graphics_state(argv)
 
 
 if __name__ == "__main__":

@@ -68,6 +68,8 @@ public:
     /// indicates whether the state has been committed
     bool is_committed() const;
 
+    bool is_equal_state(GraphicsState const& other) const;
+
 private:
     void output_colors(ObjFmtBasic& fmt);
 
@@ -77,7 +79,7 @@ private:
 
 private:
     boost::shared_ptr<GraphicsStatePack> m_state;
-    DocWriterImpl&                       m_doc;
+    DocWriterImpl*                       m_doc;
 };
 
 

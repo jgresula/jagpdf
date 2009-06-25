@@ -36,9 +36,10 @@ public:
     GraphicsState& top();
 
 private:
-    DocWriterImpl&                m_doc;
-    std::deque<GraphicsState>    m_stack;
+    DocWriterImpl&              m_doc;
+    std::deque<GraphicsState>   m_stack;
     ObjFmtBasic&                m_fmt;
+    GraphicsState               m_last_commited;
 };
 
 

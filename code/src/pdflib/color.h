@@ -25,7 +25,7 @@ class Color
 {
 public: // construction
     /// invalid color
-    Color() {};
+    Color() : m_type(CH0) {};
     /// gray, calgray
     explicit Color(Double ch1);
     /// rgb, cie, calrgb
@@ -50,20 +50,17 @@ public: // getters
     unsigned index() const { return static_cast<unsigned>(m_channel[0]); }
     PatternHandle pattern() const { return m_pattern; }
 
+    friend bool operator==(Color const&, Color const&);
+
 private:
+    enum { CH0, CH1, CH3, CH4, CH1_P, CH3_P, CH4_P, P0 };
     PatternHandle m_pattern;
     Double   m_channel[4];
+    int m_type;
 };
 
 
-/**
- * @todo implementation
- */
-inline bool operator==(Color const&, Color const&)
-{
-    return false;
-}
-
+bool operator==(Color const&, Color const&);
 inline bool operator!=(Color const& lhs, Color const& rhs)
 {
     return !(lhs==rhs);

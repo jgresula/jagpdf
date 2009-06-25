@@ -33,6 +33,7 @@ namespace
   class GraphicsStateOperators
   {
   public:
+      // when adding new members, do not forget to update operators
       Double               m_line_width;
       std::vector<UInt>  m_dash_array;
       UInt               m_dash_phase;
@@ -66,6 +67,24 @@ namespace
       };
       std::bitset<GS_NUM_OPERATOR_PARAMS>  m_param_changed;
   };
+
+  bool operator==(GraphicsStateOperators const& lhs,
+                  GraphicsStateOperators const& rhs)
+  {
+      return
+          lhs.m_pdf_font == rhs.m_pdf_font &&
+          lhs.m_stroke_color == rhs.m_stroke_color &&
+          lhs.m_fill_color == rhs.m_fill_color &&
+          lhs.m_stroke_color_space == rhs.m_stroke_color_space &&
+          lhs.m_fill_color_space == rhs.m_fill_color_space &&
+          equal_doubles(lhs.m_line_width, rhs.m_line_width) &&
+          lhs.m_dash_array == rhs.m_dash_array &&
+          lhs.m_dash_phase == rhs.m_dash_phase &&
+          equal_doubles(lhs.m_line_miter_limit, rhs.m_line_miter_limit) &&
+          lhs.m_line_cap == rhs.m_line_cap &&
+          lhs.m_line_join == rhs.m_line_join
+          ;
+  }
 
 
 
@@ -159,7 +178,7 @@ struct GraphicsState::GraphicsStatePack
 //////////////////////////////////////////////////////////////////////////
 GraphicsState::GraphicsState(DocWriterImpl& doc)
     : m_state(new GraphicsStatePack)
-    , m_doc(doc)
+    , m_doc(&doc)
 {
 }
 
@@ -225,14 +244,14 @@ void GraphicsState::output_colors(ObjFmtBasic& fmt)
         if (is_pattern_color_space(color_space[i]))
         {
             if (!is_trivial_pattern_color_space(color_space[i])) //? colored pattern
-                output_color(fmt, unmask_pattern(color_space[i]), *colors[i], m_doc);
+                output_color(fmt, unmask_pattern(color_space[i]), *colors[i], *m_doc);
 
             fmt.output_resource(colors[i]->pattern());
             color_set_op = colset12_op + i;
         }
         else
         {
-            output_color(fmt, color_space[i], *colors[i], m_doc);
+            output_color(fmt, color_space[i], *colors[i], *m_doc);
         }
         fmt.graphics_op(*color_set_op);
     }
@@ -307,7 +326,7 @@ GraphicsStateHandle GraphicsState::commit(ObjFmtBasic& fmt)
     if (m_state->m_dictionary.m_param_changed.any())
     {
         result.reset(
-            m_doc.res_mgm().register_graphics_state(m_state->m_dictionary)
+            m_doc->res_mgm().register_graphics_state(m_state->m_dictionary)
        );
         m_state->m_dictionary.m_param_changed.reset();
     }
@@ -512,6 +531,15 @@ void GraphicsState::transfer_fn(FunctionHandle fn)
         dict.m_transfer_fn = fn;
         dict.m_param_changed.set(GraphicsStateDictionary::GS_TRANSFER_FUNCTION);
     }
+}
+
+bool GraphicsState::is_equal_state(GraphicsState const& other) const
+{
+    if (m_state == other.m_state)
+        return true;
+
+    return (m_state->m_operators == other.m_state->m_operators) &&
+        (m_state->m_dictionary == other.m_state->m_dictionary);
 }
 
 
