@@ -314,12 +314,7 @@ GraphicsStateHandle GraphicsState::commit(ObjFmtBasic& fmt)
             ;
         }
 
-//         if (ops.m_param_changed[GraphicsStateOperators::GS_STROKE_COLOR]
-//              || ops.m_param_changed[GraphicsStateOperators::GS_FILL_COLOR])
-//         {
-            output_colors(fmt);
-//         }
-
+        output_colors(fmt);
         ops.m_param_changed.reset();
     }
 
@@ -407,7 +402,14 @@ void GraphicsState::fill_color(Color const& color)
         ops.m_fill_color = color;
         ops.m_param_changed.set(GraphicsStateOperators::GS_FILL_COLOR);
     }
+    else
+    {
+        // force the color operator as the color space has changed
+        if (ops.m_param_changed[GraphicsStateOperators::GS_FILL_COLOR_SPACE])
+            ops.m_param_changed.set(GraphicsStateOperators::GS_FILL_COLOR);
+    }
 }
+
 
 
 
@@ -418,6 +420,12 @@ void GraphicsState::stroke_color(Color const& color)
     {
         ops.m_stroke_color = color;
         ops.m_param_changed.set(GraphicsStateOperators::GS_STROKE_COLOR);
+    }
+    else
+    {
+        // force the color operator as the color space has changed
+        if (ops.m_param_changed[GraphicsStateOperators::GS_STROKE_COLOR_SPACE])
+            ops.m_param_changed.set(GraphicsStateOperators::GS_STROKE_COLOR);
     }
 }
 
