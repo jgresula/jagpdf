@@ -22,7 +22,7 @@ def out_text(canvas, font, x, y, txt):
 
 def basic(doc, font, font_core):
     pheight = 70
-    doc.page_start(7*72, pheight)
+    doc.page_start(9*72, pheight)
     canvas = doc.page().canvas()
     txt = "AYAYAYAYAYAYAYA YAYAYAYAYAYAYAYAYA YAYAYAYAYAYAYAY AYAYAYAYAY"
     out_text(canvas, font(12), 10, 20, txt)
@@ -37,6 +37,7 @@ def format(doc, font, align):
     canvas = doc.page().canvas()
     text_dir = os.path.expandvars('${JAG_TEST_RESOURCES_DIR}/text/')
     txt = open(os.path.join(text_dir, 'lipsum.txt')).read()
+    txt = txt.split('Qui')[0].strip()
     textfmt.format_text(rect, txt, doc, font, align=align, para_spacing=0.5)
     doc.page_end()
 
@@ -44,9 +45,11 @@ def do_doc(argv, docname, profile=None):
     doc = testlib.create_test_doc(argv, docname, profile)
     font = testlib.EasyFontTTF(doc)
     font_core = testlib.EasyFont(doc)
-    basic(doc, font, font_core)
+    #basic(doc, font, font_core)
     format(doc, font_core(12), 'justify')
-    format(doc, font_core(12), 'left')
+ #    format(doc, font_core(12), 'left')
+#    format(doc, font(12), 'justify')
+#     format(doc, font(12), 'left')
     doc.finalize()
     
 
@@ -54,7 +57,7 @@ def test_main(argv=None):
     profile = testlib.test_config()
     profile.set("text.kerning", "1")
     do_doc(argv, 'kerning2.pdf', profile)
-    do_doc(argv, 'kerning2_no.pdf')
+#    do_doc(argv, 'kerning2_no.pdf')
 
 
 if __name__ == '__main__':

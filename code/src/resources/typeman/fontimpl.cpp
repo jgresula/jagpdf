@@ -90,7 +90,7 @@ Double FontImpl::horizontal_advance_dbg(jag::Char const* text, jag::ULong length
             {
                 Int cp = conv->next_code_point(&text, end);
                 result += m_typeface.char_horizontal_advance(cp);
-                result += m_typeface.kerning_chars(prev, cp);
+                result += m_typeface.kerning_for_chars(prev, cp);
                 prev = cp;
             }
         }
@@ -116,9 +116,9 @@ Double FontImpl::horizontal_advance_dbg(jag::Char const* text, jag::ULong length
 //
 //
 //
-Double FontImpl::kerning_gids(UInt left, UInt right) const
+Double FontImpl::kerning_for_gids(UInt left, UInt right) const
 {
-    Int kern = m_typeface.kerning_gids(left, right);
+    Int kern = m_typeface.kerning_for_gids(left, right);
     if (kern)
         return m_coef * kern;
 
@@ -128,9 +128,9 @@ Double FontImpl::kerning_gids(UInt left, UInt right) const
 //
 //
 // 
-Double FontImpl::kerning_chars(Int left, Int right) const
+Double FontImpl::kerning_for_chars(Int left, Int right) const
 {
-    Int kern = m_typeface.kerning_chars(left, right);
+    Int kern = m_typeface.kerning_for_chars(left, right);
     if (kern)
         return m_coef * kern;
 
@@ -328,12 +328,12 @@ Int MultiEncFontImpl::is_in_font_dbg(jag::Char const*,
     JAG_INTERNAL_ERROR;
 }
 
-Double MultiEncFontImpl::kerning_gids(UInt, UInt) const
+Double MultiEncFontImpl::kerning_for_gids(UInt, UInt) const
 {
     JAG_INTERNAL_ERROR;
 }
 
-Double MultiEncFontImpl::kerning_chars(Int, Int) const
+Double MultiEncFontImpl::kerning_for_chars(Int, Int) const
 {
     JAG_INTERNAL_ERROR;
 }

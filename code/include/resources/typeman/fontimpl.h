@@ -61,8 +61,8 @@ public: // IFontEx
     Char const* encoding_canonical() const;
     Double horizontal_advance_dbg(Char const* text, ULong length) const;
     Int is_in_font_dbg(Char const* text, UInt length) const;
-    Double kerning_gids(UInt left, UInt right) const;
-    Double kerning_chars(Int left, Int right) const;
+    Double kerning_for_gids(UInt left, UInt right) const;
+    Double kerning_for_chars(Int left, Int right) const;
     bool has_multiple_encondings() const { return false; }
     jstd::UnicodeToCP* unicode_to_8bit() const { return 0; }
     IFontEx const& font_for_encoding(EnumCharacterEncoding /*enc*/) const {
@@ -148,8 +148,8 @@ public: // internal error if any of those is invoked
     Char const* encoding_canonical() const;
     Double horizontal_advance_dbg(jag::Char const* text, jag::ULong length) const;
     Int is_in_font_dbg(jag::Char const* text, jag::UInt length) const;
-    Double kerning_gids(UInt left, UInt right) const;
-    Double kerning_chars(Int left, Int right) const;
+    Double kerning_for_gids(UInt left, UInt right) const;
+    Double kerning_for_chars(Int left, Int right) const;
 
 public:
     bool has_multiple_encondings() const { return true; }

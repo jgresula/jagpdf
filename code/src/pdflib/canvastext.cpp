@@ -254,7 +254,7 @@ namespace
       if (exec_ctx.config().get_int("text.kerning"))
       {
           process_kerns(start, end - start,
-                        bind(&IFontEx::kerning_chars, font.font(), _1, _2),
+                        bind(&IFontEx::kerning_for_chars, font.font(), _1, _2),
                         kerns, -1000.0/font.font()->size());
           offsets = kerns.merge(offsets);
       }
@@ -329,7 +329,7 @@ namespace
       if (exec_ctx.config().get_int("text.kerning"))
       {
           process_kerns(&gids[0], gids.size(),
-                        bind(&IFontEx::kerning_gids, font.font(), _1, _2),
+                        bind(&IFontEx::kerning_for_gids, font.font(), _1, _2),
                         kerns, -1000.0/font.font()->size());
           offsets = kerns.merge(offsets);
       }

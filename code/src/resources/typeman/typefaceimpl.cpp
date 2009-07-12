@@ -443,7 +443,7 @@ Int TypefaceImpl::char_horizontal_advance(Int codepoint) const
     return advance;
 }
 
-Int TypefaceImpl::kerning_gids(UInt left, UInt right) const
+Int TypefaceImpl::kerning_for_gids(UInt left, UInt right) const
 {
     FT_Vector delta;
     CHECK_FT(FT_Get_Kerning(m_face, left, right,
@@ -451,10 +451,10 @@ Int TypefaceImpl::kerning_gids(UInt left, UInt right) const
     return delta.x;
 }
 
-Int TypefaceImpl::kerning_chars(Int left, Int right) const
+Int TypefaceImpl::kerning_for_chars(Int left, Int right) const
 {
-    return kerning_gids(codepoint_to_gid(left),
-                        codepoint_to_gid(right));
+    return kerning_for_gids(codepoint_to_gid(left),
+                            codepoint_to_gid(right));
 }
 
 

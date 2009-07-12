@@ -145,8 +145,8 @@ public:
      * @return      glyph width
      */
     virtual Int gid_horizontal_advance(UInt gid) const PURE_FUNCTION;
-    virtual Int kerning_gids(UInt left, UInt right) const PURE_FUNCTION;
-    virtual Int kerning_chars(Int left, Int right) const PURE_FUNCTION;
+    virtual Int kerning_for_gids(UInt left, UInt right) const PURE_FUNCTION;
+    virtual Int kerning_for_chars(Int left, Int right) const PURE_FUNCTION;
 
 public:
     virtual Int can_embed() const PURE_FUNCTION;

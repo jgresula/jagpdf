@@ -609,13 +609,6 @@ def gen_primes(n):
         print "%d," % p
     print "]"
 
-def next_prime(n):
-    for p in eratosthenes():
-        if p > n:
-            print n
-            break
-
-
 def get_pairs_dict():
     pairs_dict = {}
     min_key, max_key = sys.maxint, 0
@@ -713,13 +706,12 @@ def kern_frequency(fname):
 
 
 if __name__ == "__main__":
-    #encoding_status()
     gen_cpp_jagbase()
+    #encoding_status()
     #kern_stats()
     #construct_hash_table()
     #test_load_factor()
     #gen_primes(0x20002c) # redirect to primes.py
-    #next_prime(0x201d0141) # -> 5387719
     #print kern_frequency('/home/jarda/tmp/kant-critique-142.txt')
     #test_is_prime()
     #output_keys()
