@@ -71,6 +71,7 @@ const kern_rec_t sorted_kerning_table[KERN_SORTED_LEN] =
 
 #else 
 
+const unsigned NUM_HASH_FUNCTIONS = $num_hash_functions;
 const unsigned KERN_HASH_P[3] = {$hash1_p, $hash2_p, $hash3_p};
 const unsigned KERN_HASH_TABLE_SIZE = $hash_table_size;
 const int KERN_MIN_UNICODE = $min_unicode;
@@ -147,13 +148,15 @@ Int t1_get_kerning(t1s_face const& face, Int left, Int right)
 //
 //
 // 
-Int t1_get_kerning(t1s_face const& face, Int left, Int right)
+Int _t1_get_kerning(t1s_face const& face, Int left, Int right)
 {
     if (!face.kerning_getter)
         return 0;
 
     unsigned key = (left & 0xffff) + (right << 16);
-    for(unsigned const *p = &KERN_HASH_P[0]; p < KERN_HASH_P + 3; ++p)
+    for(unsigned const *p = &KERN_HASH_P[0];
+        p < KERN_HASH_P + NUM_HASH_FUNCTIONS;
+        ++p)
     {
         unsigned i = (key % *p) % KERN_HASH_TABLE_SIZE;
         if (kerning_table[i].key == key)
@@ -162,8 +165,29 @@ Int t1_get_kerning(t1s_face const& face, Int left, Int right)
             return kern_values[val];
         }
     }
-
     return 0;
+}
+
+Int t1_get_kerning(t1s_face const& face, Int left, Int right)
+{
+    if (!face.kerning_getter)
+        return 0;
+
+    unsigned key = (left & 0xffff) + (right << 16);
+    unsigned i = (key % $hash1_p) % KERN_HASH_TABLE_SIZE;
+    if (kerning_table[i].key != key)
+    {
+        i = (key % $hash2_p) % KERN_HASH_TABLE_SIZE;
+        if (kerning_table[i].key != key)
+        {
+//             i = (key % $hash3_p) % KERN_HASH_TABLE_SIZE;
+//             if (kerning_table[i].key != key)
+                return 0;
+        }
+    }
+
+    int val = (*face.kerning_getter)(kerning_table[i]);
+    return kern_values[val];
 }
 
 #endif 

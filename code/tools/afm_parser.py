@@ -245,11 +245,20 @@ def output_kern_table(templ, ctx, getter_to_index, value_to_index):
     hash2_p = 10709
     hash3_p = 61981
     hash_table_size = 3491
+    num_hash_functions = 3
     h = HFunctionsDivision(hash1_p, hash2_p, hash3_p)
+    # these 2 primes in combination with table size give ~62% load factor
+    hash1_p = 16069
+    hash2_p = 43787
+    hash_table_size = 5261
+    num_hash_functions = 2
+    h = HFunctionsDivision(hash1_p, hash2_p)
+    #
     ch = CuckooHash(hash_table_size, h)
     result = []
     min_unicode, max_unicode = sys.maxint, 0
     test_a = []
+    values_set = set()
     for k, v in ctx.kern_dict.iteritems():
         key = make_kern_pair_key(*k)
         min_unicode = min(min_unicode, k[0], k[1])
@@ -259,6 +268,8 @@ def output_kern_table(templ, ctx, getter_to_index, value_to_index):
             value[getter_to_index[getter]] = value_to_index[val]
         ch.insert(key, ", ".join((str(v) for v in value)))
         test_a.append((key, ", ".join((str(v) for v in value))))
+        values_set.add(tuple(value))
+    print "#distinct values", len(values_set)
     result += ch.c_output("{0xffffffff, 0, 0, 0, 0, 0, 0, 0, 0}")
     kerning_table = ",\n    ".join(result)
     # test
@@ -490,7 +501,7 @@ class CuckooHash:
         pos = self.hash(0, key)
         assert self.table[pos] == None or self.table[pos][0] != key
         item = (key, value)
-        for n in xrange(self.num_items + 1):
+        for n in xrange(2 * self.num_items + 1):
             if None == self.table[pos]:
                 self.table[pos] = item
                 self.num_items += 1
@@ -516,7 +527,7 @@ class CuckooHash:
     def stats(self):
         print '#items:', self.num_items
         print 'load factor:', float(self.num_items) / len(self.table)
-
+    
     def load_factor(self):
         return float(self.num_items) / len(self.table)
 
@@ -548,15 +559,42 @@ class HFunctionsDivision:
     def __str__(self):
         return 'Division: ' + ', '.join((str(p) for p in self.primes))
 
+
+import itertools
+def eratosthenes():
+    '''Yields the sequence of prime numbers via the Sieve of Eratosthenes.'''
+    D = {  }  # map each composite integer to its first-found prime factor
+    for q in itertools.count(2):     # q gets 2, 3, 4, 5, ... ad infinitum
+        p = D.pop(q, None)
+        if p is None:
+            # q not a key in D, so q is prime, therefore, yield it
+            yield q
+            # mark q squared as not-prime (with q as first-found prime factor)
+            D[q*q] = q
+        else:
+            # let x <- smallest (N*p)+q which wasn't yet known to be composite
+            # we just learned x is composite, with p first-found prime factor,
+            # since p is the first-found prime factor of q -- find and mark it
+            x = p + q
+            while x in D:
+                x += p
+            D[x] = p
+
+def gen_primes(n):
+    print "primes = [ \\"
+    for p in eratosthenes():
+        if p > n:
+            break
+        print "%d," % p
+    print "]"
+
 def CuckooIter():
-#     h = HFunctionsDivision(58393, 23567, 11273)
-#     h = HFunctionsDivision(38749, 28813, 51577)
     h = HFunctionsDivision(14897, 10709, 61981)
     yield CuckooHash(3491, h), h
 #     from primes import primes
 #     while 1:
-#         h = HFunctionsDivision(*random.sample(primes,3))
-#         yield CuckooHash(3491, h), h
+#         h = HFunctionsDivision(*random.sample(primes,2))
+#         yield CuckooHash(5261, h), h
 
 def construct_hash_table():
     pairs_dict = {}
@@ -598,7 +636,8 @@ if __name__ == "__main__":
     #encoding_status()
     gen_cpp_jagbase()
     kern_stats()
-    #construct_hash_table()
+    construct_hash_table()
+    #gen_primes(0x20002c) # redirect to primes.py
 
     #    faces = process_afm_dir( 'c:/Code/cpp/sandbox/jagbase/code/src/resources/typeman/Core14_AFMs/' )
 #    do_cpp_header( faces, sys.stdout )
