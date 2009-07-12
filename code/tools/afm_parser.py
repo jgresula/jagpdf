@@ -246,6 +246,7 @@ def output_kern_table(templ, ctx, getter_to_index, value_to_index):
     hash3_p = 61981
     hash_table_size = 3491
     num_hash_functions = 3
+    num_cells = 1
     h = HFunctionsDivision(hash1_p, hash2_p, hash3_p)
     # these 2 primes in combination with table size give ~62% load factor
     hash1_p = 16069
@@ -253,8 +254,14 @@ def output_kern_table(templ, ctx, getter_to_index, value_to_index):
     hash_table_size = 5261
     num_hash_functions = 2
     h = HFunctionsDivision(hash1_p, hash2_p)
+    # 2 primes, 2 cells -> 91.7%
+    hash1_p = 1984061
+    hash2_p = 885931
+    num_cells = 2
+    h = HFunctionsDivision(hash1_p, hash2_p)
+    hash_table_size = 1777
     #
-    ch = CuckooHash(hash_table_size, h)
+    ch = CuckooHash(hash_table_size, h, num_cells)
     result = []
     min_unicode, max_unicode = sys.maxint, 0
     test_a = []
@@ -503,40 +510,77 @@ def kern_stats():
 
 
 class CuckooHash:
-    def __init__(self, size, hash_funs):
-        self.table = size * [None]
+    def __init__(self, size, hash_funs, cells=1):
         self.num_items = 0
         self.hash_funs = hash_funs
+        self.cells = cells
+        #assert size % cells == 0
+        self.size = size
+        self.table =  cells * size * [None]
 
     def hash(self, i, key):
-        return self.hash_funs(i, key) % len(self.table)
+        return self.hash_funs(i, key) % self.size
+
+    def cell_pos(self, i, key):
+        pos = self.hash(i, key)
+        return [self.cells * pos + i for i in range(self.cells)]
 
     def insert(self, key, value):
-        pos = self.hash(0, key)
-        assert self.table[pos] == None or self.table[pos][0] != key
+        pos = self.cell_pos(0, key)
         item = (key, value)
-        for n in xrange(2 * self.num_items + 1):
-            if None == self.table[pos]:
-                self.table[pos] = item
-                self.num_items += 1
-                return 
-            item, self.table[pos] = self.table[pos], item
+        for n in xrange(self.num_items + 1):
+            for p in pos:
+                if None == self.table[p]:
+                    self.table[p] = item
+                    self.num_items += 1
+                    return
+            p0 = random.choice(pos)
+            item, self.table[p0] = self.table[p0], item
             #
-            hashes = [self.hash(i, item[0]) for i in range(self.hash_funs.size())]
-            hashes.remove(pos)
-            empty_slots = [pos for pos in hashes if None == self.table[pos]]
+            all_pos = [self.cell_pos(i, item[0]) for i in range(self.hash_funs.size())]
+            all_pos.remove(pos)
+            empty_slots = [pos for pos in all_pos \
+                           if [i for i in pos if None == self.table[i]]]
             if empty_slots:
                 pos = empty_slots[0]
             else:
-                pos = random.choice(hashes)
+                pos = random.choice(all_pos)
         raise TableFull('not possible to insert %d' % item[0])
 
     def lookup(self, key):
         for i in range(self.hash_funs.size()):
-            pos = self.hash(i, key)
-            if self.table[pos] and self.table[pos][0] == key:
-                return self.table[pos][1]
+            pos = self.cell_pos(i, key)
+            for p in pos:
+                if self.table[p] and self.table[p][0] == key:
+                    return self.table[p][1]
         return None
+
+#     def insert(self, key, value):
+#         pos = self.hash(0, key)
+#         assert self.table[pos] == None or self.table[pos][0] != key
+#         item = (key, value)
+#         for n in xrange(2 * self.num_items + 1):
+#             if None == self.table[pos]:
+#                 self.table[pos] = item
+#                 self.num_items += 1
+#                 return 
+#             item, self.table[pos] = self.table[pos], item
+#             #
+#             hashes = [self.hash(i, item[0]) for i in range(self.hash_funs.size())]
+#             hashes.remove(pos)
+#             empty_slots = [pos for pos in hashes if None == self.table[pos]]
+#             if empty_slots:
+#                 pos = empty_slots[0]
+#             else:
+#                 pos = random.choice(hashes)
+#         raise TableFull('not possible to insert %d' % item[0])
+# 
+#     def lookup(self, key):
+#         for i in range(self.hash_funs.size()):
+#             pos = self.hash(i, key)
+#             if self.table[pos] and self.table[pos][0] == key:
+#                 return self.table[pos][1]
+#         return None
 
     def stats(self):
         print '#items:', self.num_items
@@ -573,6 +617,51 @@ class HFunctionsDivision:
     def __str__(self):
         return 'Division: ' + ', '.join((str(p) for p in self.primes))
 
+def HDivisionIter():
+    h = HFunctionsDivision(1984061, 885931)
+    yield CuckooHash(1777, h, 2), h
+
+#     h = HFunctionsDivision(14897, 10709, 61981)
+#     yield CuckooHash(3491, h), h
+      #
+#     from primes import primes
+#     while 1:
+#         h = HFunctionsDivision(*random.sample(primes,2))
+#         yield CuckooHash(5261, h), h
+#     from primes import primes
+#     while 1:
+#         h = HFunctionsDivision(*random.sample(primes,2))
+#         yield CuckooHash(1777, h, 2), h
+        
+
+
+class HUniversal:
+    def __init__(self, p, *ab):
+        self.p = p
+        self.ab = ab
+
+    def __call__(self, i, key):
+        a, b = self.ab[i]
+        return (a * key + b) % self.p
+
+    def size(self):
+        return len(self.ab)
+
+    def __str__(self):
+        fns = ", ".join(("(%dk + %d) mod %d" % \
+                         (ab[0], ab[1], self.p) for ab in self.ab))
+        return "Universal: " + fns
+
+def HUniversalIter():
+    p = 5387719
+    while 1:
+        a1 = random.randint(1, p-1)
+        b1 = random.randint(0, p-1)
+        a2 = random.randint(1, p-1)
+        b2 = random.randint(0, p-1)
+        h = HUniversal(p, (a1, b1), (a2, b2))
+        yield CuckooHash(5261, h), h
+        
 
 import itertools
 def eratosthenes():
@@ -602,13 +691,12 @@ def gen_primes(n):
         print "%d," % p
     print "]"
 
-def CuckooIter():
-    h = HFunctionsDivision(14897, 10709, 61981)
-    yield CuckooHash(3491, h), h
-#     from primes import primes
-#     while 1:
-#         h = HFunctionsDivision(*random.sample(primes,2))
-#         yield CuckooHash(5261, h), h
+def next_prime(n):
+    for p in eratosthenes():
+        if p > n:
+            print n
+            break
+
 
 def construct_hash_table():
     pairs_dict = {}
@@ -623,7 +711,9 @@ def construct_hash_table():
 
     found = False
     best_lf = 0.0
-    for h, funs in CuckooIter():
+    hiter = HUniversalIter()
+    hiter = HDivisionIter()
+    for h, funs in hiter:
         try:
             for k, v in pairs_dict.iteritems():
                 h.insert(make_kern_pair_key(*k), val)
@@ -649,9 +739,10 @@ def construct_hash_table():
 if __name__ == "__main__":
     #encoding_status()
     gen_cpp_jagbase()
-    kern_stats()
-    construct_hash_table()
+    #kern_stats()
+    #construct_hash_table()
     #gen_primes(0x20002c) # redirect to primes.py
+    #next_prime(0x201d0141) # -> 5387719
 
     #    faces = process_afm_dir( 'c:/Code/cpp/sandbox/jagbase/code/src/resources/typeman/Core14_AFMs/' )
 #    do_cpp_header( faces, sys.stdout )
@@ -659,4 +750,3 @@ if __name__ == "__main__":
 #     for face in faces:
 #         print '>', font_name_to_id( face.FontName )
 #    face = process_afm( open('c:/Code/cpp/sandbox/jagbase/code/src/resources/typeman/Core14_AFMs/Helvetica.afm') )
-
