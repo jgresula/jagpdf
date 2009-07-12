@@ -8,6 +8,7 @@
 #include "precompiled.h"
 #include "t1adobestandardface.h"
 #include "fontspecimpl.h"
+#include <interfaces/streams.h>
 #include <core/errlib/errlib.h>
 #include <msg_resources.h>
 #include <string.h>
