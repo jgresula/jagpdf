@@ -5465,7 +5465,7 @@ Int t1_get_kerning(t1s_face const& face, Int left, Int right)
     if (!face.get_kerning)
         return 0;
 
-    unsigned key = (left & 0xffff) + (right << 16);
+    boost::uint32_t key = (left & 0xffff) + (right << 16);
     const kern_rec_t *it =
         kerning_table + 2 * ((key % 1984061) % KERN_HASH_TABLE_M);
     

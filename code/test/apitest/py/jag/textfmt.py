@@ -60,6 +60,26 @@ def format_text(rect, txt, doc, fontid,
     canvas.text_end()
 
 
+# def find_linebreaks(para, width, metrics):
+#     def is_last_line(n):
+#         return n==num_words-1
+#     line = []
+#     curr = 0
+#     words = para.split()
+#     num_words = len(words)
+#     spacew = metrics.advance(' ')
+#     for i, word in enumerate(words):
+#         wl = metrics.advance(word)
+#         if curr + wl > width:
+#             yield ' '.join(line), curr - spacew, is_last_line(i-1)
+#             line = []
+#             curr = 0
+#         line.append(word)
+#         curr += wl + spacew
+#     if line:
+#         yield ' '.join(line), curr - spacew, is_last_line(i)
+
+
 def find_linebreaks(para, width, metrics):
     def is_last_line(n):
         return n==num_words-1
@@ -67,16 +87,18 @@ def find_linebreaks(para, width, metrics):
     curr = 0
     words = para.split()
     num_words = len(words)
-    spacew = metrics.advance(' ')
     for i, word in enumerate(words):
-        wl = metrics.advance(word)
+        if curr > 0:
+            wl = metrics.advance(' ' + word)
+        else:
+            wl = metrics.advance(word)
         if curr + wl > width:
-            lw = metrics.advance(' '.join(line))
-            yield ' '.join(line), curr - spacew, is_last_line(i-1)
+            yield ' '.join(line), curr, is_last_line(i-1)
             line = []
             curr = 0
+            wl = metrics.advance(word)
         line.append(word)
-        curr += wl + spacew
+        curr += wl
     if line:
-        lw = metrics.advance(' '.join(line))
-        yield ' '.join(line), curr - spacew, is_last_line(i)
+        yield ' '.join(line), curr, is_last_line(i)
+
