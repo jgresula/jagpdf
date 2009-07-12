@@ -50,6 +50,8 @@ enum T1_ADOBE_STANDARD_FONTS{
 };
 extern t1s_face const* g_adobe_standard_t1_faces[T1_NUM_FACES];
 
+Int t1_get_kerning(t1s_face const& face, Int left, Int right);
+
 }} //namespace jag::resources
 
 #endif

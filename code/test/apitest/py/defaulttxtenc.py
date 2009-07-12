@@ -28,7 +28,7 @@ def test_main(argv=None):
     ## font encoding:         windows-1250
     ##
     cfg = testlib.test_config()
-    cfg.set("doc.text_encoding", "utf-8")
+    cfg.set("text.encoding", "utf-8")
     doc = testlib.create_test_doc(argv, "defaulttxtenc.pdf", cfg)
     #doc = testlib.create_test_doc("/mnt/win/c/Temp/basictxtfmt3.pdf", cfg)
 
@@ -52,7 +52,7 @@ def test_main(argv=None):
     ## font encoding: iso-8859-2
     ##
     cfg  = testlib.test_config()
-    cfg.set("doc.text_encoding", "windows-1250")
+    cfg.set("text.encoding", "windows-1250")
     doc = testlib.create_test_doc(argv, "defaulttxtenc2.pdf", cfg)
     #doc = testlib.create_test_doc("/mnt/win/c/Temp/defaulttxtenc2.pdf", cfg)
 

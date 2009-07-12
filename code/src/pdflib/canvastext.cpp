@@ -99,59 +99,7 @@ namespace
       writer.array_end().graphics_op(OP_TJ);
   }
 
-
-  ///
-  /// Outputs a text written in a simple font.
-  ///
-  /// If the text has a different encoding (txt_enc) than the font the text is
-  /// re-encoded. Also outputs glyph offsets (if any supplied).
-  ///
-  void output_simple_font_text(PDFFont const&font,
-                                ObjFmtBasic& writer,
-                                Char const* start, Char const* end,
-                                offsets_info_t const* offsets,
-                                char const* txt_enc)
-  {
-      std::vector<Char> chars;
-
-      if (!is_empty(txt_enc))
-      {
-          // text encoding --> font encoding if they are different
-          char const* txt_enc_canon = get_canonical_converter_name(txt_enc);
-          if (strcmp(txt_enc_canon, font.font()->encoding_canonical()))
-          {
-              std::vector<UChar> uchars;
-              to_unicode(txt_enc, start, end, uchars);
-              JAG_ASSERT(! uchars.empty());
-              from_unicode(font.font()->encoding_canonical(),
-                           &uchars[0], &uchars[0]+uchars.size(), chars);
-
-              start=&chars[0];
-              end=start+chars.size();
-          }
-      }
-
-      font.font_dict().use_char8(start, end);
-      if (!offsets)
-      {
-          writer.text_string(start, end-start, false).graphics_op(OP_Tj);
-      }
-      else
-      {
-          typedef ObjFmtBasic& (ObjFmtBasic::*my_overload_t)(Char const*, size_t, bool);
-          my_overload_t fn = &ObjFmtBasic::text_string;
-
-          output_text_with_adjustments(
-              make_text_writer(start,
-                                boost::bind(fn,
-                                            boost::ref(writer), _1, _2, false)),
-              writer,
-              end-start,
-              *offsets);
-      }
-  }
-
-
+  
   //
   //
   // 
@@ -181,12 +129,15 @@ namespace
           }
           else
           {
+              // when kerning and the 'other' define a glyph offset on the same
+              // position, then the other is taken (the user value is preferred)
               JAG_ASSERT(m_offsets.empty()); // not implemented
           }
           return 0;
       }
   };
 
+  
   //
   // retrives kerns for given gids/codepoints sequence
   // 
@@ -204,7 +155,74 @@ namespace
               kerns.add(i+1, kern * coef);
       }
   }
+
   
+
+
+  ///
+  /// Outputs a text written in a simple font.
+  ///
+  /// If the text has a different encoding (txt_enc) than the font the text is
+  /// re-encoded. Also outputs glyph offsets (if any supplied).
+  ///
+  void output_simple_font_text(PDFFont const&font,
+                               ObjFmtBasic& writer,
+                               Char const* start, Char const* end,
+                               offsets_info_t const* offsets,
+                               char const* txt_enc,
+                               IExecContext const& exec_ctx)
+  {
+      std::vector<Char> chars;
+
+      if (!is_empty(txt_enc))
+      {
+          // text encoding --> font encoding if they are different
+          char const* txt_enc_canon = get_canonical_converter_name(txt_enc);
+          if (strcmp(txt_enc_canon, font.font()->encoding_canonical()))
+          {
+              std::vector<UChar> uchars;
+              to_unicode(txt_enc, start, end, uchars);
+              JAG_ASSERT(! uchars.empty());
+              from_unicode(font.font()->encoding_canonical(),
+                           &uchars[0], &uchars[0]+uchars.size(), chars);
+
+              start=&chars[0];
+              end=start+chars.size();
+          }
+      }
+
+      font.font_dict().use_char8(start, end);
+
+      KerningOffsets kerns;
+      if (exec_ctx.config().get_int("text.kerning"))
+      {
+          process_kerns(start, end - start,
+                        bind(&IFontEx::kerning_chars, font.font(), _1, _2),
+                        kerns, -1000.0/font.font()->size());
+          offsets = kerns.merge(offsets);
+      }
+
+      
+      if (!offsets)
+      {
+          writer.text_string(start, end-start, false).graphics_op(OP_Tj);
+      }
+      else
+      {
+          typedef ObjFmtBasic& (ObjFmtBasic::*my_overload_t)(Char const*, size_t, bool);
+          my_overload_t fn = &ObjFmtBasic::text_string;
+
+          output_text_with_adjustments(
+              make_text_writer(start,
+                                boost::bind(fn,
+                                            boost::ref(writer), _1, _2, false)),
+              writer,
+              end-start,
+              *offsets);
+      }
+  }
+
+
   ///
   /// Outputs a text written in a composite font.
   ///
@@ -212,10 +230,11 @@ namespace
   /// re-encoded. Also outputs glyph offsets (if any supplied).
   ///
   void output_cid_font_text(PDFFont const&font,
-                             ObjFmtBasic& writer,
-                             Char const* start, Char const* end,
-                             offsets_info_t const* offsets,
-                             char const* txt_enc)
+                            ObjFmtBasic& writer,
+                            Char const* start, Char const* end,
+                            offsets_info_t const* offsets,
+                            char const* txt_enc,
+                            IExecContext const& exec_ctx)
   {
       // convert the input to unicode codepoints
       std::vector<Int> codepoints;
@@ -250,7 +269,7 @@ namespace
                                        gids);
 
       KerningOffsets kerns;
-      if (0 /*kerning*/)
+      if (exec_ctx.config().get_int("text.kerning"))
       {
           process_kerns(&gids[0], gids.size(),
                         bind(&IFontEx::kerning_gids, font.font(), _1, _2),
@@ -280,23 +299,25 @@ namespace
   /// Low-level entry point for text output.
   ///
   void output_text_internal(PDFFont const&font,
-                             ObjFmtBasic& writer,
-                             Char const* start, Char const* end,
-                             offsets_info_t const* offsets,
-                             IExecContext const& exec_ctx)
+                            ObjFmtBasic& writer,
+                            Char const* start, Char const* end,
+                            offsets_info_t const* offsets,
+                            IExecContext const& exec_ctx)
   {
       JAG_PRECONDITION(start<end);
       char const* txt_enc = get_default_text_encoding(exec_ctx);
 
       if (PDFFontData::SIMPLE_FONT == font.font_dict().fdict_data().font_type())
       {
-          output_simple_font_text(font, writer, start, end, offsets, txt_enc);
+          output_simple_font_text(font, writer, start, end,
+                                  offsets, txt_enc, exec_ctx);
       }
       else
       {
           if (ENC_IDENTITY == font.font_dict().fdict_data().font_encoding())
           {
-              output_cid_font_text(font, writer, start, end, offsets, txt_enc);
+              output_cid_font_text(font, writer, start,
+                                   end, offsets, txt_enc, exec_ctx);
           }
           else
           {

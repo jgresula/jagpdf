@@ -451,6 +451,12 @@ Int TypefaceImpl::kerning_gids(UInt left, UInt right) const
     return delta.x;
 }
 
+Int TypefaceImpl::kerning_chars(Int left, Int right) const
+{
+    return kerning_gids(codepoint_to_gid(left),
+                        codepoint_to_gid(right));
+}
+
 
 
 }} // namespace jag::resources

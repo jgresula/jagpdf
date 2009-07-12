@@ -1,3 +1,4 @@
+// -*- mode: c++ -*-
 // Copyright (c) 2005-2009 Jaroslav Gresula
 //
 // Distributed under the MIT license (See accompanying file
@@ -20,6 +21,8 @@ struct t1s_glyph {
     jag::Int widthx;
 };
 
+struct kern_rec_t;
+
 struct t1s_face {
     const TypefaceMetrics FontMetrics;
     jag::Char const* FontName;
@@ -37,6 +40,7 @@ struct t1s_face {
     const jag::Int StdVW;
     const int num_glyphs;
     const t1s_glyph* const glyphs;
+    jag::Int (*kerning_getter)(kern_rec_t const&);
     Hash16  Hash;
 };
 
@@ -58,6 +62,8 @@ enum T1_ADOBE_STANDARD_FONTS{
     T1_NUM_FACES
 };
 extern t1s_face const* g_adobe_standard_t1_faces[T1_NUM_FACES];
+
+Int t1_get_kerning(t1s_face const& face, Int left, Int right);
 
 }} //namespace jag::resources
 

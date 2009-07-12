@@ -131,6 +131,11 @@ Int T1AdobeStandardFace::kerning_gids(UInt /*left*/, UInt /*right*/) const
     JAG_TBD;
 }
 
+Int T1AdobeStandardFace::kerning_chars(Int left, Int right) const
+{
+    return t1_get_kerning(*m_face, left, right);
+}
+
 
 std::auto_ptr<IStreamInput>
 T1AdobeStandardFace::font_program(int /*index*/, unsigned /*options*/) const

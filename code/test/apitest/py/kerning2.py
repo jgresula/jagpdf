@@ -12,15 +12,23 @@ import jag.testlib as testlib
 # AY and YA seems to have the largest kerning
 
 def test_main(argv=None):
-    doc = testlib.create_test_doc(argv, 'kerning2.pdf')
+    profile = testlib.test_config()
+    profile.set("text.kerning", "1")
+    doc = testlib.create_test_doc(argv, 'kerning2.pdf', profile)
     font = testlib.EasyFontTTF(doc)
-    pheight = 58
+    font_core = testlib.EasyFont(doc)
+    pheight = 70
     doc.page_start(7*72, pheight)
     canvas = doc.page().canvas()
-    canvas.text_font(font(12))
+
 
     txt = "AYAYAYAYAYAYAYA YAYAYAYAYAYAYAYAYA YAYAYAYAYAYAYAY AYAYAYAYAY"
+    
+    canvas.text_font(font(12))
     canvas.text(10, 20, txt)
+
+    canvas.text_font(font_core(12))
+    canvas.text(10, 35, txt)
 
 #     # fetch widths
 #     finfo = font

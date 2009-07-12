@@ -107,6 +107,18 @@ Double FontImpl::kerning_gids(UInt left, UInt right) const
     return 0.0;
 }
 
+//
+//
+// 
+Double FontImpl::kerning_chars(Int left, Int right) const
+{
+    Int kern = m_typeface.kerning_chars(left, right);
+    if (kern)
+        return m_coef * kern;
+
+    return 0.0;
+}
+
 
 ///
 ///
@@ -299,6 +311,11 @@ Int MultiEncFontImpl::is_in_font_dbg(jag::Char const*,
 }
 
 Double MultiEncFontImpl::kerning_gids(UInt, UInt) const
+{
+    JAG_INTERNAL_ERROR;
+}
+
+Double MultiEncFontImpl::kerning_chars(Int, Int) const
 {
     JAG_INTERNAL_ERROR;
 }

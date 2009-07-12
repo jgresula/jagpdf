@@ -29,7 +29,8 @@ namespace
       {"doc.viewer_preferences", ""},
 
       // should not be used directly but via get_default_text_encoding()
-      {"doc.text_encoding"     , ""},   // not-documented
+      {"text.encoding"         , ""},   // not-documented
+      {"text.kerning"          , "0"},
 
       // patterns
       {"patterns.tiling_type"      , "1"},
@@ -72,20 +73,20 @@ namespace pdf {
 extern jstd::cfg_pair_t const* s_config_symbols = config_defaults;
 
 
-// Holds the text default encoding. It overrides 'doc.text_encoding' value. It
+// Holds the text default encoding. It overrides 'text.encoding' value. It
 // is usually set by clients (e.g. Java wrapper) that cannot supply text in
 // various encodings.
 extern char const* s_default_text_encoding = 0;
 
 //
-// Must be used when asking for "doc.text_encoding".
+// Must be used when asking for "text.encoding".
 //
 char const* get_default_text_encoding(IExecContext const& exec_ctx)
 {
     if (s_default_text_encoding)
         return s_default_text_encoding;
 
-    return exec_ctx.config().get("doc.text_encoding");
+    return exec_ctx.config().get("text.encoding");
 }
 
 

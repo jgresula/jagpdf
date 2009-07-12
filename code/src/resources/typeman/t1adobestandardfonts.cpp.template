@@ -64,7 +64,7 @@ extern t1s_face const* g_adobe_standard_t1_faces[T1_NUM_FACES] = {
 //
 //
 // 
-int t1_get_kerning(t1s_face const& face, Int left, Int right)
+Int t1_get_kerning(t1s_face const& face, Int left, Int right)
 {
     if (!face.kerning_getter)
         return 0;

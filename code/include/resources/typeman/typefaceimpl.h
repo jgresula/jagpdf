@@ -59,6 +59,7 @@ public:
     Int char_horizontal_advance(Int codepoint) const;
     Int gid_horizontal_advance(UInt gid) const;
     Int kerning_gids(UInt left, UInt right) const;
+    Int kerning_chars(Int left, Int right) const;
 
     Int can_embed() const { return m_can_embed; }
     Int can_subset() const { return m_can_subset; }
