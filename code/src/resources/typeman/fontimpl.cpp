@@ -82,17 +82,17 @@ Double FontImpl::horizontal_advance_dbg(jag::Char const* text, jag::ULong length
         while (text != end)
         {
             Int cp = conv->next_code_point(&text, end);
-            result += m_coef * m_typeface.char_horizontal_advance(cp);
+            result += m_typeface.char_horizontal_advance(cp);
         }
     }
     else
     {
         // built-it font encoding
         while (text != end)
-            result += m_coef * m_typeface.char_horizontal_advance(*text++);
+            result += m_typeface.char_horizontal_advance(*text++);
     }
 
-    return result;
+    return m_coef * result;
 }
 
 //
