@@ -169,10 +169,6 @@ TypefaceImpl::font_program(int index, unsigned options) const
     JAG_PRECONDITION(index >=0 && index < num_streams());
     if (options & EXTRACT_CFF)
     {
-        // This is a sub-optimal approach that is here temporarily just to find
-        // out whether it even works; actually a stream proxy atop of font
-        // program should be used This stream cannot be embedded directly into
-        // PDF.
         JAG_ASSERT(m_type == FACE_OPEN_TYPE_CFF);
         FT_ULong cff_len = 0;
         FT_Error err = FT_Load_Sfnt_Table(
@@ -434,8 +430,8 @@ Int TypefaceImpl::char_horizontal_advance(Int codepoint) const
     {
     case FACE_OPEN_TYPE_CFF:
     case FACE_TRUE_TYPE: {
-        // if FT_Get_Char_Index returns 0, it means that there is no glyph
-        // for that code point, however we can still load glyph at index 0 which
+        // if FT_Get_Char_Index returns 0, it means that there is no glyph for
+        // that code point, however we can still load glyph at index 0 which
         // should represent missing character by convention
         return gid_horizontal_advance(FT_Get_Char_Index(m_face, codepoint));
     }
@@ -446,28 +442,6 @@ Int TypefaceImpl::char_horizontal_advance(Int codepoint) const
 
     return advance;
 }
-
-
-// //////////////////////////////////////////////////////////////////////////
-// bool operator<(TypefaceImpl const& lhs, TypefaceImpl const& rhs)
-// {
-//     return jstd::is_lesser(lhs.hash(), rhs.hash());
-// }
-//
-//
-// //////////////////////////////////////////////////////////////////////////
-// bool operator==(TypefaceImpl const& lhs, TypefaceImpl const& rhs)
-// {
-//     return jstd::is_equal(lhs.hash(), rhs.hash());
-// }
-//
-//
-// //////////////////////////////////////////////////////////////////////////
-// size_t hash_value(TypefaceImpl const& font)
-// {
-//     return boost::hash_value(font.hash());
-// }
-
 
 
 }} // namespace jag::resources
