@@ -448,8 +448,7 @@ Int TypefaceImpl::kerning_gids(UInt left, UInt right) const
     FT_Vector delta;
     CHECK_FT(FT_Get_Kerning(m_face, left, right,
                             FT_KERNING_UNSCALED, &delta));
-    // return delta.x
-    return 0;
+    return delta.x;
 }
 
 

@@ -38,6 +38,7 @@ set(tests
   basictxtfmt
   defaultfont
   kerning
+  kerning2
   textstate
   defaulttxtenc
   defaultargs

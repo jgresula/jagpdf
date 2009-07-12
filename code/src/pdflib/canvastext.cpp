@@ -159,7 +159,7 @@ namespace
   {
       std::vector<Int> m_positions;
       std::vector<Double> m_offsets;
-      offsets_info_t* m_merged; // intentionally unitialized
+      offsets_info_t m_merged; // intentionally unitialized
       
   public:
       void add(Int pos, Double offset) {
@@ -168,9 +168,22 @@ namespace
       }
 
       offsets_info_t const* merge(offsets_info_t const* other) {
-          // other might be zero
-          JAG_ASSERT(m_offsets.empty()); // not implemented
-          return other;
+          if (!other)
+          {
+              if (!m_positions.empty())
+              {
+                  m_merged.adj = &m_offsets[0];
+                  m_merged.pos = &m_positions[0];
+                  m_merged.len = m_positions.size();
+                  return &m_merged;
+              }
+              return 0;
+          }
+          else
+          {
+              JAG_ASSERT(m_offsets.empty()); // not implemented
+          }
+          return 0;
       }
   };
 
@@ -178,7 +191,8 @@ namespace
   // retrives kerns for given gids/codepoints sequence
   // 
   template<class T, class FN>
-  void process_kerns(T* t, size_t size, FN kern_fn, KerningOffsets& kerns)
+  void process_kerns(T* t, size_t size, FN kern_fn,
+                     KerningOffsets& kerns, Double coef)
   {
       JAG_PRECONDITION(size > 0);
       --size;
@@ -187,7 +201,7 @@ namespace
           Double kern = kern_fn(t[i], t[i+1]);
           // test against 0.0 (without delta) as fn() returns 0.0 literal
           if (kern != 0.0)
-              kerns.add(i+1, kern);
+              kerns.add(i+1, kern * coef);
       }
   }
   
@@ -236,11 +250,11 @@ namespace
                                        gids);
 
       KerningOffsets kerns;
-      if (1 /*kerning*/)
+      if (0 /*kerning*/)
       {
           process_kerns(&gids[0], gids.size(),
                         bind(&IFontEx::kerning_gids, font.font(), _1, _2),
-                        kerns);
+                        kerns, -1000.0/font.font()->size());
           offsets = kerns.merge(offsets);
       }
       
