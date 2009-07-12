@@ -16,7 +16,18 @@
 namespace jag {
 namespace resources {
 
-struct kern_rec_t
+#ifdef __GNUC__
+# define JAG_PACKED __attribute__((packed))
+#else
+# define JAG_PACKED 
+#endif
+
+
+#if defined(_MSC_VER)
+# pragma pack(push, 1)
+#endif
+
+struct JAG_PACKED kern_rec_t
 {
     jag::UInt key;
     unsigned offset_0 : 6;
@@ -28,6 +39,16 @@ struct kern_rec_t
     unsigned offset_6 : 6;
     unsigned offset_7 : 6;
 };
+
+#if defined(_MSC_VER)
+# pragma pack(pop)
+#endif 
+#undef JAG_PACKED
+
+// compile time assertion on kern_rect_t size
+#if defined(_MSV_VER) or defined(__GNUC__)
+typedef int check_packing[(sizeof(kern_rec_t) == 10) ? 1 : -1 ];
+#endif 
 
 namespace {
 
