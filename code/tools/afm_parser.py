@@ -15,18 +15,22 @@ encoding_status()  ... gives info about encodings and core fontd
 import glyphlist
 import glob
 import re
-import string
+from string import Template
 import sys
 import md5
+from collections import defaultdict
+import math
+import random
+from StringIO import StringIO
 
 class Bunch:
     def __init__(self, **kwds):
         self.__dict__.update(kwds)
 
 class Face:
-    def __init__( self ):
+    def __init__( self, ctx ):
+        self.ctx = ctx
         self.chars = []
-        self.kern_pairs = []
         self.FontName = ""
         self.FullName = ""
         self.FamilyName = ""
@@ -45,6 +49,7 @@ class Face:
         self.Weight = 400 # 100-900
         self.StdHW = 0
         self.StdVW = 0
+        self.KernGetter = "NULL"
         self.md5 = md5.new()
 
     def finalize(self):
@@ -141,14 +146,19 @@ class KernDataHandler(HandlerBase):
 class KernPairsHandler(HandlerBase):
     def __init__( self, face, arg ):
         HandlerBase.__init__( self, face )
+        self.getter_fun = None
 
     def process_line_( self, s ):
-        kwd, name1, name2, kern = s.split( ' ' )
+        kwd, left, right, value = s.split(' ')
         assert( kwd == 'KPX' )
-        u1 = glyphlist.glyph_to_unicode_map[name1]
-        u2 = glyphlist.glyph_to_unicode_map[name2]
-        self.face.kern_pairs.append( (u1, u2, int(kern) ) )
-
+        left = glyphlist.glyph_to_unicode_map[left]
+        right = glyphlist.glyph_to_unicode_map[right]
+        # store the kerning info to ctx.kern_dict,
+        # which is (left, right) -> {get_fun: value}
+        if not self.getter_fun:
+            self.getter_fun = font_name_to_id(self.face.FontName)
+            self.face.KernGetter = 'kern_' + self.getter_fun
+        self.face.ctx.kern_dict[(left,right)][self.getter_fun] = value
 
 def get_kwd_and_val( line ):
         sp = line.split( " ", 1 )
@@ -168,10 +178,10 @@ def font_name_to_enum( fontname ):
     return "T1_" + font_name_to_id( fontname ).upper()
 
 
-def process_afm( instream ):
+def process_afm(instream, ctx):
     """processes single afm file"""
     handlers = []
-    face = Face()
+    face = Face(ctx)
     for line in instream:
         line = line.strip()
         key, val = get_kwd_and_val( line )
@@ -186,11 +196,11 @@ def process_afm( instream ):
     return face;
 
 
-def process_afm_dir( dirname ):
+def process_afm_dir(dirname, ctx):
     """non-recursively processes diretory of afm files"""
     faces = []
     for fname in glob.glob( dirname + '/*.afm' ):
-        faces.append( process_afm( open(fname) ) )
+        faces.append(process_afm(open(fname), ctx))
     return faces
 
 ###########################################################################
@@ -235,6 +245,7 @@ struct t1s_face {
     const jag::Int StdVW;
     const int num_glyphs;
     const t1s_glyph* const glyphs;
+    const jag::Int (*kerning_getter)(void*);
     Hash16  Hash;
 };
 
@@ -253,7 +264,7 @@ extern t1s_face const* g_adobe_standard_t1_faces[T1_NUM_FACES];
 
 def do_cpp_header( faces, outs ):
     ENUMS = ",\n    ".join( [ font_name_to_enum(f.FontName) for f in faces ] )
-    outs.write( string.Template(cpp_header_muster).substitute( locals() ) )
+    outs.write( Template(cpp_header_muster).substitute( locals() ) )
 
 
 ###########################################################################
@@ -275,25 +286,126 @@ cpp_impl_muster="""// Copyright (c) 2005-2009 Jaroslav Gresula
 namespace jag {
 namespace resources {
 namespace {
+
+// --- kerning pairs
+
+$KERN_TABLE
+
+// --- face definitions
+
 $FACE_DEFS
+
 } // anonymous namespace
 
 extern t1s_face const* g_adobe_standard_t1_faces[T1_NUM_FACES] = {
     $FACE_PTRS
 };
 
+#include "t1adobestandardfonts.cpp"
+
 }} //namespace jag::resources
 /** EOF @file */
 """
 
+kern_getter_templ="""
+Int $getter_fun(kern_rec_t const& krec) {
+    return krec.$value_holder;
+}
+"""
 
-def do_cpp_impl( faces, outs ):
+kern_skelet="""
+struct kern_rect_t
+{
+    jag::UInt key;
+    unsigned offset_0 : 6;
+    unsigned offset_1 : 6;
+    unsigned offset_2 : 6;
+    unsigned offset_3 : 6;
+    unsigned offset_4 : 6;
+    unsigned offset_5 : 6;
+    unsigned offset_6 : 6;
+    unsigned offset_7 : 6;
+};
+
+$kern_table
+
+const short kern_values[] =
+{
+    $KERN_VALUES
+};
+"""
+
+kern_table="""
+const unsigned KERN_HASH_P[4] = {$hash1_p, $hash2_p, $hash3_p, 0};
+const unsigned KERN_HASH_TABLE_SIZE = $hash_table_size;
+const unsigned KERN_MIN_UNICODE = $min_unicode;
+const unsigned KERN_MAX_UNICODE = $max_unicode;
+
+const kern_rect_t kerning_table[KERN_HASH_TABLE_SIZE] =
+{
+    $kerning_table
+};
+"""
+
+def make_kern_pair_key(left, right):
+    return left + (right << 14)
+
+def output_kern_table(ctx, getter_to_index, value_to_index):
+    # insertion into the hash table depends on randomizer, so make it
+    # deterministic here
+    random.seed(0)
+    # these 3 primes in combination with table size give ~93% load factor
+    hash1_p = 38749
+    hash2_p = 28813
+    hash3_p = 51577
+    hash_table_size = 3491
+    h = HFunctionsDivision(hash1_p, hash2_p, hash3_p)
+    ch = CuckooHash(hash_table_size, h)
+    result = []
+    min_unicode, max_unicode = sys.maxint, 0
+    for k, v in ctx.kern_dict.iteritems():
+        key = make_kern_pair_key(*k)
+        min_unicode = min(min_unicode, k[0], k[1])
+        max_unicode = max(max_unicode, k[0], k[1])
+        value = 9 * [-1]
+        for getter, val in v.iteritems():
+            value[getter_to_index[getter]] = value_to_index[val]
+        ch.insert(key, ", ".join((str(v) for v in value)))
+    result += ch.c_output("{0xffffffff, -1, -1, -1, -1, -1, -1, -1, -1}")
+    kerning_table = ",\n    ".join(result)
+    return Template(kern_table).substitute(locals())
+    
+
+def output_kern_data(ctx):
+    """outputs data needed for pair kerning"""
+    s = StringIO()
+    getters, values = set(), set()
+    for pair, d in ctx.kern_dict.iteritems():
+        for g, val in d.iteritems():
+            getters.add(g)
+            values.add(val)
+    getter_to_index = dict([(g, i) for i, g in enumerate(getters)])
+    vlist = [(v, i) for i, v in enumerate(values)]
+    vlist.sort(lambda l, r : cmp(l[1], r[1]))
+    value_to_index = dict(vlist)
+    KERN_VALUES = ",\n    ".join((str(v) for v, i in vlist))
+    kern_table = output_kern_table(ctx, getter_to_index, value_to_index)
+    s.write(Template(kern_skelet).substitute(locals()))
+    # output getter functions (they access offset value for given font)
+    for getter_fun, value_holder_i in getter_to_index.iteritems():
+        value_holder = "offset_%d" % value_holder_i
+        s.write(Template(kern_getter_templ).substitute(locals()))
+    return s.getvalue()
+
+
+def do_cpp_impl(faces, outs, ctx):
     FACE_PTRS = ",\n    ".join( [ "&"+font_name_to_id(f.FontName) for f in faces ] )
     FACE_DEFS = []
     for face in faces:
         FACE_DEFS.append( do_cpp_impl_face(face) )
     FACE_DEFS = "\n".join( FACE_DEFS )
-    outs.write( string.Template(cpp_impl_muster).substitute( locals() ) )
+    KERN_TABLE = output_kern_data(ctx)
+    outs.write( Template(cpp_impl_muster).substitute( locals() ) )
 
 
 
@@ -335,6 +447,7 @@ const t1s_face  $FACEID = {
     /* vertical stem w */        $StdVW,
     /* num glyphs */             $NUM_GLYPHS,
     /* glyph metrics */          ${FACEID}_glyphs,
+    /* kerning getter */         ${KernGetter},    
     /* hash */                   { $HASH }
 };
 """
@@ -372,15 +485,18 @@ def do_cpp_impl_face(face):
     BaselineDistance = 1000*12/10
     if BaselineDistance < locals()['Ascender']-locals()['Descender']:
         BaselineDistance = locals()['Ascender']-locals()['Descender']
-    return string.Template(cpp_impl_face_muster).substitute( locals() )
+    return Template(cpp_impl_face_muster).substitute( locals() )
 
 AFM_DIR = '../../external/data/Core14_AFMs/'
 
 def gen_cpp_jagbase():
-    faces = process_afm_dir(AFM_DIR)
+    ctx = Bunch(kern_dict=defaultdict(lambda : {}))
+    faces = process_afm_dir(AFM_DIR, ctx)
     if faces:
-        do_cpp_header( faces, open('../src/resources/typeman/t1adobestandardfonts.h', 'wb' ) )
-        do_cpp_impl( faces, open('../src/resources/typeman/t1adobestandardfonts.cpp', 'wb' ) )
+        header_stream = open('../src/resources/typeman/t1adobestandardfonts.h', 'wb' )
+        do_cpp_header(faces, header_stream)
+        cpp_stream = open('../src/resources/typeman/t1adobestandardfonts.cpp', 'wb')
+        do_cpp_impl(faces, cpp_stream, ctx)
 
 
 #C 33 ; WX 600 ; N exclam ; B 202 -15 398 572 ;
@@ -402,11 +518,193 @@ def encoding_status():
                 print enc, err
 
 
+# ---------------------------------------------------------------------------
+#  kerning stats
+#  
+def kern_generator():
+    from glyphlist import glyph_to_unicode_map as gmap
+    for fontfile in glob.glob('../../external/data/Core14_AFMs/*.afm'):
+        for line in open(fontfile):
+            if line.startswith('KPX'):
+                kpx, left, right, offset = line.split()
+                yield fontfile, gmap[left], gmap[right], offset
+    
+def kern_stats():
+    # unique lefts per font
+    # avg number of rights per single left
+    # % of kern pairs in all pair in lorem ipsum
+    kd = defaultdict(lambda : {})
+    pairs_total = 0
+    pairs_unique = set()
+    values_unique = set()
+    pairs_per_font = defaultdict(lambda : 0)
+    pairs_freq_font = defaultdict(lambda : 0)
+    max_unicode = 0
+    max_left = 0
+    max_right = 0
+    min_left = sys.maxint
+    min_right = sys.maxint
+    max_diff = 0
+    glyphs = set()
+    max_val, min_val = 0, sys.maxint
+    for font, left, right, val in kern_generator():
+        kd[font][(left, right)] = val
+        pairs_total += 1
+        pairs_unique.add((left, right))
+        values_unique.add(val)
+        max_val = max(max_val, int(val))
+        min_val = min(min_val, int(val))
+        pairs_per_font[font] += 1
+        pairs_freq_font[(left, right)] += 1
+        max_unicode = max(max_unicode, left, right)
+        max_left = max(max_left, left)
+        max_right = max(max_right, right)
+        min_left = min(min_left, left)
+        min_right = min(min_right, right)
+        max_diff = max(max_diff, abs(left - right))
+        glyphs.add(left)
+        glyphs.add(right)
+    # post-proc
+    pairs_dist = defaultdict(lambda : 0)
+    for v in pairs_freq_font.itervalues():
+        pairs_dist[v] += 1 
+    # out
+    log2_glyphs = defaultdict(lambda : 0)
+    for g in glyphs:
+        log2_glyphs[math.ceil(math.log(g, 2))] += 1
+    print 'total:', pairs_total
+    print 'unique pairs:', len(pairs_unique), ', tree depth:', math.log(len(pairs_unique), 2)
+    print 'unique glyphs:', len(glyphs)
+    print 'unique values:', len(values_unique)
+    print 'min val:', min_val, ', max_val:', max_val, ", diff:", (max_val - min_val)
+    print 'pairs per font:', ', '.join([str(v) for v in pairs_per_font.itervalues()]) 
+    print 'pairs freq in fonts:', ', '.join(['%d: %d' % (k, v) for k, v in pairs_dist.iteritems()])
+    print 'bits per glyph:', ', '.join(("%d: %d" % (k, v) for k, v in log2_glyphs.iteritems()))
+    print 'max unicode:', max_unicode, ', max left:', max_left, ', max right:', max_right
+    print 'min left:', min_left, ', min right:', min_right, ', max diff:', max_diff
+
+
+class CuckooHash:
+    def __init__(self, size, hash_funs):
+        self.table = size * [None]
+        self.num_items = 0
+        self.hash_funs = hash_funs
+
+    def hash(self, i, key):
+        return self.hash_funs(i, key) % len(self.table)
+
+    def insert(self, key, value):
+        pos = self.hash(0, key)
+        assert self.table[pos] == None or self.table[pos][0] != key
+        item = (key, value)
+        for n in xrange(self.num_items + 1):
+            if None == self.table[pos]:
+                self.table[pos] = item
+                self.num_items += 1
+                return 
+            item, self.table[pos] = self.table[pos], item
+            #
+            hashes = [self.hash(i, item[0]) for i in range(self.hash_funs.size())]
+            hashes.remove(pos)
+            empty_slots = [pos for pos in hashes if None == self.table[pos]]
+            if empty_slots:
+                pos = empty_slots[0]
+            else:
+                pos = random.choice(hashes)
+        raise TableFull('not possible to insert %d' % item[0])
+
+    def lookup(self, key):
+        for i in range(self.hash_funs.size()):
+            pos = self.hash(i, key)
+            if self.table[pos] and self.table[pos][0] == key:
+                return self.table[pos][1]
+        return None
+
+    def stats(self):
+        print '#items:', self.num_items
+        print 'load factor:', float(self.num_items) / len(self.table)
+
+    def load_factor(self):
+        return float(self.num_items) / len(self.table)
+
+    def c_output(self, empty_slot):
+        result = []
+        for i in range(len(self.table)):
+            item = self.table[i]
+            if item != None:
+                result.append("{0x%08x, %s}" % item)
+            else:
+                result.append(empty_slot)
+        return result
+                
+
+class TableFull(Exception):
+    def __init__(self, msg):
+        Exception.__init__(self, msg)
+
+class HFunctionsDivision:
+    def __init__(self, *primes):
+        self.primes = primes
+
+    def __call__(self, i, key):
+        return key % self.primes[i]
+
+    def size(self):
+        return len(self.primes)
+
+    def __str__(self):
+        return 'Division: ' + ', '.join((str(p) for p in self.primes))
+
+def CuckooIter():
+    h = HFunctionsDivision(58393, 23567, 11273)
+    h = HFunctionsDivision(38749, 28813, 51577)
+    yield CuckooHash(3491, h), h
+#     from primes import primes
+#     while 1:
+#         h = HFunctionsDivision(*random.sample(primes,3))
+#         yield CuckooHash(3491, h), h
+
+def construct_hash_table():
+    pairs_dict = {}
+    min_key, max_key = sys.maxint, 0
+    for font, left, right, val in kern_generator():
+        pairs_dict.setdefault((left, right), {})[font] = val
+        min_key = min(min_key, make_kern_pair_key(left, right))
+        max_key = max(max_key, make_kern_pair_key(left, right))
+    #
+    print "min key:", min_key
+    print 'max key:', max_key
+
+    found = False
+    best_lf = 0.0
+    for h, funs in CuckooIter():
+        try:
+            for k, v in pairs_dict.iteritems():
+                h.insert(make_kern_pair_key(*k), val)
+            h.stats()
+            found = True
+            break
+        except TableFull, exc:
+            if h.load_factor() > best_lf:
+                print 'Load factor: %.3f' % h.load_factor(), 'for', funs
+                best_lf = h.load_factor()
+    # verify
+    if found:
+        for k, v in pairs_dict.iteritems():
+            assert val == h.lookup(make_kern_pair_key(*k))
+        assert h.lookup(make_kern_pair_key(5000, 5000)) == None
+        print 'OK for ' + str(funs)
+    else:
+        print 'FAILED'
+    sys.exit(1)
+        
+
 
 if __name__ == "__main__":
     #encoding_status()
     gen_cpp_jagbase()
-
+    kern_stats()
+    #construct_hash_table()
 
     #    faces = process_afm_dir( 'c:/Code/cpp/sandbox/jagbase/code/src/resources/typeman/Core14_AFMs/' )
 #    do_cpp_header( faces, sys.stdout )
