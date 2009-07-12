@@ -80,9 +80,9 @@
      objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.7940781"
-     inkscape:cx="206.45143"
-     inkscape:cy="113.57691"
+     inkscape:zoom="1"
+     inkscape:cx="433.81857"
+     inkscape:cy="112.586"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -108,21 +108,9 @@
      inkscape:groupmode="layer"
      id="layer1"
      style="display:inline">
-    <rect
-       style="fill:#06266f;fill-opacity:1;stroke:none;stroke-opacity:1"
-       id="rect2547"
-       width="111"
-       height="50"
-       x="460.46011"
-       y="941.58917"
-       ry="0"
-       rx="0"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"
-       inkscape:export-filename="c:\home\jarda\tmp\logo.png" />
     <g
        id="g2424"
-       transform="translate(110.42989,286.08381)">
+       transform="translate(31.039263,29.198424)">
       <g
          style="display:inline"
          id="layer2">
@@ -232,8 +220,8 @@
     </g>
     <rect
        ry="0.66666669"
-       y="581.46478"
-       x="218.62038"
+       y="71.663536"
+       x="393.27975"
        height="1.3333334"
        width="1.3333334"
        id="rect2448"
@@ -241,7 +229,7 @@
     <g
        id="g2452"
        style="display:inline"
-       transform="translate(134.88405,668.7384)">
+       transform="translate(309.54343,158.93716)">
       <rect
          style="fill:#a4a4a4;fill-opacity:1"
          id="rect2454"
@@ -268,7 +256,7 @@
        id="g2462" />
     <g
        id="g3287"
-       transform="translate(-4.1044776,-55.597015)">
+       transform="translate(170.5549,-565.39826)">
       <rect
          style="fill:#4869d6;fill-opacity:1"
          id="rect2446"
@@ -304,7 +292,7 @@
     </g>
     <g
        id="g3294"
-       transform="translate(-7.4626866,-49.626866)">
+       transform="translate(167.19669,-559.42811)">
       <rect
          style="fill:#4671d5;fill-opacity:1;display:inline"
          id="rect2450"
@@ -344,17 +332,6 @@
              sodipodi:role="line">JagPDF</tspan></text>
       </g>
     </g>
-    <rect
-       style="fill:#06266f;fill-opacity:1;stroke:none;stroke-opacity:1"
-       id="rect3303"
-       width="16"
-       height="16"
-       x="164.88957"
-       y="849.72412"
-       ry="3.4349272"
-       inkscape:export-filename="c:\home\jarda\tmp\favicon16.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
@@ -375,88 +352,194 @@
          id="tspan3311"
          x="151.49254"
          y="847.13831" /></text>
-    <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="168.85725"
-       y="861.94287"
-       id="text3313"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="c:\home\jarda\tmp\favicon16.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
-         sodipodi:role="line"
-         id="tspan3315"
-         x="168.85725"
-         y="861.94287"
-         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:Arial Black;-inkscape-font-specification:Arial Black Heavy">J</tspan></text>
-    <rect
-       style="fill:#06266f;fill-opacity:1;stroke:none;stroke-opacity:1"
-       id="rect3321"
-       width="33"
-       height="32"
-       x="282"
-       y="865.36218"
-       ry="3.1756876"
-       inkscape:export-filename="c:\home\jarda\favicon32.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90" />
-    <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="290.73401"
-       y="889.79968"
-       id="text3323"
-       inkscape:export-filename="c:\home\jarda\favicon32.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
-         sodipodi:role="line"
-         id="tspan3325"
-         x="290.73401"
-         y="889.79968"
-         style="font-size:24px;font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:Arial Black;-inkscape-font-specification:Arial Black Heavy">J</tspan></text>
+    <g
+       id="g2490"
+       transform="translate(-8,-119)">
+      <rect
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="c:\home\jarda\tmp\favicon16.png"
+         ry="3.4349272"
+         y="390.39264"
+         x="170.56033"
+         height="16"
+         width="16"
+         id="rect3303"
+         style="fill:#06266f;fill-opacity:1;stroke:none;stroke-opacity:1" />
+      <text
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="c:\home\jarda\tmp\favicon16.png"
+         sodipodi:linespacing="125%"
+         id="text3313"
+         y="402.61139"
+         x="174.52802"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:Arial Black;-inkscape-font-specification:Arial Black Heavy"
+           y="402.61139"
+           x="174.52802"
+           id="tspan3315"
+           sodipodi:role="line">J</tspan></text>
+    </g>
+    <g
+       id="g2463"
+       transform="translate(-100.22601,-137.93906)">
+      <rect
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="c:\home\jarda\favicon32.png"
+         ry="3.1756876"
+         y="406.0307"
+         x="287.67075"
+         height="32"
+         width="33"
+         id="rect3321"
+         style="fill:#06266f;fill-opacity:1;stroke:none;stroke-opacity:1" />
+      <text
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="c:\home\jarda\favicon32.png"
+         id="text3323"
+         y="430.46823"
+         x="296.40475"
+         style="font-size:40px;font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:24px;font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:Arial Black;-inkscape-font-specification:Arial Black Heavy"
+           y="430.46823"
+           x="296.40475"
+           id="tspan3325"
+           sodipodi:role="line">J</tspan></text>
+    </g>
     <rect
        ry="3.4349272"
-       y="598.50354"
-       x="163.48328"
+       y="88.702293"
+       x="338.14264"
        height="53.016476"
        width="149.10184"
        id="rect2525"
        style="fill:#4671d5;fill-opacity:1;display:inline" />
     <rect
-       transform="matrix(0.9999758,-6.9613066e-3,0,1,0,0)"
+       transform="matrix(0.9999758,-6.9613062e-3,0,1,0,0)"
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        inkscape:export-filename="c:\home\jarda\tmp\logo.png"
        ry="8.4818449"
-       y="527.93164"
-       x="364.13733"
+       y="19.346287"
+       x="538.80096"
        height="42.105625"
        width="132.90353"
        id="rect2529"
        style="fill:#06266f;fill-opacity:1" />
-    <text
-       inkscape:export-ydpi="90"
+    <g
+       id="g2468"
+       transform="translate(-13.432924,-132.10368)">
+      <rect
+         inkscape:export-filename="c:\home\jarda\tmp\logo.png"
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         rx="0"
+         ry="0"
+         y="394.74963"
+         x="47.964024"
+         height="50"
+         width="111"
+         id="rect2569"
+         style="fill:#06266f;fill-opacity:1;stroke:none;stroke-opacity:1" />
+      <text
+         inkscape:export-filename="c:\home\jarda\tmp\logo.png"
+         xml:space="preserve"
+         style="font-size:48px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         x="57.010899"
+         y="425.90787"
+         id="text2571"
+         sodipodi:linespacing="125%"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90"><tspan
+           sodipodi:role="line"
+           id="tspan2573"
+           x="57.010899"
+           y="425.90787"
+           style="font-size:24px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold">JagPDF</tspan></text>
+    </g>
+    <g
+       id="g2457"
+       transform="translate(29.262389,-91.671208)">
+      <rect
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="c:\home\jarda\tmp\favicon16.png"
+         ry="3.4349272"
+         y="524.12177"
+         x="139.1205"
+         height="16"
+         width="16"
+         id="rect2575"
+         style="fill:#06266f;fill-opacity:1;stroke:none;stroke-opacity:1" />
+      <text
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="c:\home\jarda\tmp\favicon16.png"
+         sodipodi:linespacing="125%"
+         id="text2577"
+         y="535.29462"
+         x="145.7787"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+           y="535.29462"
+           x="145.7787"
+           id="tspan2579"
+           sodipodi:role="line">J</tspan></text>
+    </g>
+    <rect
+       style="fill:#06266f;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-opacity:1"
+       id="rect2480"
+       width="806"
+       height="100"
+       x="-1"
+       y="606.36218"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
        inkscape:export-xdpi="90"
-       sodipodi:linespacing="125%"
-       id="text2531"
-       y="972.23419"
-       x="473.37808"
-       style="font-size:48px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       xml:space="preserve"
-       inkscape:export-filename="c:\home\jarda\tmp\logo.png"><tspan
-         style="font-size:22px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
-         y="972.23419"
-         x="473.37808"
-         id="tspan2533"
-         sodipodi:role="line">JagPDF</tspan></text>
+       inkscape:export-ydpi="90" />
+    <g
+       id="g2473"
+       transform="translate(-429.39833,-65.78672)">
+      <rect
+         inkscape:export-filename="c:\home\jarda\tmp\logo.png"
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         rx="0"
+         ry="0"
+         y="482.25772"
+         x="466.13086"
+         height="50"
+         width="111"
+         id="rect2547"
+         style="fill:#06266f;fill-opacity:1;stroke:none;stroke-opacity:1" />
+      <text
+         inkscape:export-filename="c:\home\jarda\tmp\logo.png"
+         xml:space="preserve"
+         style="font-size:48px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+         x="479.04883"
+         y="512.90271"
+         id="text2531"
+         sodipodi:linespacing="125%"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90"><tspan
+           sodipodi:role="line"
+           id="tspan2533"
+           x="479.04883"
+           y="512.90271"
+           style="font-size:22px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold">JagPDF</tspan></text>
+    </g>
     <rect
        style="fill:#06266f;fill-opacity:1;stroke:none;stroke-opacity:1"
-       id="rect2569"
-       width="111"
-       height="50"
-       x="42.293266"
-       y="854.08112"
+       id="rect2497"
+       width="266"
+       height="100"
+       x="305.5"
+       y="435.36218"
        ry="0"
        rx="0"
        inkscape:export-xdpi="90"
@@ -466,42 +549,411 @@
        inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
        sodipodi:linespacing="125%"
-       id="text2571"
-       y="885.23932"
-       x="51.340141"
+       id="text2499"
+       y="663.62585"
+       x="17.417969"
        style="font-size:48px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
        xml:space="preserve"
-       inkscape:export-filename="c:\home\jarda\tmp\logo.png"><tspan
-         style="font-size:24px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
-         y="885.23932"
-         x="51.340141"
-         id="tspan2573"
-         sodipodi:role="line">JagPDF</tspan></text>
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"><tspan
+         style="font-size:22px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+         y="663.62585"
+         x="17.417969"
+         id="tspan2501"
+         sodipodi:role="line"><tspan
+   style="font-size:32"
+   id="tspan2508">JagPDF</tspan> Blog</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:900;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Arial Black;-inkscape-font-specification:Arial Black Heavy"
+       x="119"
+       y="606.36218"
+       id="text2510"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan2512" /></text>
+    <text
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       sodipodi:linespacing="125%"
+       id="text2514"
+       y="647.62585"
+       x="357.3916"
+       style="font-size:16px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+       xml:space="preserve"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"><tspan
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+         y="647.62585"
+         x="357.3916"
+         id="tspan2516"
+         sodipodi:role="line">blog on the latest developments</tspan><tspan
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+         y="667.62585"
+         x="357.3916"
+         sodipodi:role="line"
+         id="tspan2520">in the JagPDF library and related technologies</tspan></text>
     <rect
-       style="fill:#06266f;fill-opacity:1;stroke:none;stroke-opacity:1"
-       id="rect2575"
-       width="16"
-       height="16"
-       x="133.44974"
-       y="983.45325"
-       ry="3.4349272"
-       inkscape:export-filename="c:\home\jarda\tmp\favicon16.png"
+       style="fill:#06266f;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-opacity:1;display:inline"
+       id="rect2528"
+       width="806"
+       height="100"
+       x="1"
+       y="739.36218"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
     <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
-       x="140.10794"
-       y="994.6261"
-       id="text2577"
-       sodipodi:linespacing="125%"
-       inkscape:export-filename="c:\home\jarda\tmp\favicon16.png"
+       inkscape:export-ydpi="90"
        inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"><tspan
+       sodipodi:linespacing="125%"
+       id="text2530"
+       y="796.62585"
+       x="19.417969"
+       style="font-size:48px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+       xml:space="preserve"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"><tspan
+         style="font-size:32px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+         y="796.62585"
+         x="19.417969"
+         id="tspan2532"
+         sodipodi:role="line">JagPDF </tspan><tspan
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+         y="823.97546"
+         x="19.417969"
          sodipodi:role="line"
-         id="tspan2579"
-         x="140.10794"
-         y="994.6261"
-         style="font-size:12px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold">J</tspan></text>
+         id="tspan2542">                blog</tspan></text>
+    <text
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       sodipodi:linespacing="125%"
+       id="text2536"
+       y="780.62585"
+       x="359.3916"
+       style="font-size:16px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+       xml:space="preserve"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"><tspan
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+         y="780.62585"
+         x="359.3916"
+         id="tspan2538"
+         sodipodi:role="line">blog on the latest developments</tspan><tspan
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+         y="800.62585"
+         x="359.3916"
+         sodipodi:role="line"
+         id="tspan2540">in the JagPDF library and related technologies</tspan></text>
+    <rect
+       style="fill:#06266f;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-opacity:1;display:inline"
+       id="rect2546"
+       width="868"
+       height="100"
+       x="2"
+       y="876.36218"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       ry="0" />
+    <text
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       sodipodi:linespacing="125%"
+       id="text2554"
+       y="920.71375"
+       x="209.3916"
+       style="font-size:16px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+       xml:space="preserve"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"><tspan
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+         y="920.71375"
+         x="209.3916"
+         id="tspan2556"
+         sodipodi:role="line">blog on the latest developments</tspan><tspan
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+         y="940.71375"
+         x="209.3916"
+         sodipodi:role="line"
+         id="tspan2558">in the JagPDF library and related technologies</tspan></text>
+    <g
+       id="g2566"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       transform="translate(0,-5.7998009)">
+      <text
+         inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+         xml:space="preserve"
+         style="font-size:48px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+         x="28.414063"
+         y="933.62585"
+         id="text2548"
+         sodipodi:linespacing="125%"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90"><tspan
+           id="tspan2552"
+           sodipodi:role="line"
+           x="28.414063"
+           y="933.62585"
+           style="font-size:32px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold">JagPDF </tspan></text>
+      <text
+         inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+         xml:space="preserve"
+         style="font-size:48px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+         x="118.71094"
+         y="950.57312"
+         id="text2562"
+         sodipodi:linespacing="125%"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90"><tspan
+           id="tspan2564"
+           sodipodi:role="line"
+           x="118.71094"
+           y="950.57312"
+           style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold">blog</tspan></text>
+    </g>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#6699cc;stroke-width:0.09971382;stroke-opacity:1"
+       id="rect3382"
+       width="1.8761349"
+       height="84.900276"
+       x="180.5473"
+       y="883.91205"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-opacity:1;display:inline"
+       id="rect3392"
+       width="806"
+       height="100"
+       x="0"
+       y="1002.3622"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       sodipodi:linespacing="125%"
+       id="text3394"
+       y="1046.7137"
+       x="207.3916"
+       style="font-size:16px;font-style:normal;font-weight:normal;line-height:125%;fill:#06266f;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+       xml:space="preserve"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"><tspan
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#06266f;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+         y="1046.7137"
+         x="207.3916"
+         id="tspan3396"
+         sodipodi:role="line">blog on the latest developments</tspan><tspan
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#06266f;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+         y="1066.7137"
+         x="207.3916"
+         sodipodi:role="line"
+         id="tspan3398">in the JagPDF library and related technologies</tspan></text>
+    <g
+       style="display:inline;fill:#06266f;fill-opacity:1"
+       id="g3400"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       transform="translate(-2,120.2002)">
+      <text
+         inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+         xml:space="preserve"
+         style="font-size:48px;font-style:normal;font-weight:normal;line-height:125%;fill:#06266f;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+         x="28.414063"
+         y="933.62585"
+         id="text3402"
+         sodipodi:linespacing="125%"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90"><tspan
+           id="tspan3404"
+           sodipodi:role="line"
+           x="28.414063"
+           y="933.62585"
+           style="font-size:32px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#06266f;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold">JagPDF </tspan></text>
+      <text
+         inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+         xml:space="preserve"
+         style="font-size:48px;font-style:normal;font-weight:normal;line-height:125%;fill:#06266f;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+         x="118.71094"
+         y="950.57312"
+         id="text3406"
+         sodipodi:linespacing="125%"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90"><tspan
+           id="tspan3408"
+           sodipodi:role="line"
+           x="118.71094"
+           y="950.57312"
+           style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#06266f;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold">blog</tspan></text>
+    </g>
+    <rect
+       style="fill:#06266f;fill-opacity:1;fill-rule:evenodd;stroke:#6699cc;stroke-width:0.09971382000000000;stroke-opacity:1;display:inline"
+       id="rect3410"
+       width="1.8761349"
+       height="84.900276"
+       x="178.5473"
+       y="1009.9121"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="fill:#06266f;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-opacity:1;display:inline"
+       id="rect3412"
+       width="880"
+       height="78"
+       x="-3.7850952"
+       y="1110.9092"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       ry="9.3599997" />
+    <text
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       sodipodi:linespacing="125%"
+       id="text3414"
+       y="1144.2607"
+       x="203.60651"
+       style="font-size:16px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+       xml:space="preserve"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"><tspan
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+         y="1144.2607"
+         x="203.60651"
+         id="tspan3416"
+         sodipodi:role="line">blog on the latest developments</tspan><tspan
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+         y="1164.2607"
+         x="203.60651"
+         sodipodi:role="line"
+         id="tspan3418">in the JagPDF library and related technologies</tspan></text>
+    <g
+       style="display:inline"
+       id="g3420"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       transform="translate(-5.7851,217.74718)">
+      <text
+         inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+         xml:space="preserve"
+         style="font-size:48px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+         x="28.414063"
+         y="933.62585"
+         id="text3422"
+         sodipodi:linespacing="125%"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90"><tspan
+           id="tspan3424"
+           sodipodi:role="line"
+           x="28.414063"
+           y="933.62585"
+           style="font-size:32px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold">JagPDF </tspan></text>
+      <text
+         inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+         xml:space="preserve"
+         style="font-size:48px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+         x="118.71094"
+         y="950.57312"
+         id="text3426"
+         sodipodi:linespacing="125%"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90"><tspan
+           id="tspan3428"
+           sodipodi:role="line"
+           x="118.71094"
+           y="950.57312"
+           style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold">blog</tspan></text>
+    </g>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#6699cc;stroke-width:0.08479805;stroke-opacity:1;display:inline"
+       id="rect3430"
+       width="1.8908523"
+       height="60.922333"
+       x="174.75485"
+       y="1119.448"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="fill:#06266f;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-opacity:1;display:inline"
+       id="rect2504"
+       width="880"
+       height="78"
+       x="-1.1814299"
+       y="1210.7761"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       ry="9.3599997" />
+    <text
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       sodipodi:linespacing="125%"
+       id="text2506"
+       y="1244.1277"
+       x="206.21017"
+       style="font-size:16px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+       xml:space="preserve"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"><tspan
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+         y="1244.1277"
+         x="206.21017"
+         sodipodi:role="line"
+         id="tspan2527">news, notes, tips and tricks</tspan><tspan
+         style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+         y="1264.1277"
+         x="206.21017"
+         sodipodi:role="line"
+         id="tspan2531">for the JagPDF library and related technologies</tspan></text>
+    <g
+       style="display:inline"
+       id="g2513"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       transform="translate(-3.1814348,317.61412)">
+      <text
+         inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+         xml:space="preserve"
+         style="font-size:48px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+         x="28.414063"
+         y="933.62585"
+         id="text2515"
+         sodipodi:linespacing="125%"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90"><tspan
+           id="tspan2517"
+           sodipodi:role="line"
+           x="28.414063"
+           y="933.62585"
+           style="font-size:32px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold">JagPDF </tspan></text>
+      <text
+         inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+         xml:space="preserve"
+         style="font-size:48px;font-style:normal;font-weight:normal;line-height:125%;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;display:inline;font-family:Bitstream Vera Sans"
+         x="118.71094"
+         y="950.57312"
+         id="text2519"
+         sodipodi:linespacing="125%"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90"><tspan
+           id="tspan2521"
+           sodipodi:role="line"
+           x="118.71094"
+           y="950.57312"
+           style="font-size:16px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold">blog</tspan></text>
+    </g>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#6699cc;stroke-width:0.08479805;stroke-opacity:1;display:inline"
+       id="rect2523"
+       width="1.8908523"
+       height="60.922333"
+       x="177.35852"
+       y="1219.3149"
+       inkscape:export-filename="c:\home\jarda\tmp\blogh.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
   </g>
 </svg>
