@@ -1626,7 +1626,12 @@ coordinate.
 
 [py_example_text_glyph_pos]
 
+[note When kerning is turned on, both the glyph and kerning adjustments can be
+specified for the same position. In such case, the glyph adjustment is
+preferred.]
+
 [heading Glyph Positioning Summary]
+
 
 [table
 [[] []]
@@ -2189,6 +2194,17 @@ The following tables describe available options.
  ]]
 
  [[doc.compressed][[^1]][[^0], [^1]][Whether to compress the document.]]
+]
+
+[endsect]
+
+[/ ------------------]
+[section Text]
+[/ ------------------]
+[table
+ [[Name][Default][Values][Description]]
+
+ [[text.kerning][[^0]][[^0],[^1]][ Enables/disables pair kerning.  ]]
 ]
 
 [endsect]

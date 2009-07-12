@@ -28,8 +28,13 @@ public:
     virtual Double size() const = 0;
     /// Retrieves font family.
     virtual Char const* family_name() const = 0;
+    
     /// Retrieves width of the passed string in user space units.
+    ///
+    /// If kerning is turned on then the kerning offsets are counted in.
     virtual Double advance(Char const* txt_u) const = 0;
+
+    
     /// Retrieves baseline distance in user space units.
     virtual Double height() const = 0;
     /// Retrieves ascender in user space units.
