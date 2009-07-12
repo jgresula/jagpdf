@@ -107,6 +107,8 @@ namespace
   {
       std::vector<Int> m_positions;
       std::vector<Double> m_offsets;
+      std::vector<Int> m_merged_positions;
+      std::vector<Double> m_merged_offsets;
       offsets_info_t m_merged; // intentionally unitialized
       
   public:
@@ -129,9 +131,64 @@ namespace
           }
           else
           {
-              // when kerning and the 'other' define a glyph offset on the same
-              // position, then the other is taken (the user value is preferred)
-              JAG_ASSERT(m_offsets.empty()); // not implemented
+              //
+              // merge kerning and the glyph offsets provided by the client
+              // 
+              if (m_positions.empty())
+                  return other;
+              
+              int ki = 0, oi = 0;
+              const size_t assumed_size = other->len + m_positions.size();
+              m_merged_positions.reserve(assumed_size);
+              m_merged_offsets.reserve(assumed_size);
+              while(1)
+              {
+                  if (m_positions[ki] < other->pos[oi])
+                  {
+                      m_merged_positions.push_back(m_positions[ki]);
+                      m_merged_offsets.push_back(m_offsets[ki]);
+                      ++ki;
+                  }
+                  else
+                  {
+                      m_merged_positions.push_back(other->pos[oi]);
+                      m_merged_offsets.push_back(other->adj[oi]);
+                      ++oi;
+
+                      // kerning is discarded if the user provides a glyph
+                      // adjustment for a kerning pair
+                      if (m_positions[ki] == other->pos[oi])
+                          ++ki;
+                  }
+
+                  if (oi == other->len)
+                  {
+                      std::copy(m_positions.begin() + ki, m_positions.end(),
+                                back_inserter(m_merged_positions));
+
+                      std::copy(m_offsets.begin() + ki, m_offsets.end(),
+                                back_inserter(m_merged_offsets));
+                      break;
+                  }
+
+                  if (ki == static_cast<int>(m_positions.size()))
+                  {
+                      std::copy(other->pos + oi, other->pos + other->len,
+                                back_inserter(m_merged_positions));
+                      
+                      std::copy(other->adj + oi, other->adj + other->len,
+                                back_inserter(m_merged_offsets));
+
+                      break;
+                  }
+              }
+
+              JAG_ASSERT(!m_merged_offsets.empty());
+
+              m_merged.adj = &m_merged_offsets[0];
+              m_merged.pos = &m_merged_positions[0];
+              m_merged.len = m_merged_positions.size();
+              return &m_merged;
           }
           return 0;
       }
