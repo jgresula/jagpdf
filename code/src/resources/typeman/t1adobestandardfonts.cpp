@@ -52,7 +52,7 @@ struct JAG_PACKED kern_offsets_t
 #undef JAG_PACKED
 
 // compile time assertion on kern_rec_t size
-#if defined(_MSV_VER) or defined(__GNUC__)
+#if defined(_MSV_VER) || defined(__GNUC__)
 typedef int check_packing[(sizeof(kern_rec_t) == 6) ? 1 : -1 ];
 typedef int check_packing[(sizeof(kern_offsets_t) == 6) ? 1 : -1 ];
 #endif 

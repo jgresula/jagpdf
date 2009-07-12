@@ -189,7 +189,6 @@ namespace
               m_merged.len = m_merged_positions.size();
               return &m_merged;
           }
-          return 0;
       }
   };
 
