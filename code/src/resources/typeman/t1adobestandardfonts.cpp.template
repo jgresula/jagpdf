@@ -40,6 +40,11 @@ struct JAG_PACKED kern_rec_t
     unsigned offset_7 : 6;
 };
 
+bool operator<(kern_rec_t const& lhs, kern_rec_t const& rhs)
+{
+    return lhs.key < rhs.key;
+}
+
 #if defined(_MSC_VER)
 # pragma pack(pop)
 #endif 
@@ -54,7 +59,18 @@ namespace {
 
 // --- kerning pairs
 
-const unsigned KERN_HASH_P[4] = {$hash1_p, $hash2_p, $hash3_p, 0};
+#if defined(JAG_KERN_BINARY_SEARCH)
+
+const unsigned KERN_SORTED_LEN = $kern_sorted_len;
+
+const kern_rec_t sorted_kerning_table[KERN_SORTED_LEN] =
+{
+    $kerning_sorted
+};
+
+#else 
+
+const unsigned KERN_HASH_P[3] = {$hash1_p, $hash2_p, $hash3_p};
 const unsigned KERN_HASH_TABLE_SIZE = $hash_table_size;
 const int KERN_MIN_UNICODE = $min_unicode;
 const int KERN_MAX_UNICODE = $max_unicode;
@@ -64,12 +80,20 @@ const kern_rec_t kerning_table[KERN_HASH_TABLE_SIZE] =
     $kerning_table
 };
 
+#endif 
+
 const short kern_values[] =
 {
     $kern_values
 };
 
 $kerning_getters
+
+// --- TEST START optional linear search
+
+
+
+// --- TEST END optional linear search
 
 // --- face definitions
 
@@ -81,6 +105,43 @@ extern t1s_face const* g_adobe_standard_t1_faces[T1_NUM_FACES] = {
     $FACE_PTRS
 };
 
+#if defined(JAG_KERN_BINARY_SEARCH)
+//
+// TEST
+//
+struct kern_cmp
+{
+    bool operator()(kern_rec_t const& rec, unsigned key) const
+    {
+        return rec.key < key;
+    }
+
+    bool operator()(unsigned key, kern_rec_t const& rec) const
+    {
+        return key < rec.key;
+    }
+};
+
+Int t1_get_kerning(t1s_face const& face, Int left, Int right)
+{
+    if (!face.kerning_getter)
+        return 0;
+
+    unsigned key = (left & 0xffff)+ (right << 16);
+    const kern_rec_t *found = std::lower_bound(sorted_kerning_table,
+                                               sorted_kerning_table + KERN_SORTED_LEN,
+                                               key,
+                                               kern_cmp());
+    if (found->key == key)
+    {
+        int val = (*face.kerning_getter)(*found);
+        return kern_values[val];
+    }
+        
+    return 0;
+}
+
+#else 
 
 //
 //
@@ -90,28 +151,23 @@ Int t1_get_kerning(t1s_face const& face, Int left, Int right)
     if (!face.kerning_getter)
         return 0;
 
-    unsigned key = left + (right << 14);
-    for(unsigned const *p = &KERN_HASH_P[0]; *p; ++p)
+    unsigned key = (left & 0xffff) + (right << 16);
+    for(unsigned const *p = &KERN_HASH_P[0]; p < KERN_HASH_P + 3; ++p)
     {
         unsigned i = (key % *p) % KERN_HASH_TABLE_SIZE;
         if (kerning_table[i].key == key)
         {
             int val = (*face.kerning_getter)(kerning_table[i]);
-            if (val >= 0 &&
-                left >= KERN_MIN_UNICODE && left <= KERN_MAX_UNICODE &&
-                right >= KERN_MIN_UNICODE && right <= KERN_MAX_UNICODE)
-            {
-                return kern_values[val];
-            }
-            else
-            {
-                return 0;
-            }
+            return kern_values[val];
         }
     }
 
     return 0;
 }
+
+#endif 
+
+
 
 }} //namespace jag::resources
 /** EOF @file */

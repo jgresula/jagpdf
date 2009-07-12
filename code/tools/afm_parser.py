@@ -234,21 +234,22 @@ Int $getter_fun(kern_rec_t const& krec) {
 
 
 def make_kern_pair_key(left, right):
-    return left + (right << 14)
+    return left + (right << 16)
 
 def output_kern_table(templ, ctx, getter_to_index, value_to_index):
     # insertion into the hash table depends on randomizer, so make it
     # deterministic here
     random.seed(0)
     # these 3 primes in combination with table size give ~93% load factor
-    hash1_p = 38749
-    hash2_p = 28813
-    hash3_p = 51577
+    hash1_p = 14897
+    hash2_p = 10709
+    hash3_p = 61981
     hash_table_size = 3491
     h = HFunctionsDivision(hash1_p, hash2_p, hash3_p)
     ch = CuckooHash(hash_table_size, h)
     result = []
     min_unicode, max_unicode = sys.maxint, 0
+    test_a = []
     for k, v in ctx.kern_dict.iteritems():
         key = make_kern_pair_key(*k)
         min_unicode = min(min_unicode, k[0], k[1])
@@ -257,8 +258,14 @@ def output_kern_table(templ, ctx, getter_to_index, value_to_index):
         for getter, val in v.iteritems():
             value[getter_to_index[getter]] = value_to_index[val]
         ch.insert(key, ", ".join((str(v) for v in value)))
+        test_a.append((key, ", ".join((str(v) for v in value))))
     result += ch.c_output("{0xffffffff, -1, -1, -1, -1, -1, -1, -1, -1}")
     kerning_table = ",\n    ".join(result)
+    # test
+    test_a.sort()
+    kerning_sorted = ",\n   ".join(["{0x%x, %s}" % rec for rec in test_a])
+    kern_sorted_len = len(test_a)
+    # end test
     return Template(templ).safe_substitute(locals())
     
 
@@ -270,7 +277,8 @@ def output_kern_data(templ, ctx):
             getters.add(g)
             values.add(val)
     getter_to_index = dict([(g, i) for i, g in enumerate(getters)])
-    vlist = [(v, i) for i, v in enumerate(values)]
+    vlist = [(v, i + 1) for i, v in enumerate(values)]
+    vlist.append((0, 0))
     vlist.sort(lambda l, r : cmp(l[1], r[1]))
     value_to_index = dict(vlist)
     kern_values = ",\n    ".join((str(v) for v, i in vlist))
@@ -541,8 +549,9 @@ class HFunctionsDivision:
         return 'Division: ' + ', '.join((str(p) for p in self.primes))
 
 def CuckooIter():
-    h = HFunctionsDivision(58393, 23567, 11273)
-    h = HFunctionsDivision(38749, 28813, 51577)
+#     h = HFunctionsDivision(58393, 23567, 11273)
+#     h = HFunctionsDivision(38749, 28813, 51577)
+    h = HFunctionsDivision(14897, 10709, 61981)
     yield CuckooHash(3491, h), h
 #     from primes import primes
 #     while 1:

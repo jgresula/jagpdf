@@ -128,7 +128,7 @@ Panose const& T1AdobeStandardFace::panose() const
 //
 Int T1AdobeStandardFace::kerning_gids(UInt /*left*/, UInt /*right*/) const
 {
-    JAG_TBD;
+    JAG_INTERNAL_ERROR;
 }
 
 Int T1AdobeStandardFace::kerning_chars(Int left, Int right) const
