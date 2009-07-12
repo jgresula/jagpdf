@@ -261,10 +261,9 @@ def output_kern_table(templ, ctx, getter_to_index, value_to_index):
     h = HFunctionsDivision(hash1_p, hash2_p)
     hash_table_size = 1777
     #
-    ch = CuckooHash(hash_table_size, h, num_cells)
+    ch = CuckooNest(hash_table_size, h, num_cells)
     result = []
     min_unicode, max_unicode = sys.maxint, 0
-    test_a = []
     values = {} # offset tuple -> its index
     values[(0, 0, 0, 0, 0, 0)] = 0
     for k, v in ctx.kern_dict.iteritems():
@@ -281,7 +280,6 @@ def output_kern_table(templ, ctx, getter_to_index, value_to_index):
             value_i = len(values)
             values[value] = value_i
         ch.insert(key, str(value_i))
-        test_a.append((key, str(value_i)))
     result += ch.c_output("{0xffffffff, 0}")
     kerning_table = ",\n    ".join(result)
     num_kerning_offsets = len(values)
@@ -292,12 +290,6 @@ def output_kern_table(templ, ctx, getter_to_index, value_to_index):
     off_strings = (", ".join(str(o) for o in off) for off in off_tuples)
     offset_c_values = ("{%s}" % s for s in off_strings)
     kerning_offsets = ",\n    ".join(offset_c_values)
-                     
-    # test
-    test_a.sort()
-    kerning_sorted = ",\n   ".join(["{0x%x, %s}" % rec for rec in test_a])
-    kern_sorted_len = len(test_a)
-    # end test
     return Template(templ).safe_substitute(locals())
     
 
@@ -509,78 +501,46 @@ def kern_stats():
     print 'min left:', min_left, ', min right:', min_right, ', max diff:', max_diff
 
 
-class CuckooHash:
-    def __init__(self, size, hash_funs, cells=1):
-        self.num_items = 0
+class CuckooNest:
+    def __init__(self, nr_buckets, hash_funs, nr_cells=1):
+        self.nr_buckets = nr_buckets
         self.hash_funs = hash_funs
-        self.cells = cells
-        #assert size % cells == 0
-        self.size = size
-        self.table =  cells * size * [None]
+        self.nr_cells = nr_cells
+        self.table =  nr_cells * nr_buckets * [None]
+        self.num_items = 0
 
-    def hash(self, i, key):
-        return self.hash_funs(i, key) % self.size
-
-    def cell_pos(self, i, key):
-        pos = self.hash(i, key)
-        return [self.cells * pos + i for i in range(self.cells)]
+    def cells(self, n, key):
+        """Calculate hash using n-th hash function and return a list of cell
+        indices."""
+        pos = self.hash_funs(n, key) % self.nr_buckets
+        return [self.nr_cells * pos + n for n in range(self.nr_cells)]
 
     def insert(self, key, value):
-        pos = self.cell_pos(0, key)
+        cells = self.cells(0, key)
         item = (key, value)
         for n in xrange(self.num_items + 1):
-            for p in pos:
-                if None == self.table[p]:
-                    self.table[p] = item
+            for cell in cells:
+                if None == self.table[cell]:
+                    self.table[cell] = item
                     self.num_items += 1
                     return
-            p0 = random.choice(pos)
+            p0 = random.choice(cells)
             item, self.table[p0] = self.table[p0], item
-            #
-            all_pos = [self.cell_pos(i, item[0]) for i in range(self.hash_funs.size())]
-            all_pos.remove(pos)
-            empty_slots = [pos for pos in all_pos \
-                           if [i for i in pos if None == self.table[i]]]
-            if empty_slots:
-                pos = empty_slots[0]
-            else:
-                pos = random.choice(all_pos)
-        raise TableFull('not possible to insert %d' % item[0])
+            all_cells = [self.cells(i, item[0]) for i in range(len(self.hash_funs))]
+            all_cells.remove(cells)
+            cells = random.choice(all_cells)
+        raise TableFull('cannot insert %d' % item[0])
+
+    def load_factor(self):
+        return float(self.num_items) / len(self.table)
 
     def lookup(self, key):
-        for i in range(self.hash_funs.size()):
-            pos = self.cell_pos(i, key)
+        for i in range(len(self.hash_funs)):
+            pos = self.cells(i, key)
             for p in pos:
                 if self.table[p] and self.table[p][0] == key:
                     return self.table[p][1]
         return None
-
-#     def insert(self, key, value):
-#         pos = self.hash(0, key)
-#         assert self.table[pos] == None or self.table[pos][0] != key
-#         item = (key, value)
-#         for n in xrange(2 * self.num_items + 1):
-#             if None == self.table[pos]:
-#                 self.table[pos] = item
-#                 self.num_items += 1
-#                 return 
-#             item, self.table[pos] = self.table[pos], item
-#             #
-#             hashes = [self.hash(i, item[0]) for i in range(self.hash_funs.size())]
-#             hashes.remove(pos)
-#             empty_slots = [pos for pos in hashes if None == self.table[pos]]
-#             if empty_slots:
-#                 pos = empty_slots[0]
-#             else:
-#                 pos = random.choice(hashes)
-#         raise TableFull('not possible to insert %d' % item[0])
-# 
-#     def lookup(self, key):
-#         for i in range(self.hash_funs.size()):
-#             pos = self.hash(i, key)
-#             if self.table[pos] and self.table[pos][0] == key:
-#                 return self.table[pos][1]
-#         return None
 
     def stats(self):
         print '#items:', self.num_items
@@ -611,7 +571,7 @@ class HFunctionsDivision:
     def __call__(self, i, key):
         return key % self.primes[i]
 
-    def size(self):
+    def __len__(self):
         return len(self.primes)
 
     def __str__(self):
@@ -619,49 +579,7 @@ class HFunctionsDivision:
 
 def HDivisionIter():
     h = HFunctionsDivision(1984061, 885931)
-    yield CuckooHash(1777, h, 2), h
-
-#     h = HFunctionsDivision(14897, 10709, 61981)
-#     yield CuckooHash(3491, h), h
-      #
-#     from primes import primes
-#     while 1:
-#         h = HFunctionsDivision(*random.sample(primes,2))
-#         yield CuckooHash(5261, h), h
-#     from primes import primes
-#     while 1:
-#         h = HFunctionsDivision(*random.sample(primes,2))
-#         yield CuckooHash(1777, h, 2), h
-        
-
-
-class HUniversal:
-    def __init__(self, p, *ab):
-        self.p = p
-        self.ab = ab
-
-    def __call__(self, i, key):
-        a, b = self.ab[i]
-        return (a * key + b) % self.p
-
-    def size(self):
-        return len(self.ab)
-
-    def __str__(self):
-        fns = ", ".join(("(%dk + %d) mod %d" % \
-                         (ab[0], ab[1], self.p) for ab in self.ab))
-        return "Universal: " + fns
-
-def HUniversalIter():
-    p = 5387719
-    while 1:
-        a1 = random.randint(1, p-1)
-        b1 = random.randint(0, p-1)
-        a2 = random.randint(1, p-1)
-        b2 = random.randint(0, p-1)
-        h = HUniversal(p, (a1, b1), (a2, b2))
-        yield CuckooHash(5261, h), h
-        
+    yield CuckooNest(1777, h, 2), h
 
 import itertools
 def eratosthenes():
@@ -698,25 +616,70 @@ def next_prime(n):
             break
 
 
-def construct_hash_table():
+def get_pairs_dict():
     pairs_dict = {}
     min_key, max_key = sys.maxint, 0
     for font, left, right, val in kern_generator():
         pairs_dict.setdefault((left, right), {})[font] = val
-        min_key = min(min_key, make_kern_pair_key(left, right))
-        max_key = max(max_key, make_kern_pair_key(left, right))
-    #
-    print "min key:", min_key
-    print 'max key:', max_key
+    return pairs_dict
 
+
+def hfuns_generator(n):
+    from primes import primes
+    while 1:
+        yield HFunctionsDivision(*[random.choice(primes) for i in range(n)])
+
+def test_load_factor():
+    from primes import primes
+    N = 50
+    p1 = primes.index(5003) # 3271
+    p2 = primes.index(6007)
+    sizes = primes[p1:p2]
+    pairs_dict = get_pairs_dict()
+    items = [(make_kern_pair_key(*k), v) for k, v in pairs_dict.iteritems()]
+    cells = 1
+    maximize_load_factor(N, items, sizes, hfuns_generator(2), cells)
+
+def maximize_load_factor(N, input_data, nr_buckets_lst, hfun_gen, nr_cells):
+    max_factor, curr_max_factor = 0.0, 0.0
+    num_tries = N
+    low, high = 0, len(nr_buckets_lst)
+    while high > low:
+        found = False
+        mid = low + (high - low) / 2
+        for i in xrange(num_tries):
+            hfuns = hfun_gen.next()
+            htable = CuckooNest(nr_buckets_lst[mid], hfuns, nr_cells)
+            try:
+                for key, val in input_data:
+                    htable.insert(key, val)
+                print 'OK:', nr_buckets_lst[mid], htable.load_factor(), hfuns
+                high = mid - 1
+                found = True
+                break
+            except TableFull:
+                curr_max_factor = max(curr_max_factor, htable.load_factor())
+        if not found and curr_max_factor > max_factor:
+            max_factor = curr_max_factor
+            num_tries *= 2
+        else:
+            max_factor = 0.0
+            curr_max_factor = 0.0
+            num_tries = N
+            if not found:
+                print 'not found:', nr_buckets_lst[mid], ', load factor:', max_factor, \
+                      'target was:', len(input_data) / float(nr_buckets_lst[mid])
+                low = mid + 1
+    
+def construct_hash_table():
+    pairs_dict = get_pairs_dict()
     found = False
     best_lf = 0.0
-    hiter = HUniversalIter()
     hiter = HDivisionIter()
     for h, funs in hiter:
         try:
             for k, v in pairs_dict.iteritems():
-                h.insert(make_kern_pair_key(*k), val)
+                h.insert(make_kern_pair_key(*k), v)
             h.stats()
             found = True
             break
@@ -727,22 +690,34 @@ def construct_hash_table():
     # verify
     if found:
         for k, v in pairs_dict.iteritems():
-            assert val == h.lookup(make_kern_pair_key(*k))
+            assert v == h.lookup(make_kern_pair_key(*k))
         assert h.lookup(make_kern_pair_key(5000, 5000)) == None
         print 'OK for ' + str(funs)
+        return h
     else:
         print 'FAILED'
-    sys.exit(1)
-        
+
+def kern_frequency(fname):
+    h = construct_hash_table()
+    data = " ".join(open(fname).read().split())
+    freq = 0
+    for i in range(0, len(data)-1):
+        k = make_kern_pair_key(ord(data[i]), ord(data[i+1]))
+        if h.lookup(k):
+            freq += 1
+    return len(data), freq, float(freq) / (len(data)-1)
 
 
 if __name__ == "__main__":
     #encoding_status()
-    gen_cpp_jagbase()
+    #gen_cpp_jagbase()
     #kern_stats()
     #construct_hash_table()
+    test_load_factor()
     #gen_primes(0x20002c) # redirect to primes.py
     #next_prime(0x201d0141) # -> 5387719
+    #print kern_frequency('/home/jarda/tmp/kant-critique-142.txt')
+    #test_is_prime()
 
     #    faces = process_afm_dir( 'c:/Code/cpp/sandbox/jagbase/code/src/resources/typeman/Core14_AFMs/' )
 #    do_cpp_header( faces, sys.stdout )
