@@ -169,10 +169,6 @@ TypefaceImpl::font_program(int index, unsigned options) const
     JAG_PRECONDITION(index >=0 && index < num_streams());
     if (options & EXTRACT_CFF)
     {
-        // This is a sub-optimal approach that is here temporarily just to find
-        // out whether it even works; actually a stream proxy atop of font
-        // program should be used This stream cannot be embedded directly into
-        // PDF.
         JAG_ASSERT(m_type == FACE_OPEN_TYPE_CFF);
         FT_ULong cff_len = 0;
         FT_Error err = FT_Load_Sfnt_Table(
@@ -446,15 +442,6 @@ Int TypefaceImpl::char_horizontal_advance(Int codepoint) const
 
     return advance;
 }
-
-Int TypefaceImpl::kerning_gids(UInt left, UInt right) const
-{
-    FT_Vector delta;
-    CHECK_FT(FT_Get_Kerning(m_face, left, right,
-                            FT_KERNING_UNSCALED, &delta));
-    return delta.x;
-}
-
 
 
 }} // namespace jag::resources
