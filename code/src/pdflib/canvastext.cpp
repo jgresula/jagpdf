@@ -153,11 +153,10 @@ namespace
                   {
                       m_merged_positions.push_back(other->pos[oi]);
                       m_merged_offsets.push_back(other->adj[oi]);
-                      ++oi;
 
                       // kerning is discarded if the user provides a glyph
                       // adjustment for a kerning pair
-                      if (m_positions[ki] == other->pos[oi])
+                      if (m_positions[ki] == other->pos[oi++])
                           ++ki;
                   }
 

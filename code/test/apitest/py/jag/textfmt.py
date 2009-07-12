@@ -61,22 +61,22 @@ def format_text(rect, txt, doc, fontid,
 
 
 def find_linebreaks(para, width, metrics):
-    # there is some problem as curr != metrics.advance(' '.join(line))
-    # when yielding
     def is_last_line(n):
         return n==num_words-1
     line = []
     curr = 0
     words = para.split()
     num_words = len(words)
+    spacew = metrics.advance(' ')
     for i, word in enumerate(words):
-#        wl = sum([metrics.advance(c) for c in word])
         wl = metrics.advance(word)
-        if curr+wl > width:
-            yield ' '.join(line), metrics.advance(' '.join(line)), is_last_line(i-1)
+        if curr + wl > width:
+            lw = metrics.advance(' '.join(line))
+            yield ' '.join(line), curr - spacew, is_last_line(i-1)
             line = []
             curr = 0
         line.append(word)
-        curr += wl + metrics.advance(' ')
+        curr += wl + spacew
     if line:
-        yield ' '.join(line), metrics.advance(' '.join(line)), is_last_line(i)
+        lw = metrics.advance(' '.join(line))
+        yield ' '.join(line), curr - spacew, is_last_line(i)

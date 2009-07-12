@@ -35,9 +35,13 @@ def format(doc, font, align):
     rect = margin, margin, media[0]-2*margin, media[1]-2*margin
     doc.page_start(*media)
     canvas = doc.page().canvas()
+    canvas.state_save()
+    canvas.color('s', 0.5)
+    canvas.rectangle(*rect)
+    canvas.path_paint('s')
+    canvas.state_restore()
     text_dir = os.path.expandvars('${JAG_TEST_RESOURCES_DIR}/text/')
     txt = open(os.path.join(text_dir, 'lipsum.txt')).read()
-    txt = txt.split('Qui')[0].strip()
     textfmt.format_text(rect, txt, doc, font, align=align, para_spacing=0.5)
     doc.page_end()
 
@@ -45,19 +49,20 @@ def do_doc(argv, docname, profile=None):
     doc = testlib.create_test_doc(argv, docname, profile)
     font = testlib.EasyFontTTF(doc)
     font_core = testlib.EasyFont(doc)
-    #basic(doc, font, font_core)
+    basic(doc, font, font_core)
     format(doc, font_core(12), 'justify')
- #    format(doc, font_core(12), 'left')
-#    format(doc, font(12), 'justify')
-#     format(doc, font(12), 'left')
+    format(doc, font_core(12), 'left')
+    format(doc, font(12), 'justify')
+    format(doc, font(12), 'left')
     doc.finalize()
-    
+
+# TBD: glyph adj on beginning + check kerning na konci and vice versa
 
 def test_main(argv=None):
     profile = testlib.test_config()
     profile.set("text.kerning", "1")
     do_doc(argv, 'kerning2.pdf', profile)
-#    do_doc(argv, 'kerning2_no.pdf')
+    do_doc(argv, 'kerning2_no.pdf')
 
 
 if __name__ == '__main__':

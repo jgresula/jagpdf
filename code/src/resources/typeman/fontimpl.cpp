@@ -90,6 +90,7 @@ Double FontImpl::horizontal_advance_dbg(jag::Char const* text, jag::ULong length
             {
                 Int cp = conv->next_code_point(&text, end);
                 result += m_typeface.char_horizontal_advance(cp);
+                //JAG_ASSERT((prev!=32 && cp!=32) || 0 == m_typeface.kerning_for_chars(prev, cp));
                 result += m_typeface.kerning_for_chars(prev, cp);
                 prev = cp;
             }
