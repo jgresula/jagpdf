@@ -1,16 +1,10 @@
 #!/usr/bin/env python
+
+# Copyright (c) 2005-2009 Jaroslav Gresula
 #
-# $(Copyright)
-# $(License)
+# Distributed under the MIT license (See accompanying file
+# LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
 #
-
-
-"""
-Implements the following functions:
-
-gen_cpp_jagbase()  ... generates .h/.cpp files with metrics
-encoding_status()  ... gives info about encodings and core fontd
-"""
 
 import glyphlist
 import glob
@@ -241,9 +235,9 @@ def output_kern_table(templ, ctx, getter_to_index, value_to_index):
     # deterministic here
     random.seed(0)
     # these 3 primes in combination with table size give ~93% load factor
-    hash1_p = 14897
-    hash2_p = 10709
-    hash3_p = 61981
+    hash1_p = 226783
+    hash2_p = 1354601
+    hash3_p = 1622471
     hash_table_size = 3491
     num_hash_functions = 3
     num_cells = 1
@@ -578,8 +572,14 @@ class HFunctionsDivision:
         return 'Division: ' + ', '.join((str(p) for p in self.primes))
 
 def HDivisionIter():
-    h = HFunctionsDivision(1984061, 885931)
-    yield CuckooNest(1777, h, 2), h
+#     h = HFunctionsDivision(1984061, 885931)
+#     yield CuckooNest(1777, h, 2), h
+    while 1:
+        from primes import primes
+        h = HFunctionsDivision(random.choice(primes),
+                               random.choice(primes),
+                               random.choice(primes))
+        yield CuckooNest(3491, h), h
 
 import itertools
 def eratosthenes():
@@ -622,6 +622,10 @@ def get_pairs_dict():
     for font, left, right, val in kern_generator():
         pairs_dict.setdefault((left, right), {})[font] = val
     return pairs_dict
+
+def output_keys():
+    for k, v in get_pairs_dict().iteritems():
+        print make_kern_pair_key(*k)
 
 
 def hfuns_generator(n):
@@ -710,18 +714,13 @@ def kern_frequency(fname):
 
 if __name__ == "__main__":
     #encoding_status()
-    #gen_cpp_jagbase()
+    gen_cpp_jagbase()
     #kern_stats()
     #construct_hash_table()
-    test_load_factor()
+    #test_load_factor()
     #gen_primes(0x20002c) # redirect to primes.py
     #next_prime(0x201d0141) # -> 5387719
     #print kern_frequency('/home/jarda/tmp/kant-critique-142.txt')
     #test_is_prime()
+    #output_keys()
 
-    #    faces = process_afm_dir( 'c:/Code/cpp/sandbox/jagbase/code/src/resources/typeman/Core14_AFMs/' )
-#    do_cpp_header( faces, sys.stdout )
-#    do_cpp_impl( faces, sys.stdout )
-#     for face in faces:
-#         print '>', font_name_to_id( face.FontName )
-#    face = process_afm( open('c:/Code/cpp/sandbox/jagbase/code/src/resources/typeman/Core14_AFMs/Helvetica.afm') )
