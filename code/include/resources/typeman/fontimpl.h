@@ -34,7 +34,8 @@ class FontImpl
 public:
     FontImpl(FontSpecImpl const& fspec,
              ITypeface const& face,
-             CharEncodingRecord const& enc_rec);
+             CharEncodingRecord const& enc_rec,
+             IExecContext const& exec_ctx);
 
 public:
     /** @name IFont implementation */
@@ -85,6 +86,7 @@ private:
     mutable jstd::UConverterCtrl   m_conv_ctrl;
 
     const Double m_coef;
+    const bool m_kerning;
 };
 
 // operators

@@ -7,6 +7,8 @@
 #include <resources/typeman/fontimpl.h>
 #include <resources/typeman/charencrecord.h>
 #include "fontspecimpl.h"
+#include <interfaces/execcontext.h>
+#include <interfaces/configinternal.h>
 #include <resources/typeman/typefaceimpl.h>
 #include <resources/interfaces/typeman.h>
 #include <resources/interfaces/typefaceops.h>
@@ -30,8 +32,9 @@ namespace resources {
 
 //////////////////////////////////////////////////////////////////////////
 FontImpl::FontImpl(FontSpecImpl const& fspec,
-                    ITypeface const& face,
-                    CharEncodingRecord const& enc_rec)
+                   ITypeface const& face,
+                   CharEncodingRecord const& enc_rec,
+                   IExecContext const& exec_ctx)
     : m_typeface(face)
     , m_pointsize(fspec.size())
     , m_bold(face.bold())
@@ -39,6 +42,7 @@ FontImpl::FontImpl(FontSpecImpl const& fspec,
     , m_enc_rec(enc_rec)
     , m_conv_ctrl(enc_rec.encoding_canonical)
     , m_coef(m_pointsize / m_typeface.metrics().units_per_EM)
+    , m_kerning(exec_ctx.config().get_int("text.kerning"))
 {
 }
 
@@ -79,10 +83,24 @@ Double FontImpl::horizontal_advance_dbg(jag::Char const* text, jag::ULong length
     Char const*const end = text + length;
     if (conv)
     {
-        while (text != end)
+        if (m_kerning)
         {
-            Int cp = conv->next_code_point(&text, end);
-            result += m_typeface.char_horizontal_advance(cp);
+            Int prev = 0;
+            while (text != end)
+            {
+                Int cp = conv->next_code_point(&text, end);
+                result += m_typeface.char_horizontal_advance(cp);
+                result += m_typeface.kerning_chars(prev, cp);
+                prev = cp;
+            }
+        }
+        else
+        {
+            while (text != end)
+            {
+                Int cp = conv->next_code_point(&text, end);
+                result += m_typeface.char_horizontal_advance(cp);
+            }
         }
     }
     else

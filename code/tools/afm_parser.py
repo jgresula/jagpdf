@@ -254,12 +254,12 @@ def output_kern_table(templ, ctx, getter_to_index, value_to_index):
         key = make_kern_pair_key(*k)
         min_unicode = min(min_unicode, k[0], k[1])
         max_unicode = max(max_unicode, k[0], k[1])
-        value = 8 * [-1]
+        value = 8 * [0]
         for getter, val in v.iteritems():
             value[getter_to_index[getter]] = value_to_index[val]
         ch.insert(key, ", ".join((str(v) for v in value)))
         test_a.append((key, ", ".join((str(v) for v in value))))
-    result += ch.c_output("{0xffffffff, -1, -1, -1, -1, -1, -1, -1, -1}")
+    result += ch.c_output("{0xffffffff, 0, 0, 0, 0, 0, 0, 0, 0}")
     kerning_table = ",\n    ".join(result)
     # test
     test_a.sort()

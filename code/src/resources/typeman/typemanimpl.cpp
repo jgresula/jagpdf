@@ -272,7 +272,9 @@ TypeManImpl::font_load_internal(FontSpecImpl const& specimpl,
     CharEncodingRecord const& text_enc_rec(
         get_text_encoding_rec(specimpl.encoding(), *face_it, specimpl));
 
-    std::auto_ptr<FontImpl> font(new FontImpl(specimpl, *face_it, text_enc_rec));
+    std::auto_ptr<FontImpl> font(
+        new FontImpl(specimpl, *face_it, text_enc_rec, exec_ctx));
+    
     return lookup_font(font, m_fonts_map);
 }
 
