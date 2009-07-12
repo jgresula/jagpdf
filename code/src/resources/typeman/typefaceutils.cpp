@@ -69,17 +69,18 @@ public: //IStreamInput
 
 
 //////////////////////////////////////////////////////////////////////////
-boost::shared_ptr<IStreamInput> create_ftopenargs_stream_adapter(FT_Open_Args const& args)
+std::auto_ptr<IStreamInput>
+create_ftopenargs_stream_adapter(FT_Open_Args const& args)
 {
     switch(args.flags)
     {
     case FT_OPEN_STREAM:
-        return boost::shared_ptr<IStreamInput>(
+        return std::auto_ptr<IStreamInput>(
             new FTStreamAdapterFromStream(args.stream)
        );
 
     case FT_OPEN_PATHNAME:
-        return boost::shared_ptr<IStreamInput>(
+        return std::auto_ptr<IStreamInput>(
             new jstd::FileStreamInput(args.pathname)
        );
 
@@ -88,7 +89,6 @@ boost::shared_ptr<IStreamInput> create_ftopenargs_stream_adapter(FT_Open_Args co
     }
 
     JAG_INTERNAL_ERROR;
-//    return boost::shared_ptr<IStreamInput>();
 }
 
 

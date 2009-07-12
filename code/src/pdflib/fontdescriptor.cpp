@@ -290,34 +290,37 @@ bool FontDescriptor::on_before_output_definition()
     ITypeface const& typeface(m_font_data.typeface());
 
     // we need to get the font program stream (or possibly its subset)
-    boost::shared_ptr<IStreamInput> font_program;
+    std::auto_ptr<IStreamInput> font_program;
     if (typeface.can_subset())
     {
         std::vector<UInt> codepoints;
         codepoints.reserve(m_used_codepoints.size());
-        std::copy(m_used_codepoints.begin(), m_used_codepoints.end(), std::back_inserter(codepoints));
+        std::copy(m_used_codepoints.begin(),
+                  m_used_codepoints.end(),
+                  std::back_inserter(codepoints));
         JAG_ASSERT(!codepoints.empty());
 
         unsigned subset_options = 0;
-        // spec (5.8) says that embedded TrueType CID fonts do not need cmap
-        // but without it does not work in acrobat, (also it might be some problem in the subsetting code)
-//             if (ITypeface::TRUE_TYPE==typeface->type() && PDFFontData::COMPOSITE_FONT == m_font_data.font_type())
-//                 subset_options |= ITypeface::DONT_INCLUDE_CMAP;
-
-        font_program = typeface.subset_font_program(&codepoints[0], codepoints.size(), subset_options);
+        // spec (5.8) says that embedded TrueType CID fonts do not need cmap but
+        // without it does not work in acrobat, (also it might be some problem
+        // in the subsetting code)
+//         if (ITypeface::TRUE_TYPE==typeface->type() &&
+//             PDFFontData::COMPOSITE_FONT == m_font_data.font_type())
+//         {
+//             subset_options |= ITypeface::DONT_INCLUDE_CMAP;
+//         }
+        font_program = typeface.subset_font_program(&codepoints[0],
+                                                    codepoints.size(),
+                                                    subset_options);
     }
     else
     {
-        // -note: -
-        // it would be possible to drop some tables here but is
-        // questionable wheter it does not degrade quality of the
-        // rendered fonts
-        // --
+        // Note: it would be possible to drop some tables here but is
+        // questionable wheter it does not degrade quality of the rendered fonts
 
         unsigned options = 0;
-        // see #98 - for now, always extract CFF instead of using whole OpenType
-        // file
-        //if (FACE_OPEN_TYPE_CFF==typeface->type() && doc().version() < 6)
+        // see #98 - always extract CFF instead of using whole OpenType file
+        if (FACE_OPEN_TYPE_CFF==typeface.type())
         {
             // extract CFF as version <1.6 is being produced
             options |= ITypeface::EXTRACT_CFF;
@@ -326,11 +329,11 @@ bool FontDescriptor::on_before_output_definition()
     }
 
 #if 0
-    // outputs font to C:/ for debugging purposes
+    // outputs font for debugging purposes
     {
         static int i=0;
         char fname[128];
-        sprintf(fname, "c:/pdf_%d.ttf", ++i);
+        sprintf(fname, "/tmp/pdf_%d.ttf", ++i);
         FileStreamOutput fout(fname);
         copy_stream(*font_program, fout);
         font_program->seek(0, OFFSET_FROM_BEGINNING);
@@ -346,14 +349,8 @@ bool FontDescriptor::on_before_output_definition()
     }
     else if (FACE_OPEN_TYPE_CFF == typeface.type())
     {
-        // see #98 - for now, always extract CFF instead of using whole OpenType
-        // file
-//         Char const* subtype = (doc().version() >= 6)
-//             ? "OpenType"
-//             : (PDFFontData::COMPOSITE_FONT==m_font_data.font_type())
-//                 ? "CIDFontType0C"
-//                 : "Type1C";
-        Char const* subtype = (PDFFontData::COMPOSITE_FONT==m_font_data.font_type())
+        Char const* subtype =
+            (PDFFontData::COMPOSITE_FONT==m_font_data.font_type())
             ? "CIDFontType0C"
             : "Type1C";
 

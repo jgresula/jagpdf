@@ -198,7 +198,7 @@ public: // not going to be exported
      * Stream lifetime is tied to ITypeface.
      *
      */
-    virtual boost::shared_ptr<IStreamInput> font_program(
+    virtual std::auto_ptr<IStreamInput> font_program(
         int index, unsigned options) const PURE_FUNCTION;
 
 
@@ -212,7 +212,7 @@ public: // not going to be exported
      *
      * @return an input stream with the subset font
      */
-    virtual boost::shared_ptr<IStreamInput> subset_font_program(
+    virtual std::auto_ptr<IStreamInput> subset_font_program(
         UInt const* codepoints,
         size_t len,
         unsigned options) const PURE_FUNCTION;

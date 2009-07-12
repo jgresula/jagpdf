@@ -47,7 +47,8 @@ private:
 };
 
 
-boost::shared_ptr<IStreamInput> create_ftopenargs_stream_adapter(FT_Open_Args const& args);
+std::auto_ptr<IStreamInput>
+create_ftopenargs_stream_adapter(FT_Open_Args const& args);
 
 }} // namespace jag::resources
 

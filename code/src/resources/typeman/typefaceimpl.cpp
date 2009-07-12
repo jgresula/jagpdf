@@ -42,7 +42,8 @@ namespace
 } // anonymous namespace
 
 //////////////////////////////////////////////////////////////////////////
-TypefaceImpl::TypefaceImpl(boost::shared_ptr<FT_LibraryRec_> ftlib, std::auto_ptr<FTOpenArgs> args)
+TypefaceImpl::TypefaceImpl(boost::shared_ptr<FT_LibraryRec_> ftlib,
+                           std::auto_ptr<FTOpenArgs> args)
     : m_open_args(args.release())
     , m_face(0)
     , m_type(FACE_UNINITIALIZED)
@@ -50,9 +51,10 @@ TypefaceImpl::TypefaceImpl(boost::shared_ptr<FT_LibraryRec_> ftlib, std::auto_pt
     , m_can_subset(false)
     , m_ftlib(ftlib)
 {
-    FT_Error err = FT_Open_Face(m_ftlib.get(), m_open_args->get_args(0), 0, &m_face);
+    FT_Error err = FT_Open_Face(
+        m_ftlib.get(), m_open_args->get_args(0), 0, &m_face);
     CHECK_FT(err);
-
+    
     if (2 == m_open_args->num_records())
     {
         FT_Error err = FT_Attach_Stream(m_face, m_open_args->get_args(1));
@@ -62,7 +64,7 @@ TypefaceImpl::TypefaceImpl(boost::shared_ptr<FT_LibraryRec_> ftlib, std::auto_pt
     calculate_hash();
     detect_type();
     preflight();
-
+    
     JAG_POSTCONDITION(m_face);
 }
 
@@ -72,17 +74,21 @@ void TypefaceImpl::detect_type()
 {
     if (FT_IS_SFNT(m_face))
     {
-        // detect opentype with truetype outlines: check if there is glyf
-        // table, otherwise the font should have postcript outlines
-        FT_ULong table_len=0;
-        FT_Load_Sfnt_Table(m_face, FT_MAKE_TAG('g', 'l', 'y', 'f'), 0, 0, &table_len);
+        // detect opentype with truetype outlines: check if there is glyf table,
+        // otherwise the font should have postcript outlines
+        FT_ULong table_len = 0;
+        FT_Load_Sfnt_Table(
+            m_face, FT_MAKE_TAG('g', 'l', 'y', 'f'), 0, 0, &table_len);
+        
         if (table_len)
         {
             m_type = FACE_TRUE_TYPE;
         }
         else
         {
-            FT_Load_Sfnt_Table(m_face, FT_MAKE_TAG('C', 'F', 'F', ' '), 0, 0, &table_len);
+            FT_Load_Sfnt_Table(
+                m_face, FT_MAKE_TAG('C', 'F', 'F', ' '), 0, 0, &table_len);
+            
             if (table_len)
             {
                 m_type = FACE_OPEN_TYPE_CFF;
@@ -97,14 +103,6 @@ void TypefaceImpl::detect_type()
             CHECK_FT(err);
         }
     }
-    else
-    {
-//         const char* face_type = FT_Get_X11_Font_Format(m_face);
-//         puts(face_type);
-//         if (!strcmp("CFF", face_type))
-//         {
-//         }
-    }
 
     if (m_type == FACE_UNINITIALIZED)
         throw exception_invalid_input(msg_unknown_font_format()) << JAGLOC;
@@ -114,6 +112,9 @@ void TypefaceImpl::detect_type()
 
 
 
+//
+//
+// 
 TypefaceMetrics const& TypefaceImpl::metrics() const
 {
     return m_metrics;
@@ -151,7 +152,9 @@ TypefaceImpl::~TypefaceImpl()
 }
 
 
-
+//
+//
+// 
 int TypefaceImpl::num_streams() const
 {
     return m_open_args->num_records();
@@ -160,23 +163,30 @@ int TypefaceImpl::num_streams() const
 
 
 //////////////////////////////////////////////////////////////////////////
-boost::shared_ptr<IStreamInput> TypefaceImpl::font_program(int index, unsigned options) const
+std::auto_ptr<IStreamInput>
+TypefaceImpl::font_program(int index, unsigned options) const
 {
     JAG_PRECONDITION(index >=0 && index < num_streams());
     if (options & EXTRACT_CFF)
     {
-        // This is a sub-optimal approach that is here temporarily
-        // just to find out whether it even works
-        // actually a stream proxy atop of font program should be used
-        // This stream cannot be embedded directly into PDF.
+        // This is a sub-optimal approach that is here temporarily just to find
+        // out whether it even works; actually a stream proxy atop of font
+        // program should be used This stream cannot be embedded directly into
+        // PDF.
         JAG_ASSERT(m_type == FACE_OPEN_TYPE_CFF);
         FT_ULong cff_len = 0;
-        FT_Error err = FT_Load_Sfnt_Table(m_face, FT_MAKE_TAG('C', 'F', 'F', ' '), 0, 0, &cff_len);
+        FT_Error err = FT_Load_Sfnt_Table(
+            m_face, FT_MAKE_TAG('C', 'F', 'F', ' '), 0, 0, &cff_len);
+        
         CHECK_FT(err);
         auto_array<Byte> cff_table(cff_len);
-        err = FT_Load_Sfnt_Table(m_face, FT_MAKE_TAG('C', 'F', 'F', ' '), 0, cff_table.ptr(), &cff_len);
+        err = FT_Load_Sfnt_Table(
+            m_face, FT_MAKE_TAG('C', 'F', 'F', ' '),
+            0, cff_table.ptr(), &cff_len);
+        
         CHECK_FT(err);
-        return boost::shared_ptr<IStreamInput>(new MemoryStreamInput(cff_table.detach(), cff_len, true));
+        return std::auto_ptr<IStreamInput>(
+            new MemoryStreamInput(cff_table.detach(), cff_len, true));
     }
 
     return create_ftopenargs_stream_adapter(*m_open_args->get_args(index));
@@ -367,14 +377,14 @@ std::string TypefaceImpl::full_name() const
 
 
 //////////////////////////////////////////////////////////////////////////
-boost::shared_ptr<IStreamInput>
+std::auto_ptr<IStreamInput>
 TypefaceImpl::subset_font_program(UInt const* codepoints, size_t len, unsigned options) const
 {
     JAG_PRECONDITION(m_can_subset);
 
     if (FACE_TRUE_TYPE == m_type)
     {
-        boost::shared_ptr<IStreamInput> font_prg(font_program(0,options));
+        std::auto_ptr<IStreamInput> font_prg(font_program(0,options));
         truetype::TTFont font(*font_prg);
 
         boost::shared_ptr<MemoryStreamOutput> mem_out(new MemoryStreamOutput);
@@ -382,12 +392,11 @@ TypefaceImpl::subset_font_program(UInt const* codepoints, size_t len, unsigned o
 
         font.make_subset(*mem_out, codepoints, len, include_cmap);
 
-        return boost::shared_ptr<IStreamInput>(
+        return std::auto_ptr<IStreamInput>(
             new MemoryStreamInputFromOutput(mem_out));
     }
 
     JAG_INTERNAL_ERROR;
-//    return boost::shared_ptr<IStreamInput>();
 }
 
 
