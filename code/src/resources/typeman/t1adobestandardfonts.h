@@ -21,7 +21,7 @@ struct t1s_glyph {
     jag::Int widthx;
 };
 
-struct kern_rec_t;
+struct kern_offsets_t;
 
 struct t1s_face {
     const TypefaceMetrics FontMetrics;
@@ -40,7 +40,7 @@ struct t1s_face {
     const jag::Int StdVW;
     const int num_glyphs;
     const t1s_glyph* const glyphs;
-    jag::Int (*kerning_getter)(kern_rec_t const&);
+    jag::Int (*get_kerning)(kern_offsets_t const&);
     Hash16  Hash;
 };
 

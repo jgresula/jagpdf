@@ -227,7 +227,7 @@ cpp_impl_muster="""
 """
 
 kern_getter_templ="""
-Int $getter_fun(kern_rec_t const& krec) {
+Int $getter_fun(kern_offsets_t const& krec) {
     return krec.$value_holder;
 }
 """
@@ -258,7 +258,8 @@ def output_kern_table(templ, ctx, getter_to_index, value_to_index):
     result = []
     min_unicode, max_unicode = sys.maxint, 0
     test_a = []
-    values_set = set()
+    values = {} # offset tuple -> its index
+    values[(0, 0, 0, 0, 0, 0)] = 0
     for k, v in ctx.kern_dict.iteritems():
         key = make_kern_pair_key(*k)
         min_unicode = min(min_unicode, k[0], k[1])
@@ -266,12 +267,25 @@ def output_kern_table(templ, ctx, getter_to_index, value_to_index):
         value = 8 * [0]
         for getter, val in v.iteritems():
             value[getter_to_index[getter]] = value_to_index[val]
-        ch.insert(key, ", ".join((str(v) for v in value)))
-        test_a.append((key, ", ".join((str(v) for v in value))))
-        values_set.add(tuple(value))
-    print "#distinct values", len(values_set)
-    result += ch.c_output("{0xffffffff, 0, 0, 0, 0, 0, 0, 0, 0}")
+        value = tuple(value)
+        try:
+            value_i = values[value]
+        except KeyError:
+            value_i = len(values)
+            values[value] = value_i
+        ch.insert(key, str(value_i))
+        test_a.append((key, str(value_i)))
+    result += ch.c_output("{0xffffffff, 0}")
     kerning_table = ",\n    ".join(result)
+    num_kerning_offsets = len(values)
+    offset_list = [(v, k) for k, v in values.iteritems()]
+    offset_list.sort()
+
+    off_tuples = (os for i, os in offset_list)
+    off_strings = (", ".join(str(o) for o in off) for off in off_tuples)
+    offset_c_values = ("{%s}" % s for s in off_strings)
+    kerning_offsets = ",\n    ".join(offset_c_values)
+                     
     # test
     test_a.sort()
     kerning_sorted = ",\n   ".join(["{0x%x, %s}" % rec for rec in test_a])

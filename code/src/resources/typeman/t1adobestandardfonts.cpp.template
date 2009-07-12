@@ -31,6 +31,11 @@ namespace resources {
 struct JAG_PACKED kern_rec_t
 {
     boost::uint32_t key;
+    short offset_index;
+};
+
+struct JAG_PACKED kern_offsets_t
+{
     unsigned offset_0 : 6;
     unsigned offset_1 : 6;
     unsigned offset_2 : 6;
@@ -40,6 +45,7 @@ struct JAG_PACKED kern_rec_t
     unsigned offset_6 : 6;
     unsigned offset_7 : 6;
 };
+
 
 bool operator<(kern_rec_t const& lhs, kern_rec_t const& rhs)
 {
@@ -53,7 +59,8 @@ bool operator<(kern_rec_t const& lhs, kern_rec_t const& rhs)
 
 // compile time assertion on kern_rect_t size
 #if defined(_MSV_VER) or defined(__GNUC__)
-typedef int check_packing[(sizeof(kern_rec_t) == 10) ? 1 : -1 ];
+typedef int check_packing[(sizeof(kern_rec_t) == 6) ? 1 : -1 ];
+typedef int check_packing[(sizeof(kern_offsets_t) == 6) ? 1 : -1 ];
 #endif 
 
 namespace {
@@ -72,6 +79,7 @@ const kern_rec_t sorted_kerning_table[KERN_SORTED_LEN] =
 #else 
 
 const unsigned NUM_HASH_FUNCTIONS = $num_hash_functions;
+const unsigned NUM_KERNING_OFFSETS = $num_kerning_offsets;
 const unsigned KERN_HASH_P[3] = {$hash1_p, $hash2_p, $hash3_p};
 const unsigned KERN_HASH_TABLE_SIZE = $hash_table_size;
 const int KERN_MIN_UNICODE = $min_unicode;
@@ -80,6 +88,11 @@ const int KERN_MAX_UNICODE = $max_unicode;
 const kern_rec_t kerning_table[KERN_HASH_TABLE_SIZE] =
 {
     $kerning_table
+};
+
+const kern_offsets_t kerning_offsets[NUM_KERNING_OFFSETS] =
+{
+    $kerning_offsets
 };
 
 #endif 
@@ -126,7 +139,7 @@ struct kern_cmp
 
 Int t1_get_kerning(t1s_face const& face, Int left, Int right)
 {
-    if (!face.kerning_getter)
+    if (!face.get_kerning)
         return 0;
 
     unsigned key = (left & 0xffff)+ (right << 16);
@@ -136,7 +149,7 @@ Int t1_get_kerning(t1s_face const& face, Int left, Int right)
                                                kern_cmp());
     if (found->key == key)
     {
-        int val = (*face.kerning_getter)(*found);
+        int val = (*face.get_kerning)(*found);
         return kern_values[val];
     }
         
@@ -148,9 +161,9 @@ Int t1_get_kerning(t1s_face const& face, Int left, Int right)
 //
 //
 // 
-Int _t1_get_kerning(t1s_face const& face, Int left, Int right)
+Int t1_get_kerning(t1s_face const& face, Int left, Int right)
 {
-    if (!face.kerning_getter)
+    if (!face.get_kerning)
         return 0;
 
     unsigned key = (left & 0xffff) + (right << 16);
@@ -161,16 +174,18 @@ Int _t1_get_kerning(t1s_face const& face, Int left, Int right)
         unsigned i = (key % *p) % KERN_HASH_TABLE_SIZE;
         if (kerning_table[i].key == key)
         {
-            int val = (*face.kerning_getter)(kerning_table[i]);
+            int val = (*face.get_kerning)(
+                kerning_offsets[kerning_table[i].offset_index]);
+            
             return kern_values[val];
         }
     }
     return 0;
 }
 
-Int t1_get_kerning(t1s_face const& face, Int left, Int right)
+Int _t1_get_kerning(t1s_face const& face, Int left, Int right)
 {
-    if (!face.kerning_getter)
+    if (!face.get_kerning)
         return 0;
 
     unsigned key = (left & 0xffff) + (right << 16);
@@ -186,7 +201,9 @@ Int t1_get_kerning(t1s_face const& face, Int left, Int right)
         }
     }
 
-    int val = (*face.kerning_getter)(kerning_table[i]);
+    int val = (*face.get_kerning)(
+        kerning_offsets[kerning_table[i].offset_index]);
+    
     return kern_values[val];
 }
 
