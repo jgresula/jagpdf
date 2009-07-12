@@ -10,8 +10,8 @@
 
 ALL_FILES=/tmp/ctags_all_files-$$
 
-find . -name '*.cpp' > $ALL_FILES
-find . -name '*.h' >> $ALL_FILES
+find . -name '*.h' > $ALL_FILES
+find . -name '*.cpp' >> $ALL_FILES
 
 cat $ALL_FILES | ctags -e -f ~/JAGBASE-TAGS -L -
 
