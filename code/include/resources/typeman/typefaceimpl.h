@@ -58,6 +58,7 @@ public:
 
     Int char_horizontal_advance(Int codepoint) const;
     Int gid_horizontal_advance(UInt gid) const;
+    Int kerning_gids(UInt left, UInt right) const;
 
     Int can_embed() const { return m_can_embed; }
     Int can_subset() const { return m_can_subset; }
@@ -66,7 +67,8 @@ public:
     Char const* encoding_scheme() const { return ""; }
     int num_streams() const;
     std::auto_ptr<IStreamInput> font_program(int index, unsigned options) const;
-    std::auto_ptr<IStreamInput> subset_font_program(UInt const* codepoints, size_t len, unsigned options) const;
+    std::auto_ptr<IStreamInput>
+    subset_font_program(UInt const* codepoints, size_t len, unsigned options) const;
     Hash16 const& hash() const { return m_md5.sum(); }
     //@}
 

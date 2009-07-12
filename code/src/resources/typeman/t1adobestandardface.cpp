@@ -122,6 +122,14 @@ Panose const& T1AdobeStandardFace::panose() const
     throw exception_invalid_operation() << JAGLOC;
 }
 
+//
+//
+//
+Int T1AdobeStandardFace::kerning_gids(UInt /*left*/, UInt /*right*/) const
+{
+    JAG_TBD;
+}
+
 
 std::auto_ptr<IStreamInput>
 T1AdobeStandardFace::font_program(int /*index*/, unsigned /*options*/) const

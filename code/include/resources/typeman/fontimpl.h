@@ -44,7 +44,7 @@ public:
     Double size() const { return m_pointsize; }
     Char const* family_name() const { return m_typeface.family_name(); }
     Char const* style_name() const { return m_typeface.style_name(); }
-    Double advance(jag::Char const* text) const;
+    Double advance(Char const* text) const;
     Double height() const;
     Double ascender() const { return m_coef*m_typeface.metrics().ascent; }
     Double descender() const { return m_coef*m_typeface.metrics().descent; }
@@ -54,17 +54,18 @@ public:
     Double bbox_ymax() const { return m_coef*m_typeface.metrics().bbox_ymax; }
     //@}
 
-public:
+public: // IFontEx
     ITypeface const& typeface() const { return m_typeface; }
     EnumCharacterEncoding encoding_id() const ;
     Char const* encoding_canonical() const;
-    Double horizontal_advance_dbg(jag::Char const* text, jag::ULong length) const;
-    Int is_in_font_dbg(jag::Char const* text, jag::UInt length) const;
-
+    Double horizontal_advance_dbg(Char const* text, ULong length) const;
+    Int is_in_font_dbg(Char const* text, UInt length) const;
+    Double kerning_gids(UInt left, UInt right) const;
     bool has_multiple_encondings() const { return false; }
-    IFontEx const& font_for_encoding(EnumCharacterEncoding /*enc*/) const { throw ""; }
     jstd::UnicodeToCP* unicode_to_8bit() const { return 0; }
-
+    IFontEx const& font_for_encoding(EnumCharacterEncoding /*enc*/) const {
+        JAG_INTERNAL_ERROR;
+    }
 
 private:
     ITypeface const& m_typeface;
@@ -75,8 +76,7 @@ private:
     friend bool operator<(FontImpl const& lhs, FontImpl const& rhs);
 
     // when adding a new font attribute, don't forget to update
-    // - operator==
-    // - hash_value
+    // - operators ==, < and hash_value
     Double      m_pointsize;
     Int       m_bold;
     Int       m_italic;
@@ -86,11 +86,14 @@ private:
     const Double m_coef;
 };
 
-
+// operators
 size_t hash_value(FontImpl const& font);
 bool operator==(FontImpl const& lhs, FontImpl const& rhs);
-inline bool operator!=(FontImpl const& lhs, FontImpl const& rhs) { return !(lhs==rhs); }
 bool operator<(FontImpl const& lhs, FontImpl const& rhs);
+inline bool operator!=(FontImpl const& lhs, FontImpl const& rhs) {
+    return !(lhs==rhs);
+}
+
 
 
 //
@@ -142,12 +145,12 @@ public: // internal error if any of those is invoked
     Char const* encoding_canonical() const;
     Double horizontal_advance_dbg(jag::Char const* text, jag::ULong length) const;
     Int is_in_font_dbg(jag::Char const* text, jag::UInt length) const;
+    Double kerning_gids(UInt left, UInt right) const;
 
 public:
     bool has_multiple_encondings() const { return true; }
     IFontEx const& font_for_encoding(EnumCharacterEncoding enc) const;
     jstd::UnicodeToCP* unicode_to_8bit() const { return m_from_unicode.get(); }
-
 
 private:
     friend bool operator<(MultiEncFontImpl const& lhs, MultiEncFontImpl const& rhs);

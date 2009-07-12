@@ -152,6 +152,45 @@ namespace
   }
 
 
+  //
+  //
+  // 
+  class KerningOffsets
+  {
+      std::vector<Int> m_positions;
+      std::vector<Double> m_offsets;
+      offsets_info_t* m_merged; // intentionally unitialized
+      
+  public:
+      void add(Int pos, Double offset) {
+          m_positions.push_back(pos);
+          m_offsets.push_back(offset);
+      }
+
+      offsets_info_t const* merge(offsets_info_t const* other) {
+          // other might be zero
+          JAG_ASSERT(m_offsets.empty()); // not implemented
+          return other;
+      }
+  };
+
+  //
+  // retrives kerns for given gids/codepoints sequence
+  // 
+  template<class T, class FN>
+  void process_kerns(T* t, size_t size, FN kern_fn, KerningOffsets& kerns)
+  {
+      JAG_PRECONDITION(size > 0);
+      --size;
+      for(size_t i=0; i<size; ++i)
+      {
+          Double kern = kern_fn(t[i], t[i+1]);
+          // test against 0.0 (without delta) as fn() returns 0.0 literal
+          if (kern != 0.0)
+              kerns.add(i+1, kern);
+      }
+  }
+  
   ///
   /// Outputs a text written in a composite font.
   ///
@@ -195,6 +234,16 @@ namespace
       font.font_dict().use_codepoints(&codepoints[0],
                                        &codepoints[0] + codepoints.size(),
                                        gids);
+
+      KerningOffsets kerns;
+      if (1 /*kerning*/)
+      {
+          process_kerns(&gids[0], gids.size(),
+                        bind(&IFontEx::kerning_gids, font.font(), _1, _2),
+                        kerns);
+          offsets = kerns.merge(offsets);
+      }
+      
       if (!offsets)
       {
           writer.string_object_2b(&gids[0], gids.size()).graphics_op(OP_Tj);

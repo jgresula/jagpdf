@@ -32,10 +32,9 @@ public:
     virtual EnumCharacterEncoding encoding_id() const = 0;
     virtual Char const* encoding_canonical() const = 0;
 
-    //
     virtual Double horizontal_advance_dbg(jag::Char const* text, jag::ULong length) const = 0;
     virtual Int is_in_font_dbg(jag::Char const* text, jag::UInt length) const = 0;
-
+    virtual Double kerning_gids(UInt left, UInt right) const = 0;
 
     virtual bool has_multiple_encondings() const = 0;
     virtual IFontEx const& font_for_encoding(EnumCharacterEncoding enc) const = 0;

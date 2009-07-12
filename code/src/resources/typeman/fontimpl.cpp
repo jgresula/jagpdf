@@ -95,6 +95,18 @@ Double FontImpl::horizontal_advance_dbg(jag::Char const* text, jag::ULong length
     return result;
 }
 
+//
+//
+//
+Double FontImpl::kerning_gids(UInt left, UInt right) const
+{
+    Int kern = m_typeface.kerning_gids(left, right);
+    if (kern)
+        return m_coef * kern;
+
+    return 0.0;
+}
+
 
 ///
 ///
@@ -283,6 +295,11 @@ Double MultiEncFontImpl::horizontal_advance_dbg(jag::Char const*,
 
 Int MultiEncFontImpl::is_in_font_dbg(jag::Char const*,
                                      jag::UInt) const {
+    JAG_INTERNAL_ERROR;
+}
+
+Double MultiEncFontImpl::kerning_gids(UInt, UInt) const
+{
     JAG_INTERNAL_ERROR;
 }
 

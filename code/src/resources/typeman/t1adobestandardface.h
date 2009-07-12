@@ -75,6 +75,7 @@ public: //ITypeface
 
     Int char_horizontal_advance(Int codepoint) const;
     Int gid_horizontal_advance(UInt gid) const;
+    Int kerning_gids(UInt left, UInt right) const;
 
     Int can_embed() const {
         return false;
