@@ -75,9 +75,11 @@ inline int round(double val)
 //
 inline double round(double val, double precision)
 {
-    return floor(val / precision + .5) * precision;
+    volatile double d2 = val / precision;
+//  TBD: switch to the following code
+//    return (val > 0 ? floor(d2 + .5) : ceil(d2 - .5)) * precision;
+    return floor(d2 + .5) * precision;
 }
-
 
 
 
