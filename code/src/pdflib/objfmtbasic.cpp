@@ -579,10 +579,12 @@ ObjFmtBasic& ObjFmtBasic::output(double value)
         //    using #)
         //  - discard the trailing zeroes and possibly the decimal point
         //
+        double rounded = round(value, .00001);
+        if (rounded == 0.0) rounded = 0.0; // negative zero -> zero
         int written = jstd::snprintf(buffer,
                                      buffer_length,
                                      "%#.5f",
-                                     round(value, .00001));
+                                     rounded);
         char* p = buffer + written - 1;
         while(*p == '0') --p;
         if (*p != '.') ++p;
