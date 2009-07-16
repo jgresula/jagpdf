@@ -5466,17 +5466,17 @@ Int t1_get_kerning(t1s_face const& face, Int left, Int right)
         return 0;
 
     boost::uint32_t key = (left & 0xffff) + (right << 16);
-    const kern_rec_t *it =
+    const kern_rec_t *loc =
         kerning_table + 2 * ((key % 1984061) % KERN_HASH_TABLE_M);
     
-    if (it->key != key && (++it)->key != key)
+    if (loc->key != key && (++loc)->key != key)
     {
-        it = kerning_table + 2 * ((key % 885931) % KERN_HASH_TABLE_M);
-        if (it->key != key && (++it)->key != key)
+        loc = kerning_table + 2 * ((key % 885931) % KERN_HASH_TABLE_M);
+        if (loc->key != key && (++loc)->key != key)
             return 0;
     }
 
-    int val = (*face.get_kerning)(kerning_offsets[it->offset_index]);
+    int val = (*face.get_kerning)(kerning_offsets[loc->offset_index]);
     return kern_values[val];
 }
 

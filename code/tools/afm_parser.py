@@ -501,7 +501,7 @@ class CuckooNest:
         self.hash_funs = hash_funs
         self.nr_cells = nr_cells
         self.table =  nr_cells * nr_buckets * [None]
-        self.num_items = 0
+        self.nr_items = 0
 
     def cells(self, n, key):
         """Calculate hash using n-th hash function and return a list of cell
@@ -512,11 +512,11 @@ class CuckooNest:
     def insert(self, key, value):
         cells = self.cells(0, key)
         item = (key, value)
-        for n in xrange(self.num_items + 1):
+        for n in xrange(self.nr_items + 1):
             for cell in cells:
                 if None == self.table[cell]:
                     self.table[cell] = item
-                    self.num_items += 1
+                    self.nr_items += 1
                     return
             p0 = random.choice(cells)
             item, self.table[p0] = self.table[p0], item
@@ -526,7 +526,7 @@ class CuckooNest:
         raise TableFull('cannot insert %d' % item[0])
 
     def load_factor(self):
-        return float(self.num_items) / len(self.table)
+        return float(self.nr_items) / len(self.table)
 
     def lookup(self, key):
         for i in range(len(self.hash_funs)):
@@ -537,11 +537,11 @@ class CuckooNest:
         return None
 
     def stats(self):
-        print '#items:', self.num_items
-        print 'load factor:', float(self.num_items) / len(self.table)
+        print '#items:', self.nr_items
+        print 'load factor:', float(self.nr_items) / len(self.table)
     
     def load_factor(self):
-        return float(self.num_items) / len(self.table)
+        return float(self.nr_items) / len(self.table)
 
     def c_output(self, empty_slot):
         result = []
@@ -636,15 +636,20 @@ def test_load_factor():
     items = [(make_kern_pair_key(*k), v) for k, v in pairs_dict.iteritems()]
     cells = 1
     maximize_load_factor(N, items, sizes, hfuns_generator(2), cells)
-
+    
 def maximize_load_factor(N, input_data, nr_buckets_lst, hfun_gen, nr_cells):
-    max_factor, curr_max_factor = 0.0, 0.0
-    num_tries = N
+    found, reset = 1, 2
     low, high = 0, len(nr_buckets_lst)
+    status = reset
     while high > low:
-        found = False
-        mid = low + (high - low) / 2
-        for i in xrange(num_tries):
+        if status & reset:
+            max_factor = 0.0
+            nr_tries = N
+            mid = low + (high - low) / 2
+        else:
+            nr_tries *= 2
+        status = reset
+        for i in xrange(nr_tries):
             hfuns = hfun_gen.next()
             htable = CuckooNest(nr_buckets_lst[mid], hfuns, nr_cells)
             try:
@@ -652,22 +657,18 @@ def maximize_load_factor(N, input_data, nr_buckets_lst, hfun_gen, nr_cells):
                     htable.insert(key, val)
                 print 'OK:', nr_buckets_lst[mid], htable.load_factor(), hfuns
                 high = mid - 1
-                found = True
+                status = found | reset
                 break
             except TableFull:
-                curr_max_factor = max(curr_max_factor, htable.load_factor())
-        if not found and curr_max_factor > max_factor:
-            max_factor = curr_max_factor
-            num_tries *= 2
-        else:
-            max_factor = 0.0
-            curr_max_factor = 0.0
-            num_tries = N
-            if not found:
-                print 'not found:', nr_buckets_lst[mid], ', load factor:', max_factor, \
-                      'target was:', len(input_data) / float(nr_buckets_lst[mid])
-                low = mid + 1
-    
+                if htable.load_factor() > max_factor:
+                    max_factor = htable.load_factor()
+                    status = 0
+        if status == reset:
+            print 'not found:', nr_buckets_lst[mid], ', load factor:', max_factor, \
+                  'target was:', len(input_data) / float(nr_buckets_lst[mid])
+            low = mid + 1
+
+
 def construct_hash_table():
     pairs_dict = get_pairs_dict()
     found = False
@@ -706,11 +707,11 @@ def kern_frequency(fname):
 
 
 if __name__ == "__main__":
-    gen_cpp_jagbase()
+    #gen_cpp_jagbase()
     #encoding_status()
     #kern_stats()
     #construct_hash_table()
-    #test_load_factor()
+    test_load_factor()
     #gen_primes(0x20002c) # redirect to primes.py
     #print kern_frequency('/home/jarda/tmp/kant-critique-142.txt')
     #test_is_prime()
