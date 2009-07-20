@@ -88,7 +88,9 @@ public:
         m_impl->addref();
     }
 
-    Exception(Exception const& other) {
+    Exception(Exception const& other)
+        : std::exception() // to get rid of a gcc warning
+    {
         m_impl=other.m_impl;
         m_impl->addref();
     }
