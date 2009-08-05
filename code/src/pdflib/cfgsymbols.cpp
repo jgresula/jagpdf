@@ -27,6 +27,7 @@ namespace
       {"doc.page_mode"         , ""},
       {"doc.initial_destination"      , ""},
       {"doc.viewer_preferences", ""},
+      {"doc.topdown",            "0"},
 
       // should not be used directly but via get_default_text_encoding()
       {"text.encoding"         , ""},   // not-documented

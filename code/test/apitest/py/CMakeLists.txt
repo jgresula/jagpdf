@@ -84,7 +84,7 @@ set(tests
   confidential
   initialview
   #clock
-  #topdown
+  topdown
   # tickets
   symbolswidth
   t0068
