@@ -839,6 +839,19 @@ void CanvasImpl::arc_to(Double x, Double y, Double rx, Double ry,
     draw_arc_approximation(*this, approx);
 }
 
+//
+// Copies deeply the content stream. The resource list is shared between this
+// one and the other. The graphics state is not transferred.
+//
+// This is intended for taking a *read-only* snapshot of the canvas.
+// 
+void CanvasImpl::copy_to(CanvasImpl& other) const
+{
+    m_content_stream->copy_to(other.content_stream());
+    other.m_resource_list = m_resource_list;
+    
+}
+
 
 
 }} //namespace jag::pdf

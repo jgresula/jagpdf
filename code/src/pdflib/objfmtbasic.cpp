@@ -979,6 +979,18 @@ ObjFmtBasic& ObjFmtBasic::graphics_op(GraphicsOperator op)
     return *this;
 }
 
+//
+// Copies the formatter state (not the content of the underlying streams).
+//
+// This is intended for taking a *read-only* snapshot of the content stream.
+// 
+void ObjFmtBasic::copy_to(ObjFmtBasic& fmt) const
+{
+    fmt.m_state = m_state;
+    fmt.m_operator_categories = m_operator_categories;
+}
+
+
 //////////////////////////////////////////////////////////////////////////
 // DateWriter
 DateWriter::DateWriter()

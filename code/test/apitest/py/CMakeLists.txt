@@ -85,6 +85,7 @@ set(tests
   initialview
   #clock
   topdown
+  topdown2
   # tickets
   symbolswidth
   t0068

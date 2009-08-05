@@ -36,7 +36,9 @@ public:
     ~ContentStream();
     ISeqStreamOutput& stream();
     ObjFmtBasic& object_writer();
+    ObjFmtBasic const& object_writer() const;
     bool is_empty() const;
+    void copy_to(ContentStream& other) const;
 
     /// allows to add data to stream dictionary
     typedef boost::function<void (ObjFmt& fmt)> callback_t;

@@ -191,6 +191,7 @@ public:
 
 public:
     unsigned operator_categories() const { return m_operator_categories; }
+    void copy_to(ObjFmtBasic& other) const;
 
 public:
     //
@@ -216,7 +217,7 @@ private:
 
     jstd::UnicodeConverterStream& m_utf8_to_16be;
     ContentStateId m_state;
-    unsigned       m_operator_categories;
+    unsigned m_operator_categories;
 
     // checks output consistency as far as dictionaries and arrays are concerned
 #ifdef JAG_DEBUG

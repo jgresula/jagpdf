@@ -14,10 +14,12 @@
 #include <core/jstd/zlib_stream.h>
 #include <core/jstd/file_stream.h>
 #include <core/jstd/memory_stream.h>
+#include <core/jstd/streamhelpers.h>
 
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
 
+using namespace jag::jstd;
 
 namespace jag {
 namespace pdf {
@@ -47,7 +49,7 @@ ContentStream::ContentStream(DocWriterImpl& doc, StreamFilter const* filters, in
             switch (filters[i])
             {
             case STREAM_FILTER_FLATE:
-                new_filter.reset(new jstd::ZLibStreamOutput(*m_top_stream));
+                new_filter.reset(new ZLibStreamOutput(*m_top_stream));
                 break;
             default:
                 ;
@@ -89,6 +91,16 @@ ObjFmtBasic& ContentStream::object_writer()
     JAG_PRECONDITION_MSG(m_object_writer, "object already outputted");
     return *m_object_writer;
 }
+
+//////////////////////////////////////////////////////////////////////////
+ObjFmtBasic const& ContentStream::object_writer() const
+{
+    // This precondition could be removed since the writer is const. That would
+    // involve not resetting m_object_writer in on_output_definition()
+    JAG_PRECONDITION_MSG(m_object_writer, "object already outputted");
+    return *m_object_writer;
+}
+
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -170,6 +182,19 @@ ISeqStreamOutput& ContentStream::stream()
 void ContentStream::set_writer_callback(callback_t const& writer)
 {
     m_writer_callback = writer;
+}
+
+
+//
+// Copies the content stream bytes and the state of the object writer.
+//
+// This is intended for taking a *read-only* snapshot of the content stream.
+// 
+void ContentStream::copy_to(ContentStream& other) const
+{
+    MemoryStreamInput in_stream(m_stream.data(), m_stream.tell(), false);
+    copy_stream(in_stream, other.stream());
+    object_writer().copy_to(other.object_writer());
 }
 
 

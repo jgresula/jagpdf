@@ -137,6 +137,7 @@ public: //non-interface
 
     boost::shared_ptr<ResourceList> const& resource_list() const;
     void text_font_internal(PDFFont const& font);
+    void copy_to(CanvasImpl& other) const;
 
 private:
     ResourceList& ensure_resource_list();

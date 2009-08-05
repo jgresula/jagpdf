@@ -65,6 +65,7 @@ public: //resource access
     void add_graphics_state(GraphicsStateHandle handle);
     void add_font(FontDictionary& handle);
     void add_shading(ShadingHandle sh);
+    
 
 public: //general
     void append(ResourceList const&);

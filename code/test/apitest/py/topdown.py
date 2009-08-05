@@ -1,15 +1,15 @@
 #!/usr/bin/env python
-# $Id$
-
+#
+# Copyright (c) 2005-2009 Jaroslav Gresula
+#
+# Distributed under the MIT license (See accompanying file
+# LICENSE.txt or copy at http://jagpdf.org/LICENSE.txt)
+#
 import jagpdf
 import jag.testlib as testlib
 import math
 
 pageDim = 500, 650
-
-# tbd
-# ruzne vysky stranek
-# pattern reusing
 
 def create_tiling_pattern_inner(doc):
     fnt = testlib.EasyFont(doc, 'utf-8')
@@ -197,24 +197,6 @@ def test_main(argv=None):
     profile.set('doc.topdown', "1")
     do_file(argv, "topdown_on.pdf", profile)
 #     #
-#     profile = testlib.test_config()
-#     profile.set('doc.page_layout', 'TwoColumnLeft')
-#     profile.set('doc.viewer_preferences', 'FitWindow')
-#     doc = testlib.create_test_doc(argv, "topdown.pdf", profile)
-#     # classic page
-#     doc.page_start(*pageDim)
-#     canvas = doc.page().canvas()
-#     do_document(doc, canvas)
-#     doc.page_end()
-#     # top-down page
-#     doc.page_start(*pageDim)
-#     canvas = doc.page().canvas()
-#     canvas.translate(0, pageDim[1])
-#     canvas.scale(1, -1)
-#     do_document(doc, canvas, True)
-#     doc.page_end()
-#     doc.finalize()
-
 
 if __name__ == "__main__":
     test_main()

@@ -352,7 +352,7 @@ IIndirectObject& ResourceManagement::pattern(PatternHandle ph)
 
 /// Adjusts a pattern matrix for the topdown mode.
 ///
-/// Visits a pattern implementation, shallow clones it and adds it to the
+/// Visits a pattern implementation, clones it and adds it to the
 /// pattern table.
 ///  
 class ResourceManagement::PatternVisitorTopdown
@@ -378,14 +378,20 @@ public: // visitor methods
     //
     bool visit(TilingPatternImpl& visited)
     {
+        // the pattern canvas cannot be shared since the pattern matrix is part
+        // of the canvas' content stream definition
+        CanvasImpl* canvas =
+            checked_static_cast<CanvasImpl*>(m_res_mgm.canvas_create());
+
+        CanvasImpl* visited_canvas =
+            checked_static_cast<CanvasImpl*>(visited.canvas());
+
+        visited_canvas->copy_to(*canvas);
         std::auto_ptr<TilingPatternImpl> pattern(
             new TilingPatternImpl(m_res_mgm.m_doc,
                                   visited.definition_string(),
-                                  visited.canvas()));
-#ifdef JAG_DEBUG
-        CanvasRecord* canvas_rec = m_res_mgm.canvas_record(visited.canvas());
-        JAG_ASSERT(!canvas_rec->can_be_shared);
-#endif
+                                  canvas));
+
         adjust_matrix(pattern.get(), visited);
         m_handle = m_res_mgm.m_pattern_table.add(pattern.release());
         return true;
