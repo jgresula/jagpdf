@@ -388,8 +388,9 @@ public:
         else
         {
             JAG_ASSERT(visited.matrix().size() == 6);
-            trans_affine_t mtx(&visited.matrix()[0]);
-            mtx *= trans_affine_t(1, 0, 0, -1, 0, m_page_height);
+            trans_affine_t mtx_orig(&visited.matrix()[0]);
+            trans_affine_t mtx(1, 0, 0, -1, 0, m_page_height);
+            mtx *= mtx_orig;
             pattern->matrix(mtx);
         }
 
@@ -398,6 +399,17 @@ public:
     }
 };
 
+bool operator<(ResourceManagement::PatternAndPageHeight const&lhs,
+               ResourceManagement::PatternAndPageHeight const&rhs)
+{
+    if (lhs.first > rhs.first)
+        return false;
+
+    if (lhs.second < lhs.second)
+        return true;
+
+    return false;
+}
 
 //
 //
@@ -409,13 +421,14 @@ ResourceManagement::pattern_ref(PatternHandle ph, double page_height)
         return resource_ref(ph, m_patterns, m_pattern_table);
     
     typedef PatternsByPageHeight::iterator It;
-    It found = m_patterns_by_page_height.find(page_height);
+    PatternAndPageHeight key(ph, page_height);
+    It found = m_patterns_by_page_height.find(key);
     if (found == m_patterns_by_page_height.end())
     {
         PatternVisitorTopdown visitor(*this, page_height);
         pattern(ph).accept(visitor);
         found = m_patterns_by_page_height.insert(
-            PatternsByPageHeight::value_type(page_height,
+            PatternsByPageHeight::value_type(key,
                                              visitor.handle())).first;
     }
 

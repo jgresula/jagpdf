@@ -229,7 +229,22 @@ def paint_image(path, doc, x, y):
     img = doc.image_load_file(img_file)
     doc.page().canvas().image(img, x, y)
 
+class Matrix:
+    def __init__(self):
+        self.d = [1, 0, 0, 1, 0, 0]
 
+    def data(self):
+        return self.d
+
+    def translate(self, tx, ty):
+        self.d[4] = tx * self.d[0] + ty * self.d[2] + self.d[4]
+        self.d[5] = tx * self.d[1] + ty * self.d[3] + self.d[5]
+
+    def scale(self, sx, sy):
+        self.d[0] = sx * self.d[0]
+        self.d[1] = sx * self.d[1]
+        self.d[2] = sy * self.d[2]
+        self.d[3] = sy * self.d[3]
 
 long_text="""How Software Companies Die
 By: Orson Scott Card

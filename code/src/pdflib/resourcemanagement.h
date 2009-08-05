@@ -162,8 +162,12 @@ private:
     resources::ResourceTable<PatternHandle,
                              IIndirectObject,
                              boost::ptr_vector<IIndirectObject> > m_pattern_table;
-    
-    typedef std::map<double, PatternHandle> PatternsByPageHeight;
+
+    typedef std::pair<PatternHandle, double> PatternAndPageHeight;
+    friend bool operator<(PatternAndPageHeight const&lhs,
+                          PatternAndPageHeight const&rhs);
+
+    typedef std::map<PatternAndPageHeight, PatternHandle> PatternsByPageHeight;
     PatternsByPageHeight m_patterns_by_page_height;
 
     // shadings

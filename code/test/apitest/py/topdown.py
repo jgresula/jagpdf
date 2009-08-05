@@ -7,12 +7,11 @@ import jag.testlib as testlib
 pageDim = 500, 650
 
 # tbd
-# shading pattern with matrix
 # tiling pattern
 #   - w and w/o matrix
 #   - with image and text
 #   - using another pattern
-#   - ruzne vysky stranek
+# ruzne vysky stranek
 
 def do_document(doc, canvas, topdown=False):
     # path
@@ -34,15 +33,16 @@ def do_document(doc, canvas, topdown=False):
         canvas.state_restore()
     # multiline text
     linespacing = fnt.height()
-    canvas.move_to(50, 500)
-    canvas.line_to(450, 500)
+    basey = 550
+    canvas.move_to(50, basey)
+    canvas.line_to(450, basey)
     canvas.path_paint('s')
     canvas.color('s', 0.8)
-    canvas.move_to(50, 500 + linespacing)
-    canvas.line_to(450, 500 + linespacing)
+    canvas.move_to(50, basey + linespacing)
+    canvas.line_to(450, basey + linespacing)
     canvas.path_paint('s')
     canvas.color('s', 0.0)
-    canvas.text_start(50, 500)
+    canvas.text_start(50, basey)
     canvas.text("Multiline #1")
     canvas.text_translate_line(0, linespacing)
     canvas.text("Multiline #2")
@@ -61,24 +61,43 @@ def do_document(doc, canvas, topdown=False):
     canvas.state_restore()
     # shading pattern
     fn = doc.function_2_load("domain=0, 1; c0=0; c1=1")
-    sh = doc.shading_pattern_load("axial; coords=300, 300, 400, 400",
+    sh = doc.shading_pattern_load("axial; coords=170, 300, 270, 400",
                                   jagpdf.CS_DEVICE_GRAY,
                                   fn)
     canvas.state_save()
     canvas.color_space_pattern('f')
     canvas.pattern('f', sh)
-    canvas.rectangle(280, 280, 140, 140)
+    canvas.rectangle(150, 280, 140, 140)
     canvas.path_paint('fs')
     canvas.state_restore()
-    canvas.move_to(300, 300)
-    canvas.line_to(400, 400)
+    canvas.move_to(170, 300)
+    canvas.line_to(270, 400)
+    canvas.path_paint('s')
+    # scaled shading pattern
+    mtx = testlib.Matrix()
+    mtx.translate(400, 350)
+    mtx.scale(.5, .5)
+    mtx.translate(-400, -350)
+    mtx_s = ", ".join([str(i) for i in mtx.data()])
+    spec_str = "axial; coords=350, 300, 450, 400; matrix=%s" % mtx_s
+    sh = doc.shading_pattern_load(spec_str,
+                                  jagpdf.CS_DEVICE_GRAY,
+                                  fn)
+    canvas.state_save()
+    canvas.color_space_pattern('f')
+    canvas.pattern('f', sh)
+    canvas.rectangle(330, 280, 140, 140)
+    canvas.path_paint('fs')
+    canvas.state_restore()
+    canvas.move_to(375, 325)
+    canvas.line_to(425, 375)
     canvas.path_paint('s')
     # shading operator
     canvas.state_save()
     sh = doc.shading_pattern_load("axial; coords=10, 10, 90, 90",
                                   jagpdf.CS_DEVICE_GRAY,
                                   fn)
-    canvas.translate(100, 300)
+    canvas.translate(25, 300)
     canvas.rectangle(0, 0, 100, 100)
     canvas.path_paint('w')
     canvas.shading_apply(sh)
@@ -97,7 +116,7 @@ def do_file(argv, name, profile=None):
 
 
 def test_main(argv=None):
-#    do_file(argv, "topdown_off.pdf")
+    do_file(argv, "topdown_off.pdf")
     profile = testlib.test_config()
     profile.set('doc.topdown', "1")
     do_file(argv, "topdown_on.pdf", profile)

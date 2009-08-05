@@ -79,6 +79,13 @@ bool operator<(THandle<T> const& lhs,  THandle<T> const& rhs)
     return lhs.id() < rhs.id();
 }
 
+//////////////////////////////////////////////////////////////////////////
+template<class T>
+bool operator>(THandle<T> const& lhs,  THandle<T> const& rhs)
+{
+    return lhs.id() > rhs.id();
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 template<class T>
