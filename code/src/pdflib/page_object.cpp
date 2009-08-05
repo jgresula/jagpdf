@@ -43,8 +43,12 @@ bool PageObject::on_before_output_definition()
     JAG_ASSERT(!is_invalid_double(m_dimension[0]));
 
     if (m_content_streams.size())
-        m_resource_dictionary_ref = output_resource_dictionary(doc(), m_content_streams[0].second);
-
+    {
+        ResourceListPtr const& res_list(m_content_streams[0].second);
+        double page_height = doc().is_topdown() ? m_dimension[1] : 0.0;
+        m_resource_dictionary_ref =
+            output_resource_dictionary(doc(), res_list, page_height);
+    }
 
     // output annotations
     if (!m_annotations.empty())
@@ -179,6 +183,17 @@ void PageObject::annotation_goto_obj(
 //
 ICanvas* PageObject::canvas()
 {
+    // topdown & multiple canvases (future feature)
+    //  
+    //  It must be ensured that the first operation in the first canvas is the
+    //  transformation to the topdown mode.
+    //  
+    //  - if the first canvas is the one created by this function than the
+    //    operation is specified here
+    //    
+    //  - if the first canvas is supplied by the client (and thus without the
+    //    topdown transformation), then a special purpose canvas consisting only
+    //    of the transformation must be inserted at postion 0
     if (!m_canvas)
     {
         m_canvas.reset(doc().create_canvas_impl().release());

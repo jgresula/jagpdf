@@ -18,7 +18,7 @@ namespace jstd {
 //
 //
 //
-trans_affine_t::trans_affine_t(Double* data)
+trans_affine_t::trans_affine_t(Double const* data)
 {
     memcpy(m_data, data, 6 * sizeof(Double));
 }
@@ -70,6 +70,14 @@ trans_affine_t& trans_affine_t::operator*=(trans_affine_t const& other)
     return *this;
 }
 
+trans_affine_t& trans_affine_t::translate(Double tx, Double ty)
+{
+    trans_affine_t this_(*this);
+    m_data[4] = tx * this_.m_data[0] + ty * this_.m_data[2] + this_.m_data[4];
+    m_data[5] = tx * this_.m_data[1] + ty * this_.m_data[3] + this_.m_data[5];
+    return *this;
+}
+
 trans_affine_t& trans_affine_t::scale(Double sx, Double sy)
 {
     trans_affine_t this_(*this);
@@ -112,6 +120,14 @@ trans_affine_t trans_affine_rotation(Double angle)
 trans_affine_t trans_affine_translation(Double tx, Double ty)
 {
     return trans_affine_t(1.0, 0.0, 0.0, 1.0, tx, ty);
+}
+
+//
+//
+// 
+trans_affine_t trans_affine_scaling(Double sx, Double sy)
+{
+        return trans_affine_t(sx, 0.0, 0.0, sy, 0, 0);
 }
 
 }} // namespace jag::jstd

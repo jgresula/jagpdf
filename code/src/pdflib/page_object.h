@@ -67,7 +67,8 @@ private:
 
 
 private:
-    typedef std::pair<IndirectObjectRef,boost::shared_ptr<ResourceList> >    ContentStreamRec;
+    typedef boost::shared_ptr<ResourceList> ResourceListPtr;
+    typedef std::pair<IndirectObjectRef,ResourceListPtr>    ContentStreamRec;
     typedef std::vector<ContentStreamRec> ContenStreamVec;
     std::vector<ContentStreamRec> m_content_streams;
     IndirectObjectRef    m_resource_dictionary_ref;

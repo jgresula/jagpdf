@@ -78,8 +78,10 @@ public:
                                        ColorSpaceHandle cs,
                                        FunctionHandle const* funcs,
                                        UInt num_functions);
-    IndirectObjectRef const& pattern_ref(PatternHandle ph);
     IIndirectObject& pattern(PatternHandle ph);
+    IndirectObjectRef const& pattern_ref(PatternHandle ph, double page_height);
+
+    
     IndirectObjectRef const& shading_ref(ShadingHandle sh);
     ShadingHandle shading_from_pattern(PatternHandle handle);
     IndirectObjectRef const& color_space_ref(ColorSpaceHandle color_space_id);
@@ -126,6 +128,7 @@ public:
 
 private:
     IImageMan& image_man();
+    class PatternVisitorTopdown;
 
 private:
     DocWriterImpl&                    m_doc;
@@ -159,6 +162,9 @@ private:
     resources::ResourceTable<PatternHandle,
                              IIndirectObject,
                              boost::ptr_vector<IIndirectObject> > m_pattern_table;
+    
+    typedef std::map<double, PatternHandle> PatternsByPageHeight;
+    PatternsByPageHeight m_patterns_by_page_height;
 
     // shadings
     typedef std::map<ShadingHandle,IndirectObjectRef> ShadingsMap;

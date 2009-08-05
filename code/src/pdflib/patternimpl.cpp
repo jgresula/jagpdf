@@ -391,6 +391,7 @@ ShadingPatternImpl::ShadingPatternImpl(DocWriterImpl& doc,
                                        ShadingHandle shading)
     : IndirectObjectImpl(doc)
     , m_shading(shading)
+    , m_definition_str(pattern)
 {
     try
     {
@@ -432,6 +433,40 @@ void ShadingPatternImpl::on_output_definition()
     output_array("Matrix", fmt, m_matrix.begin(), m_matrix.end());
     fmt.dict_end();
 }
+
+//
+//
+// 
+char const* ShadingPatternImpl::definition_string() const
+{
+    JAG_PRECONDITION(!m_definition_str.empty());
+    return m_definition_str.c_str();
+}
+
+//
+//
+// 
+std::vector<double> const& ShadingPatternImpl::matrix() const
+{
+    return m_matrix;
+}
+
+//
+//
+// 
+ShadingHandle ShadingPatternImpl::shading_handle() const
+{
+    return m_shading;
+}
+
+//
+//
+// 
+void ShadingPatternImpl::matrix(trans_affine_t const& mtx)
+{
+    m_matrix.assign(mtx.data(), mtx.data() + 6);
+}
+
 
 
 

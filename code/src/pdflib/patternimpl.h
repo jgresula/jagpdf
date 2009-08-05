@@ -146,6 +146,10 @@ public:
     ShadingPatternImpl(DocWriterImpl& doc,
                        Char const* pattern,
                        ShadingHandle handle);
+    char const* definition_string() const;
+    std::vector<double> const& matrix() const;
+    ShadingHandle shading_handle() const;
+    void matrix(jstd::trans_affine_t const& mtx);
 
 protected:
     void on_output_definition();
@@ -155,6 +159,7 @@ private:
     ShadingHandle           m_shading;
     IndirectObjectRef       m_shading_ref;
     std::vector<double>     m_matrix;
+    std::string             m_definition_str;
 };
 
 

@@ -148,8 +148,10 @@ void before_output_generic(T const& range, FN const& fn)
 
 
 /// Constructor.
-ResourceDictionary::ResourceDictionary(DocWriterImpl& doc)
+ResourceDictionary::ResourceDictionary(DocWriterImpl& doc,
+                                       double page_height)
     : IndirectObjectImpl(doc)
+    , m_page_height(page_height)
 {
 }
 
@@ -176,8 +178,9 @@ bool ResourceDictionary::on_before_output_definition()
 
     ResourceManagement& res_mgm = doc().res_mgm();
     before_output_generic(
-        m_compiled_res_list->patterns()
-        , make_before_output_fn<PatternHandle>(boost::bind(&ResourceManagement::pattern_ref, &res_mgm, _1))
+        m_compiled_res_list->patterns(),
+        make_before_output_fn<PatternHandle>(
+            boost::bind(&ResourceManagement::pattern_ref, &res_mgm, _1, m_page_height))
    );
 
     before_output_generic(
@@ -220,7 +223,8 @@ void ResourceDictionary::on_output_definition()
         , writer
         , m_compiled_res_list->patterns()
         , make_resource_writer<PatternHandle>(
-            writer, boost::bind(&ResourceManagement::pattern_ref, &res_mgm, _1))
+            writer,
+            boost::bind(&ResourceManagement::pattern_ref, &res_mgm, _1, m_page_height))
    );
 
     output_generic(
@@ -285,13 +289,13 @@ void ResourceDictionary::add_resources(boost::shared_ptr<ResourceList> const& re
 
 //////////////////////////////////////////////////////////////////////////
 IndirectObjectRef output_resource_dictionary(
-      DocWriterImpl& doc
-    , boost::shared_ptr<ResourceList> res_list
-)
+    DocWriterImpl& doc,
+    boost::shared_ptr<ResourceList> res_list,
+    double page_height)
 {
     if (res_list && !res_list->is_empty())
     {
-        ResourceDictionary res_dict(doc);
+        ResourceDictionary res_dict(doc, page_height);
         res_dict.add_resources(res_list);
         res_dict.output_definition();
         return IndirectObjectRef(res_dict);

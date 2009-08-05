@@ -6,6 +6,13 @@ import jag.testlib as testlib
 
 pageDim = 500, 650
 
+# tbd
+# shading pattern with matrix
+# tiling pattern
+#   - w and w/o matrix
+#   - with image and text
+#   - using another pattern
+#   - ruzne vysky stranek
 
 def do_document(doc, canvas, topdown=False):
     # path
@@ -90,28 +97,29 @@ def do_file(argv, name, profile=None):
 
 
 def test_main(argv=None):
-    do_file(argv, "topdown_off.pdf")
+#    do_file(argv, "topdown_off.pdf")
     profile = testlib.test_config()
     profile.set('doc.topdown', "1")
     do_file(argv, "topdown_on.pdf", profile)
-    #
-    profile = testlib.test_config()
-    profile.set('doc.page_layout', 'TwoColumnLeft')
-    profile.set('doc.viewer_preferences', 'FitWindow')
-    doc = testlib.create_test_doc(argv, "topdown.pdf", profile)
-    # classic page
-    doc.page_start(*pageDim)
-    canvas = doc.page().canvas()
-    do_document(doc, canvas)
-    doc.page_end()
-    # top-down page
-    doc.page_start(*pageDim)
-    canvas = doc.page().canvas()
-    canvas.translate(0, pageDim[1])
-    canvas.scale(1, -1)
-    do_document(doc, canvas, True)
-    doc.page_end()
-    doc.finalize()
+#     #
+#     profile = testlib.test_config()
+#     profile.set('doc.page_layout', 'TwoColumnLeft')
+#     profile.set('doc.viewer_preferences', 'FitWindow')
+#     doc = testlib.create_test_doc(argv, "topdown.pdf", profile)
+#     # classic page
+#     doc.page_start(*pageDim)
+#     canvas = doc.page().canvas()
+#     do_document(doc, canvas)
+#     doc.page_end()
+#     # top-down page
+#     doc.page_start(*pageDim)
+#     canvas = doc.page().canvas()
+#     canvas.translate(0, pageDim[1])
+#     canvas.scale(1, -1)
+#     do_document(doc, canvas, True)
+#     doc.page_end()
+#     doc.finalize()
+
 
 if __name__ == "__main__":
     test_main()

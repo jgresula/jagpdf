@@ -122,6 +122,4 @@ bool operator<(ResourceList::FontDictionaryRef const& lhs,
 }
 
 
-
-
 }} //namespace jag::pdf

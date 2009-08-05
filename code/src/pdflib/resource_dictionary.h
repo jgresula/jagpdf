@@ -26,7 +26,8 @@ class ResourceDictionary
 {
 public:
     DEFINE_VISITABLE;
-    explicit ResourceDictionary(DocWriterImpl& doc);
+    explicit ResourceDictionary(DocWriterImpl& doc,
+                                double page_height);
     void add_resources(boost::shared_ptr<ResourceList> const& resources);
 
 private: // IndirectObjectImpl
@@ -40,6 +41,7 @@ private:
 private:
     typedef std::vector<boost::shared_ptr<ResourceList> > ResourceVec;
     ResourceVec m_resources;
+    double m_page_height;
 
     // cached, resource list actually used, needed during output
     boost::shared_ptr<ResourceList> m_compiled_res_list;
@@ -56,9 +58,9 @@ private:
  *        resource dictionary was outputted.
  */
 IndirectObjectRef output_resource_dictionary(
-      DocWriterImpl& doc
-    , boost::shared_ptr<ResourceList> res_list
-);
+    DocWriterImpl& doc,
+    boost::shared_ptr<ResourceList> res_list,
+    double page_height = 0.0);
 
 
 /**

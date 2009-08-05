@@ -22,6 +22,9 @@
 #include "objfmtbasic.h"
 #include "defines.h"
 #include "canvasimpl.h"
+#include "visitornoop.h"
+#include "patternimpl.h"
+#include <core/jstd/transaffine.h>
 #include <msg_pdflib.h>
 #include <msg_jstd.h>
 #include <core/jstd/optionsparser.h>
@@ -338,15 +341,6 @@ ResourceManagement::tiling_pattern_load(Char const* pattern, ICanvas* canvas)
 }
 
 
-
-//
-//
-//
-IndirectObjectRef const& ResourceManagement::pattern_ref(PatternHandle ph)
-{
-    return resource_ref(ph, m_patterns, m_pattern_table);
-}
-
 //
 //
 //
@@ -354,6 +348,80 @@ IIndirectObject& ResourceManagement::pattern(PatternHandle ph)
 {
     return m_pattern_table.lookup(ph);
 }
+
+
+//
+//
+// 
+class ResourceManagement::PatternVisitorTopdown
+    : public VisitorNoOp
+{
+    ResourceManagement& m_res_mgm;
+    double m_page_height;
+    PatternHandle m_handle;
+    
+public:
+    PatternVisitorTopdown(ResourceManagement& res_mgm, double page_height)
+        : m_res_mgm(res_mgm)
+        , m_page_height(page_height)
+    {
+    }
+    
+    PatternHandle handle() const {
+        JAG_PRECONDITION(is_valid(m_handle));
+        return m_handle;
+    }
+    
+public:
+    bool visit(ShadingPatternImpl& visited)
+    {
+        std::auto_ptr<ShadingPatternImpl> pattern(
+            new ShadingPatternImpl(m_res_mgm.m_doc,
+                                   visited.definition_string(),
+                                   visited.shading_handle()));
+
+        // adjust the pattern matrix
+        if (visited.matrix().empty())
+        {
+            pattern->matrix(trans_affine_t(1, 0, 0, -1, 0, m_page_height));
+        }
+        else
+        {
+            JAG_ASSERT(visited.matrix().size() == 6);
+            trans_affine_t mtx(&visited.matrix()[0]);
+            mtx *= trans_affine_t(1, 0, 0, -1, 0, m_page_height);
+            pattern->matrix(mtx);
+        }
+
+        m_handle = m_res_mgm.m_pattern_table.add(pattern.release());
+        return true;
+    }
+};
+
+
+//
+//
+// 
+IndirectObjectRef const&
+ResourceManagement::pattern_ref(PatternHandle ph, double page_height)
+{
+    if (page_height == 0.0)
+        return resource_ref(ph, m_patterns, m_pattern_table);
+    
+    typedef PatternsByPageHeight::iterator It;
+    It found = m_patterns_by_page_height.find(page_height);
+    if (found == m_patterns_by_page_height.end())
+    {
+        PatternVisitorTopdown visitor(*this, page_height);
+        pattern(ph).accept(visitor);
+        found = m_patterns_by_page_height.insert(
+            PatternsByPageHeight::value_type(page_height,
+                                             visitor.handle())).first;
+    }
+
+    return resource_ref(found->second, m_patterns, m_pattern_table);
+}
+
 
 
 //
