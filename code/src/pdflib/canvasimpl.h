@@ -22,6 +22,10 @@
 #include <boost/ptr_container/ptr_vector.hpp>
 
 namespace jag {
+
+// fwd
+namespace jstd {class trans_affine_t;}
+
 namespace pdf {
 // fwd
 class DocWriterImpl;
@@ -126,6 +130,8 @@ public: //ICanvas
     void text_rise(Double rise);
 
 public: //non-interface
+    void transform(jstd::trans_affine_t const& mtxt);
+
     ContentStream const& content_stream() const { return *m_content_stream; }
     ContentStream& content_stream() { return *m_content_stream; }
 

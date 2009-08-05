@@ -197,6 +197,21 @@ void CanvasImpl::transform(Double a, Double b, Double c, Double d, Double e, Dou
         .output(f).graphics_op(OP_cm);
 }
 
+//
+//
+// 
+void CanvasImpl::transform(trans_affine_t const& mtx)
+{
+    Double const* mtx_data = mtx.data();
+    m_fmt
+        .output(mtx_data[0]).space()
+        .output(mtx_data[1]).space()
+        .output(mtx_data[2]).space()
+        .output(mtx_data[3]).space()
+        .output(mtx_data[4]).space()
+        .output(mtx_data[5]).graphics_op(OP_cm);
+}
+
 //////////////////////////////////////////////////////////////////////////
 void CanvasImpl::translate(Double x, Double y)
 {
@@ -422,8 +437,7 @@ void CanvasImpl::scaled_image(IImage* image, Double x, Double y, Double sx, Doub
 
     if (m_doc_writer.exec_context().config().get_int("doc.topdown"))
     {
-        translate(x, y + sheight);
-        scale(swidth * sx, -sheight * sy);
+        transform(swidth * sx, 0, 0, -sheight * sy, x, y + sheight);
     }
     else
     {

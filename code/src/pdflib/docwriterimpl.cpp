@@ -231,6 +231,7 @@ public: //data
     // collector
     typedef std::map<PDFFont const*, shared_ptr<IFontAdapter> > FontMap;
     FontMap m_font_map;
+    bool m_is_topdown;
 };
 
 
@@ -271,9 +272,9 @@ DocWriterImpl::DocWriterImpl(
     if (m_pimpl->m_version < 2 || m_pimpl->m_version > 6)
         throw exception_invalid_value(msg_option_out_of_range("doc.version")) << JAGLOC;
 
-    // static file_id
+    // various flags
     m_pimpl->m_static_file_id = config->get("doc.static_file_id") ? true : false;
-
+    m_pimpl->m_is_topdown = config->get_int("doc.topdown");
 
     // encoding
     if (config->get_int("doc.compressed"))
@@ -289,7 +290,6 @@ DocWriterImpl::DocWriterImpl(
         m_pimpl->m_encryption_stream.reset(new EncryptionStream(*out_stream, *m_pimpl->m_security_handler));
         m_pimpl->m_object_formatter->encryption_stream(m_pimpl->m_encryption_stream.get());
     }
-
 
     output_pdf_file_header(*m_pimpl->m_out_stream, m_pimpl->m_version);
 
@@ -974,6 +974,14 @@ ColorSpace DocWriterImpl::color_space_load(Char const* spec)
 ICanvas* DocWriterImpl::canvas_create() const
 {
     return res_mgm().canvas_create();
+}
+
+//
+//
+// 
+bool DocWriterImpl::is_topdown() const
+{
+    return m_pimpl->m_is_topdown;
 }
 
 

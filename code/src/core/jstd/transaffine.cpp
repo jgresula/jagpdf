@@ -70,6 +70,17 @@ trans_affine_t& trans_affine_t::operator*=(trans_affine_t const& other)
     return *this;
 }
 
+trans_affine_t& trans_affine_t::scale(Double sx, Double sy)
+{
+    trans_affine_t this_(*this);
+        
+    m_data[0] = sx * this_.m_data[0];
+    m_data[1] = sx * this_.m_data[1];
+    m_data[2] = sy * this_.m_data[2];
+    m_data[3] = sy * this_.m_data[3];
+    return *this;
+}
+
 ///
 /// Transforms a vector.
 ///

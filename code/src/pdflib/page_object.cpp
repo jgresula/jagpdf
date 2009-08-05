@@ -21,7 +21,9 @@
 #include <interfaces/execcontext.h>
 #include <interfaces/configinternal.h>
 
+
 using namespace boost;
+using namespace jag::jstd;
 
 namespace jag {
 namespace pdf {
@@ -180,11 +182,8 @@ ICanvas* PageObject::canvas()
     if (!m_canvas)
     {
         m_canvas.reset(doc().create_canvas_impl().release());
-        if (doc().exec_context().config().get_int("doc.topdown"))
-        {
-            m_canvas->translate(0, m_dimension[1]);
-            m_canvas->scale(1, -1);
-        }
+        if (doc().is_topdown())
+            m_canvas->transform(1, 0, 0, -1, 0, m_dimension[1]);
     }
 
     // REF

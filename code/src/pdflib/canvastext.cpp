@@ -388,12 +388,24 @@ namespace
 
 
   // writes text object start and translates to specified position
-  void write_label_prologue(ObjFmtBasic& writer, Double x, Double y)
+  void write_label_prologue(ObjFmtBasic& writer, Double x, Double y, bool is_topdown)
   {
-    writer
-        .graphics_op(OP_BT)
-        .output(x).space().output(y).graphics_op(OP_Td)
-    ;
+      writer.graphics_op(OP_BT);
+      if (is_topdown)
+      {
+          writer
+              .output(1).space()
+              .output(0).space()
+              .output(0).space()
+              .output(-1).space()
+              .output(x).space()
+              .output(y).graphics_op(OP_Tm);
+      }
+      else
+      {
+          writer
+              .output(x).space().output(y).graphics_op(OP_Td);
+      }
   }
 
 
@@ -563,11 +575,13 @@ void CanvasImpl::text_simple_ro(Double x, Double y,
     // the generic text show function is called with a pre-action that writes
     // start of the text object and the offset; upon returning the text object
     // is closed
-    text_show_generic(start, end,
-                       offsets, offsets_length,
-                       positions, positions_length,
-                       boost::bind(write_label_prologue, boost::ref(m_fmt), x, y),
-                       boost::bind(&ObjFmtBasic::graphics_op, boost::ref(m_fmt), OP_ET));
+    text_show_generic(
+        start, end,
+        offsets, offsets_length,
+        positions, positions_length,
+        boost::bind(write_label_prologue,
+                    boost::ref(m_fmt), x, y, m_doc_writer.is_topdown()),
+        boost::bind(&ObjFmtBasic::graphics_op, boost::ref(m_fmt), OP_ET));
 }
 
 //
@@ -613,7 +627,20 @@ void CanvasImpl::text_simple_o(Double x, Double y,
 void CanvasImpl::text_start(Double x, Double y)
 {
     m_fmt.graphics_op(OP_BT);
-    text_translate_line(x, y);
+    if (m_doc_writer.is_topdown())
+    {
+        m_fmt
+            .output(1).space()
+            .output(0).space()
+            .output(0).space()
+            .output(-1).space()
+            .output(x).space()
+            .output(y).graphics_op(OP_Tm);
+    }
+    else
+    {
+        text_translate_line(x, y);
+    }
 }
 
 //
@@ -680,7 +707,10 @@ void CanvasImpl::text_r(Char const* start, Char const* end)
 //
 void CanvasImpl::text_translate_line(Double x, Double y)
 {
-    m_fmt.output(x).space().output(y).graphics_op(OP_Td);
+    if (m_doc_writer.is_topdown())
+        m_fmt.output(x).space().output(-y).graphics_op(OP_Td);
+    else
+        m_fmt.output(x).space().output(y).graphics_op(OP_Td);
 }
 
 

@@ -132,6 +132,7 @@ public: //non-interface
     IndirectObjectRef page_ref(int page_num) const;
     jstd::UnicodeConverterStream& utf8_to_16be_stream();
     IFont* default_font();
+    bool is_topdown() const;
 
     std::auto_ptr<CanvasImpl> create_canvas_impl();
     std::auto_ptr<ContentStream> create_content_stream();

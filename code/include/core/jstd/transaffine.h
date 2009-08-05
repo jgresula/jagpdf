@@ -29,6 +29,7 @@ public: // construction/modification
 public: // operations
     void transform(Double *x, Double *y) const;
     trans_affine_t& operator*=(trans_affine_t const& other);
+    trans_affine_t& scale(Double sx, Double sy);
 
 public:
     Double const* data() const { return m_data; }
