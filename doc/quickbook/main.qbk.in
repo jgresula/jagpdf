@@ -1002,14 +1002,12 @@ transformation matrix ourselves and use [code_canvas_transform].
 
 [heading Top-down Coordinate Space]
 
-We already mentioned that the origin of the default user space
-corresponds to the lower-left corner of a page. We can move it to the
-upper-left corner and reverse the orientation of the y axis like this:
+We already mentioned that the origin of the default user space corresponds to
+the lower-left corner of a page. We can move it to the upper-left corner and
+reverse the orientation of the y axis with the [^doc.topdown] [ref_profile_t
+profile] option.
 
 [py_example_topdown]
-
-However, this is not a full-blown solution as texts and images are
-shown upside-down due to the y axis orientation.
 
 [heading Coordinate Systems Summary]
 
@@ -2194,6 +2192,10 @@ The following tables describe available options.
  ]]
 
  [[doc.compressed][[^1]][[^0], [^1]][Whether to compress the document.]]
+ [[doc.topdown][[^0]][[^0], [^1]][
+   Moves the origin of the default user space coordinate system to the
+   upper-left page corner and reverses the orientation of the y axis.]]
+
 ]
 
 [endsect]
@@ -2204,7 +2206,7 @@ The following tables describe available options.
 [table
  [[Name][Default][Values][Description]]
 
- [[text.kerning][[^0]][[^0],[^1]][ Enables/disables pair kerning.  ]]
+ [[text.kerning][[^0]][[^0], [^1]][ Enables/disables pair kerning.  ]]
 ]
 
 [endsect]

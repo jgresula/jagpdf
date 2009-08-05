@@ -680,23 +680,22 @@ def coord_systems(argv):
     canvas.state_restore()
     #]
     doc.page_end()
-    # -------- example page separator ------------
-    doc.page_start(*page_dim)
-    canvas = doc.page().canvas()
-    label('topdown')
-    page_height = page_dim[1]
-    #[py_example_topdown
-    # transform the origin
-    canvas.translate(0, page_height)
-    canvas.scale(1, -1)
-    # paint a line in the transformed coordinate space
-    canvas.move_to(0, 0)
-    canvas.line_to(250, 250)
-    canvas.path_paint('s')
-    #]
-    doc.page_end()
-    # -------- example page separator ------------
     doc.finalize()
+    # -------- example doc separator ------------
+    #[py_example_topdown
+    profile = jagpdf.create_profile()
+    profile.set('doc.topdown', '1')
+    doc = jagpdf.create_file('topdown.pdf', profile)
+    # ..
+    #]
+    doc.page_start(*paperA4)
+    fnt = testlib.EasyFont(doc)
+    canvas = doc.page().canvas()
+    canvas.text_font(fnt(12))
+    canvas.text(10, 50, "top-down mode")
+    doc.page_end()
+    doc.finalize()
+    
 
 
 # ------------------------------------------------------------------------
