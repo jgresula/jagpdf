@@ -40,9 +40,15 @@ def do_document(doc, canvas, topdown=False):
     # image
     canvas.move_to(50, 260)
     canvas.line_to(50, 230)    
-    canvas.line_to(450, 230)
+    canvas.line_to(250, 230)
+    canvas.line_to(250, 260)
     canvas.path_paint('s')
     testlib.paint_image('/images/logo.png', doc, 50, 230)
+    canvas.state_save()
+    canvas.translate(250, 230)
+    canvas.scale(0.5, 0.5)
+    testlib.paint_image('/images/logo.png', doc, 0, 0)
+    canvas.state_restore()
     # shading pattern
     fn = doc.function_2_load("domain=0, 1; c0=0; c1=1")
     sh = doc.shading_pattern_load("axial; coords=300, 300, 400, 400",
@@ -69,11 +75,23 @@ def do_document(doc, canvas, topdown=False):
     canvas.state_restore()
     
     
-    
+
+def do_file(argv, name, profile=None):
+    doc = testlib.create_test_doc(argv, name, profile)
+    doc.page_start(*pageDim)
+    canvas = doc.page().canvas()
+    do_document(doc, canvas)
+    doc.page_end()
+    doc.finalize()
     
 
 
 def test_main(argv=None):
+    do_file(argv, "topdown_off.pdf")
+    profile = testlib.test_config()
+    profile.set('doc.topdown', "1")
+    do_file(argv, "topdown_on.pdf", profile)
+    #
     profile = testlib.test_config()
     profile.set('doc.page_layout', 'TwoColumnLeft')
     profile.set('doc.viewer_preferences', 'FitWindow')

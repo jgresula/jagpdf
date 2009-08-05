@@ -18,6 +18,8 @@
 #include <core/jstd/tracer.h>
 #include <core/generic/floatpointtools.h>
 #include <core/generic/containerhelpers.h>
+#include <interfaces/execcontext.h>
+#include <interfaces/configinternal.h>
 
 using namespace boost;
 
@@ -176,7 +178,14 @@ void PageObject::annotation_goto_obj(
 ICanvas* PageObject::canvas()
 {
     if (!m_canvas)
+    {
         m_canvas.reset(doc().create_canvas_impl().release());
+        if (doc().exec_context().config().get_int("doc.topdown"))
+        {
+            m_canvas->translate(0, m_dimension[1]);
+            m_canvas->scale(1, -1);
+        }
+    }
 
     // REF
     return m_canvas.get();

@@ -29,6 +29,9 @@
 #include <pdflib/interfaces/canvas.h>
 #include <msg_pdflib.h>
 
+#include <interfaces/execcontext.h>
+#include <interfaces/configinternal.h>
+
 #include <cmath>
 #include <iostream>
 #include <memory>
@@ -416,7 +419,18 @@ void CanvasImpl::scaled_image(IImage* image, Double x, Double y, Double sx, Doub
     // resolution
     double swidth = img_data.width() * 72.0/ img_data.dpi_x();
     double sheight = img_data.height() * 72.0/ img_data.dpi_y();
-    transform(swidth*sx, 0, 0, sheight*sy, x, y);
+
+    if (m_doc_writer.exec_context().config().get_int("doc.topdown"))
+    {
+        translate(x, y + sheight);
+        scale(swidth * sx, -sheight * sy);
+    }
+    else
+    {
+        transform(swidth * sx, 0, 0, sheight * sy, x, y);
+    }
+
+    
 
     // gamma correction
     if (img_data.has_gamma() && !equal_doubles(img_data.gamma(), 1.0) && m_doc_writer.version()>=3)
