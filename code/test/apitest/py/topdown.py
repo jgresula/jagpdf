@@ -3,15 +3,72 @@
 
 import jagpdf
 import jag.testlib as testlib
+import math
 
 pageDim = 500, 650
 
 # tbd
-# tiling pattern
-#   - w and w/o matrix
-#   - with image and text
-#   - using another pattern
 # ruzne vysky stranek
+# pattern reusing
+
+def create_tiling_pattern_inner(doc):
+    fnt = testlib.EasyFont(doc, 'utf-8')
+    pc = doc.canvas_create()
+    pc.color_space("f", jagpdf.CS_DEVICE_GRAY)
+    pc.color("f", 0.0)
+    pc.text_font(fnt(8))
+    pc.text_start(2, 9)
+    pc.text("inner #1")
+    pc.text_translate_line(0, 9)
+    pc.text("inner #2")
+    pc.text_end()
+    spec = "step=50, 25"
+    return doc.tiling_pattern_load(spec, pc)
+    
+
+def create_tiling_pattern2(doc):
+    pc = doc.canvas_create()
+    pc.color_space("fs", jagpdf.CS_DEVICE_GRAY)
+    pc.color("fs", 0.5)
+    pc.rectangle(5, 5, 90, 40)
+    pc.path_paint("f")
+    pc.rectangle(0, 0, 100, 50)
+    pc.path_paint("s")
+    spec = "step=100, 50"
+    tp = create_tiling_pattern_inner(doc)
+    pc.color_space_pattern('f')
+    pc.pattern('f', tp)
+    pc.rectangle(0, 0, 100, 50)
+    pc.path_paint("f")
+    return doc.tiling_pattern_load(spec, pc)
+
+def create_tiling_pattern(doc, mtx=None):
+    pc = doc.canvas_create()
+    pc.color_space("fs", jagpdf.CS_DEVICE_GRAY)
+    pc.color("fs", 0)
+    pc.state_save()
+    pc.color("fs", 0.5)
+    pc.translate(50, 50)
+    pc.rotate(math.pi/4.)
+    pc.scale(1, 0.5)
+    pc.translate(-50, -50)
+    pc.circle(50, 50, 50)
+    pc.path_paint("fs")
+    pc.state_restore()
+    pc.move_to(5, 5)
+    pc.line_to(95, 95)
+    pc.path_paint("s")
+    pc.text_start(5, 10)
+    pc.text("text in pattern #1")
+    pc.text_translate_line(0, 14)
+    pc.text("text in pattern #2")
+    pc.text_end()
+    testlib.paint_image('/images/logo.png', doc, 5, 40, pc)
+    spec = "step=100, 100"
+    if mtx:
+        mtx_s = ", ".join([str(i) for i in mtx])
+        spec = spec + "; matrix=" + mtx_s
+    return doc.tiling_pattern_load(spec, pc)
 
 def do_document(doc, canvas, topdown=False):
     # path
@@ -102,6 +159,25 @@ def do_document(doc, canvas, topdown=False):
     canvas.path_paint('w')
     canvas.shading_apply(sh)
     canvas.state_restore()
+    # tiling pattern
+    tp = create_tiling_pattern(doc)
+    canvas.color_space_pattern('f')
+    canvas.pattern('f', tp)
+    canvas.rectangle(0, 400, 100, 100)
+    canvas.path_paint("f")
+    mtx = testlib.Matrix()
+    mtx.translate(50, 50)
+    mtx.scale(.5, .5)
+    mtx.translate(-50, -50)
+    tp_scaled = create_tiling_pattern(doc, mtx.data())
+    canvas.pattern('f', tp_scaled)
+    canvas.rectangle(125, 425, 100, 100)
+    canvas.path_paint("fs")
+    # pattern using another pattern
+    tp2 = create_tiling_pattern2(doc)
+    canvas.pattern('f', tp2)
+    canvas.rectangle(300, 450, 100, 50)
+    canvas.path_paint("f")
     
     
 
@@ -116,7 +192,7 @@ def do_file(argv, name, profile=None):
 
 
 def test_main(argv=None):
-    do_file(argv, "topdown_off.pdf")
+    #do_file(argv, "topdown_off.pdf")
     profile = testlib.test_config()
     profile.set('doc.topdown', "1")
     do_file(argv, "topdown_on.pdf", profile)

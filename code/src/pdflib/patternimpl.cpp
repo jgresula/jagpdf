@@ -73,7 +73,8 @@ namespace
 TilingPatternImpl::TilingPatternImpl(DocWriterImpl& doc,
                                      Char const* pattern_str,
                                      ICanvas* canvas)
-    : m_doc(doc)
+    : PatternBase(pattern_str)
+    , m_doc(doc)
     , m_canvas(checked_static_cast<CanvasImpl*>(canvas))
 {
     if (m_canvas->content_stream().is_empty())
@@ -164,7 +165,13 @@ void TilingPatternImpl::on_write(ObjFmt& fmt)
     output_resource_dictionary_ref(m_res_dict, fmt);
 }
 
-
+//
+//
+// 
+ICanvas* TilingPatternImpl::canvas() const
+{
+    return m_canvas;
+}
 
 // ---------------------------------------------------------------------------
 //              Symbols common for shadings and shading patterns
@@ -390,8 +397,8 @@ ShadingPatternImpl::ShadingPatternImpl(DocWriterImpl& doc,
                                        Char const* pattern,
                                        ShadingHandle shading)
     : IndirectObjectImpl(doc)
+    , PatternBase(pattern)
     , m_shading(shading)
-    , m_definition_str(pattern)
 {
     try
     {
@@ -434,19 +441,32 @@ void ShadingPatternImpl::on_output_definition()
     fmt.dict_end();
 }
 
+
+// ---------------------------------------------------------------------------
+//          class PatternBase
+
 //
 //
 // 
-char const* ShadingPatternImpl::definition_string() const
+PatternBase::PatternBase(char const* def_string)
+    : m_definition_string(def_string)
 {
-    JAG_PRECONDITION(!m_definition_str.empty());
-    return m_definition_str.c_str();
+}
+
+
+//
+//
+// 
+char const* PatternBase::definition_string() const
+{
+    JAG_PRECONDITION(!m_definition_string.empty());
+    return m_definition_string.c_str();
 }
 
 //
 //
 // 
-std::vector<double> const& ShadingPatternImpl::matrix() const
+std::vector<double> const& PatternBase::matrix() const
 {
     return m_matrix;
 }
@@ -454,15 +474,7 @@ std::vector<double> const& ShadingPatternImpl::matrix() const
 //
 //
 // 
-ShadingHandle ShadingPatternImpl::shading_handle() const
-{
-    return m_shading;
-}
-
-//
-//
-// 
-void ShadingPatternImpl::matrix(trans_affine_t const& mtx)
+void PatternBase::matrix(trans_affine_t const& mtx)
 {
     m_matrix.assign(mtx.data(), mtx.data() + 6);
 }

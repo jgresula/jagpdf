@@ -350,9 +350,11 @@ IIndirectObject& ResourceManagement::pattern(PatternHandle ph)
 }
 
 
-//
-//
-// 
+/// Adjusts a pattern matrix for the topdown mode.
+///
+/// Visits a pattern implementation, shallow clones it and adds it to the
+/// pattern table.
+///  
 class ResourceManagement::PatternVisitorTopdown
     : public VisitorNoOp
 {
@@ -372,7 +374,24 @@ public:
         return m_handle;
     }
     
-public:
+public: // visitor methods
+    //
+    bool visit(TilingPatternImpl& visited)
+    {
+        std::auto_ptr<TilingPatternImpl> pattern(
+            new TilingPatternImpl(m_res_mgm.m_doc,
+                                  visited.definition_string(),
+                                  visited.canvas()));
+#ifdef JAG_DEBUG
+        CanvasRecord* canvas_rec = m_res_mgm.canvas_record(visited.canvas());
+        JAG_ASSERT(!canvas_rec->can_be_shared);
+#endif
+        adjust_matrix(pattern.get(), visited);
+        m_handle = m_res_mgm.m_pattern_table.add(pattern.release());
+        return true;
+    }
+
+    // 
     bool visit(ShadingPatternImpl& visited)
     {
         std::auto_ptr<ShadingPatternImpl> pattern(
@@ -380,6 +399,14 @@ public:
                                    visited.definition_string(),
                                    visited.shading_handle()));
 
+        adjust_matrix(pattern.get(), visited);
+        m_handle = m_res_mgm.m_pattern_table.add(pattern.release());
+        return true;
+    }
+
+private:
+    void adjust_matrix(PatternBase* pattern, PatternBase const& visited)
+    {
         // adjust the pattern matrix
         if (visited.matrix().empty())
         {
@@ -393,12 +420,13 @@ public:
             mtx *= mtx_orig;
             pattern->matrix(mtx);
         }
-
-        m_handle = m_res_mgm.m_pattern_table.add(pattern.release());
-        return true;
     }
 };
 
+
+//
+//
+// 
 bool operator<(ResourceManagement::PatternAndPageHeight const&lhs,
                ResourceManagement::PatternAndPageHeight const&rhs)
 {
@@ -419,9 +447,12 @@ ResourceManagement::pattern_ref(PatternHandle ph, double page_height)
 {
     if (page_height == 0.0)
         return resource_ref(ph, m_patterns, m_pattern_table);
-    
+
+    // In the topdown mode, the pattern's matrix must be
+    // adjusted. m_patterns_by_page_height maintains {(orig_pattern,
+    // page_height): adjusted_pattern} dictionary.
     typedef PatternsByPageHeight::iterator It;
-    PatternAndPageHeight key(ph, page_height);
+    const PatternAndPageHeight key(ph, page_height);
     It found = m_patterns_by_page_height.find(key);
     if (found == m_patterns_by_page_height.end())
     {

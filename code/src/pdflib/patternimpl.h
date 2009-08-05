@@ -38,6 +38,22 @@ class IIndirectObject;
 class IndirectObjectRef;
 class ObjFmt;
 
+//
+//
+// 
+class PatternBase
+{
+protected:    
+    std::vector<double> m_matrix;
+    std::string m_definition_string;
+    
+public:
+    PatternBase(char const* def_string);
+    char const* definition_string() const;
+    std::vector<double> const& matrix() const;
+    void matrix(jstd::trans_affine_t const& mtx);
+};
+
 // ---------------------------------------------------------------------------
 //                         Tiling Pattern
 //
@@ -49,13 +65,13 @@ class TilingPatternImpl
     : public IndirectObjectFwd
       // hook for an intrusive list in image manager
     , public boost::intrusive::list_base_hook<>
+    , public PatternBase
 {
 public:
-    explicit TilingPatternImpl(DocWriterImpl& doc);
     TilingPatternImpl(DocWriterImpl& doc, Char const* pattern_str, ICanvas* canvas);
     ~TilingPatternImpl();
     bool is_colored() const;
-
+    ICanvas* canvas() const;
 
 public: // IIndirectObject
     DEFINE_VISITABLE;
@@ -81,7 +97,6 @@ private:
     PatternTilingType   m_tiling_type;
     Double                m_bbox[4];
     Double              m_step[2];
-    std::vector<double> m_matrix;
 };
 
 
@@ -140,16 +155,14 @@ private:
 //
 class ShadingPatternImpl
     : public IndirectObjectImpl
+    , public PatternBase
 {
 public:
     DEFINE_VISITABLE;
     ShadingPatternImpl(DocWriterImpl& doc,
                        Char const* pattern,
                        ShadingHandle handle);
-    char const* definition_string() const;
-    std::vector<double> const& matrix() const;
-    ShadingHandle shading_handle() const;
-    void matrix(jstd::trans_affine_t const& mtx);
+    ShadingHandle shading_handle() const { return m_shading; }
 
 protected:
     void on_output_definition();
@@ -158,8 +171,6 @@ protected:
 private:
     ShadingHandle           m_shading;
     IndirectObjectRef       m_shading_ref;
-    std::vector<double>     m_matrix;
-    std::string             m_definition_str;
 };
 
 

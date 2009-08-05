@@ -224,10 +224,12 @@ class ExampleFile:
         else:
             return self.fn(fname)
 
-def paint_image(path, doc, x, y):
+def paint_image(path, doc, x, y, canvas=None):
     img_file = os.path.expandvars('${JAG_TEST_RESOURCES_DIR}/' + path)
     img = doc.image_load_file(img_file)
-    doc.page().canvas().image(img, x, y)
+    if not canvas:
+        canvas = doc.page().canvas()
+    canvas.image(img, x, y)
 
 class Matrix:
     def __init__(self):
