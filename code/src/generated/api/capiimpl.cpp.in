@@ -989,6 +989,18 @@ JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_font(jag_Canvas hobj, jag_Font
     }
 }
 
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_glyphs(jag_Canvas hobj, jag_Double x, jag_Double y, jag_UInt16 const* array_in, jag_UInt length)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->text_glyphs(x, y, array_in, length);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
 JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_horizontal_scaling(jag_Canvas hobj, jag_Double scaling)
 {
     try {

@@ -80,6 +80,7 @@ BUFFER_OR_SEQUENCE_TO_ARRAY( jag::UInt, PyInt_AsLong )
 BUFFER_OR_SEQUENCE_TO_ARRAY( jag::Byte,   PyInt_AsLong )
 BUFFER_OR_SEQUENCE_TO_ARRAY( jag::Int, PyInt_AsLong )
 BUFFER_OR_SEQUENCE_TO_ARRAY( jag::Function, PyInt_AsLong )
+BUFFER_OR_SEQUENCE_TO_ARRAY( jag::UInt16, PyInt_AsLong )
 
 
 //

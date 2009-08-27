@@ -105,11 +105,12 @@ JAG_STATIC_ASSERT_PUBLIC(sizeof(void*)==4, not_32bit_architecture)
 
 /* the same width regardless of the address model */
 typedef char                jag_Char;
-typedef double                jag_Double;
+typedef double              jag_Double;
 typedef unsigned char       jag_Byte;
 typedef int                 jag_Int;
 typedef unsigned int        jag_UInt;
 typedef unsigned char       jag_UInt8;
+typedef unsigned short      jag_UInt16;
 
 
 #ifdef __cplusplus
@@ -126,6 +127,7 @@ namespace pdf
   typedef jag_Int     Int;
   typedef jag_UInt    UInt;
   typedef jag_UInt8   UInt8;
+  typedef jag_UInt16  UInt16;
 }} /* namespace jag::pdf */
 #endif
 
@@ -134,6 +136,7 @@ namespace pdf
 /* check type sizes */
   JAG_STATIC_ASSERT_PUBLIC(sizeof(jag_Char)==1, jag_char_sizeof_problem_detected)
   JAG_STATIC_ASSERT_PUBLIC(sizeof(jag_UInt8)==1, jag_uint8_sizeof_problem_detected)
+  JAG_STATIC_ASSERT_PUBLIC(sizeof(jag_UInt16)==2, jag_uint16_sizeof_problem_detected)
   JAG_STATIC_ASSERT_PUBLIC(sizeof(jag_Byte)==1, jag_byte_sizeof_problem_detected)
   JAG_STATIC_ASSERT_PUBLIC(sizeof(jag_Int)==4, jag_int_sizeof_problem_detected)
   JAG_STATIC_ASSERT_PUBLIC(sizeof(jag_UInt)==4, jag_uint_sizeof_problem_detected)

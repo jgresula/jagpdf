@@ -559,6 +559,17 @@ void CanvasImpl::text_show_multienc_font(
 }
 
 
+//
+//
+//
+void CanvasImpl::text_glyphs(Double x, Double y,
+                             UInt16 const* array_in, UInt length)
+{
+    return;
+}
+
+
+
 
 //////////////////////////////////////////////////////////////////////////
 // TEXT LABEL

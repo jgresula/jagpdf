@@ -847,6 +847,16 @@ public:
 #endif
     }
 
+    Result text_glyphs(Double x, Double y, UInt16 const* array_in, UInt length)
+    {
+#ifndef JAG_DO_NOT_USE_EXCEPTIONS
+        if (jag_Canvas_text_glyphs(m_obj, x, y, array_in, length))
+            throw Exception();
+#else
+        return jag_Canvas_text_glyphs(m_obj, x, y, array_in, length);
+#endif
+    }
+
     Result text_horizontal_scaling(Double scaling)
     {
 #ifndef JAG_DO_NOT_USE_EXCEPTIONS

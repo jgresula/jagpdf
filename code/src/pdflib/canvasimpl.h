@@ -128,6 +128,8 @@ public: //ICanvas
     void text_horizontal_scaling(Double scaling);
     void text_rendering_mode(Char const* mode);
     void text_rise(Double rise);
+    void text_glyphs(Double x, Double y, UInt16 const* array_in, UInt length);
+
 
 public: //non-interface
     void transform(jstd::trans_affine_t const& mtxt);

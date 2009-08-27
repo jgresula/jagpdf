@@ -871,6 +871,19 @@ public:
                                  Char const* start, Char const* end,
                                  Double const* offsets, UInt offsets_length,
                                  Int const* positions, UInt positions_length) = 0;
+
+
+    /// Shows a text specified by glyph indices.
+    ///
+    /// @param x the x baseline coordinate
+    /// @param y the y baseline coordinate
+    /// @param array_in array of glyph indices
+    /// @param lenght number of glyphs to show
+    ///
+    /// @pre A text object has not been started.
+    /// 
+    virtual void text_glyphs(Double x, Double y,
+                             UInt16 const* array_in, UInt length) = 0;
     //@}
 
 

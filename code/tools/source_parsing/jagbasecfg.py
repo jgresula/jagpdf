@@ -50,6 +50,7 @@ class TypeMap:
         jag::Double;   Double;   jag_Double;  double
         jag::Byte;     Byte;     jag_Byte;    byte
         jag::UInt8;    UInt8;    jag_UInt8;   ????
+        jag::UInt16;   UInt16;   jag_UInt16;  int
 
         #- classes
         jag::ICanvas;            Canvas;                jag_Canvas;    Canvas
@@ -236,7 +237,7 @@ def cfg( testenv=False):
                        ]
     ns = 'jag::'
     remove_from_links = [ns]
-    allowed_pointers=[ ns+p for p in ['Char', 'Double', 'UInt', 'Byte', 'Int', 'Function'] ] + ['jag_streamout']
+    allowed_pointers=[ ns+p for p in ['Char', 'Double', 'UInt', 'Byte', 'Int', 'Function', 'UInt16'] ] + ['jag_streamout']
     def get_typemap( p, pname ):
         return ( dict(base_name=p, category='const_pointer', argname=pname ),\
                  dict(base_name='UInt', category='other', argname='length' ) )

@@ -125,6 +125,7 @@ JAVA_ARRAY_TO_C_ARRAY(unsigned int, jag::UInt, array_in);
 JAVA_ARRAY_TO_C_ARRAY(signed char, jag::Byte, array_in);
 JAVA_ARRAY_TO_C_ARRAY(int, jag::Int, array_in);
 JAVA_ARRAY_TO_C_ARRAY(unsigned int, jag::Function, array_in);
+JAVA_ARRAY_TO_C_ARRAY(unsigned short, jag::UInt16, array_in);
 JAVA_ARRAY_TO_C_ARRAY(int, jag::Int, positions);
 JAVA_ARRAY_TO_C_ARRAY(double, jag::Double, offsets);
 

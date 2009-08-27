@@ -36,6 +36,7 @@ namespace jag
   typedef jag::pdf::Int Int;
   typedef jag::pdf::UInt UInt;
   typedef jag::pdf::UInt8 UInt8;
+  typedef jag::pdf::UInt16 UInt16;
 
 
   const jag_Int err_no_error = jag::pdf::err_no_error;
