@@ -449,9 +449,12 @@ void CanvasImpl::scaled_image(IImage* image, Double x, Double y, Double sx, Doub
     // gamma correction
     if (img_data.has_gamma() && !equal_doubles(img_data.gamma(), 1.0) && m_doc_writer.version()>=3)
     {
-        const int gamma_str_len = 128;
+        char func_str[PDF_DOUBLE_MAX_SIZE];
+        snprintf_pdf_double(func_str, PDF_DOUBLE_MAX_SIZE, 1.0/img_data.gamma());
+
+        const int gamma_str_len = 128 + PDF_DOUBLE_MAX_SIZE;
         char gamma_str[gamma_str_len];
-        jstd::snprintf(gamma_str, gamma_str_len, "domain=0.0, 1.0; range=0.0, 1.0; func={%.5f exp}", 1.0/img_data.gamma());
+        jstd::snprintf(gamma_str, gamma_str_len, "domain=0.0, 1.0; range=0.0, 1.0; func={%s exp}", func_str);
         m_graphics_state.top().transfer_fn(
             m_doc_writer.res_mgm().function_4_load(gamma_str));
     }

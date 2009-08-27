@@ -21,9 +21,9 @@
 #include <core/generic/assert.h>
 #include <core/jstd/tracer.h>
 #include <core/jstd/transaffine.h>
-#include <core/generic/minmax.h>
 #include <core/generic/floatpointtools.h>
 #include <interfaces/streams.h>
+#include <core/generic/minmax.h>
 
 #include <boost/scoped_array.hpp>
 
@@ -553,42 +553,45 @@ ObjFmtBasic& ObjFmtBasic::output(double value)
     }
     else
     {
-
-        value = (min)(value,3.403e+38);
-        value = (max)(value,-3.403e+38);
-        const int buffer_length = std::numeric_limits<double>::digits10+10;
-        Char buffer[buffer_length];
-        // A seemingly simple task of printing a double with at most 5
-        // significant decimal digits of precision in fractional part does not
-        // have a straightforward solution:
-        //
-        // std::ostrstream .. deprecated
-        // std::ostringstream .. allocation + slow
-        // boost::format .. slow and maybe allocation
-        // printf %e .. exponent
-        // printf %g .. cannot specify the number of digits after the decimal
-        //              point (%. specifies significant digits); moreover in
-        //              certain cases can print exponent
-        // printf %f .. always prints trailing zeros
-        //
-        //
-        // To get a result consistent across multiple platforms we do the
-        // following:
-        //  - round the number to .00001
-        //  - format it with %f forcing to always print the fractional part (by
-        //    using #)
-        //  - discard the trailing zeroes and possibly the decimal point
-        //
-        double rounded = round(value, .00001);
-        if (rounded == 0.0) rounded = 0.0; // negative zero -> zero
-        int written = jstd::snprintf(buffer,
-                                     buffer_length,
-                                     "%#.5f",
-                                     rounded);
-        char* p = buffer + written - 1;
-        while(*p == '0') --p;
-        if (*p != '.') ++p;
-        m_stream->write(buffer, p-buffer);
+        Char buffer[PDF_DOUBLE_MAX_SIZE];
+        int written = snprintf_pdf_double(buffer, PDF_DOUBLE_MAX_SIZE, value);
+        m_stream->write(buffer, written);
+            
+//         value = (min)(value,3.403e+38);
+//         value = (max)(value,-3.403e+38);
+//         const int buffer_length = std::numeric_limits<double>::digits10+10;
+//         Char buffer[buffer_length];
+//         // A seemingly simple task of printing a double with at most 5
+//         // significant decimal digits of precision in fractional part does not
+//         // have a straightforward solution:
+//         //
+//         // std::ostrstream .. deprecated
+//         // std::ostringstream .. allocation + slow
+//         // boost::format .. slow and maybe allocation
+//         // printf %e .. exponent
+//         // printf %g .. cannot specify the number of digits after the decimal
+//         //              point (%. specifies significant digits); moreover in
+//         //              certain cases can print exponent
+//         // printf %f .. always prints trailing zeros
+//         //
+//         //
+//         // To get a result consistent across multiple platforms we do the
+//         // following:
+//         //  - round the number to .00001
+//         //  - format it with %f forcing to always print the fractional part (by
+//         //    using #)
+//         //  - discard the trailing zeroes and possibly the decimal point
+//         //
+//         double rounded = round(value, .00001);
+//         if (rounded == 0.0) rounded = 0.0; // negative zero -> zero
+//         int written = jstd::snprintf(buffer,
+//                                      buffer_length,
+//                                      "%#.5f",
+//                                      rounded);
+//         char* p = buffer + written - 1;
+//         while(*p == '0') --p;
+//         if (*p != '.') ++p;
+//         m_stream->write(buffer, p-buffer);
     }
 
     return *this;
