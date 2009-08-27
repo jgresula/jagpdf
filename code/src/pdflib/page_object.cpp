@@ -140,6 +140,9 @@ void PageObject::create_annotation(
     std::auto_ptr<IAnnotationType> ann_worker(
         new AW(worker_param));
 
+    if (doc().is_topdown())
+        y = m_dimension[1] - y - height;
+
     std::auto_ptr<AnnotationImpl> ann(
         new AnnotationImpl(doc(),
                             x, y, width, height, style, ann_worker));
