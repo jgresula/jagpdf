@@ -118,7 +118,7 @@ Int T1AdobeStandardFace::codepoint_to_gid(Int /*codepoint*/) const
     throw exception_invalid_operation() << JAGLOC;
 }
 
-Int T1AdobeStandardFace::gid_to_codepoint(UInt16) const
+FaceCharIterator T1AdobeStandardFace::char_iterator() const
 {
     throw exception_invalid_operation() << JAGLOC;
 }

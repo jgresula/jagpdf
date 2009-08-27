@@ -21,6 +21,9 @@
 #error "no gccxml" 
 #endif 
 
+// freetype fwd
+struct FT_FaceRec_;
+
 namespace jag {
 
 class IStreamInput;
@@ -70,6 +73,28 @@ private:
     };
 
     boost::shared_ptr<Impl> m_impl;
+};
+
+
+//
+//
+//
+class FaceCharIterator
+{
+public:
+    struct Item {
+        Int codepoint;
+        UInt glyph;
+    };
+    
+    FaceCharIterator(FT_FaceRec_* face);
+    bool done() const;
+    Item const& current() const;
+    void next();
+    
+private:
+    Item m_item;
+    FT_FaceRec_* m_face;
 };
 
 
@@ -213,7 +238,7 @@ public:
      * Implementations are allowed not to implement this method.
      */
     virtual Int codepoint_to_gid(Int codepoint) const PURE_FUNCTION;
-    virtual Int gid_to_codepoint(UInt16 gid) const PURE_FUNCTION;
+    virtual FaceCharIterator char_iterator() const PURE_FUNCTION;
 
 
 

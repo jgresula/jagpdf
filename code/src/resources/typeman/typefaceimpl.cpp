@@ -419,33 +419,9 @@ Int TypefaceImpl::codepoint_to_gid(Int codepoint) const
 //
 // O(N), where N is number of glyphs in font
 // 
-Int TypefaceImpl::gid_to_codepoint(UInt16 gid) const
+FaceCharIterator TypefaceImpl::char_iterator() const
 {
-    Int codepoint = 0xfffe; // unassigned unicode
-    switch(m_type)
-    {
-    case FACE_TRUE_TYPE:
-    case FACE_OPEN_TYPE_CFF:
-    {
-        FT_ULong charcode;
-        FT_UInt gindex;
-
-        charcode = FT_Get_First_Char(m_face, &gindex);
-        while (gindex != 0)
-        {
-            if (gid == gindex)
-                return charcode;
-            
-            charcode = FT_Get_Next_Char(m_face, charcode, &gindex);
-        }
-        break;
-    }
-
-    default:
-        JAG_TBD;
-    };
-    
-    return codepoint;
+    return FaceCharIterator(m_face);
 }
 
 
@@ -616,6 +592,7 @@ void UsedGlyphs::update()
 {
     if (m_impl->update_glyphs)
     {
+        // update used glyphs by iterating the map and storing the values
         typedef CodepointToGlyph::const_iterator MapIter;
         MapIter end = m_impl->codepoint_to_glyph.end();
         for(MapIter it = m_impl->codepoint_to_glyph.begin();
@@ -627,7 +604,22 @@ void UsedGlyphs::update()
         m_impl->update_glyphs = false;
     }
 
-    JAG_ASSERT(!m_impl->update_map);
+    if (m_impl->update_map)
+    {
+        // update the map by finding codepoints for used glyphs
+        typedef FaceCharIterator::Item Item;
+        FaceCharIterator it = m_face.char_iterator();
+        for(; !it.done(); it.next())
+        {
+            Item const& item = it.current();
+            if (m_impl->glyphs.count(item.glyph))
+            {
+                m_impl->codepoint_to_glyph.insert(
+                    std::make_pair(item.codepoint, item.glyph));
+            }
+        }
+        m_impl->update_map = false;
+    }
 }
 
 void UsedGlyphs::set_update_glyphs()
@@ -643,8 +635,32 @@ void UsedGlyphs::set_update_map()
 }
 
 
+// ---------------------------------------------------------------------------
+//                     class FaceCharIterator
 
+FaceCharIterator::FaceCharIterator(FT_FaceRec_* face)
+    : m_face(face)
+{
+    m_item.codepoint = FT_Get_First_Char(m_face, &m_item.glyph);
+}
 
+bool FaceCharIterator::done() const
+{
+    return m_item.glyph == 0;
+}
+
+FaceCharIterator::Item const& FaceCharIterator::current() const
+{
+    JAG_PRECONDITION(!done());
+    return m_item;
+}
+
+void FaceCharIterator::next()
+{
+    m_item.codepoint = FT_Get_Next_Char(m_face,
+                                        m_item.codepoint,
+                                        &m_item.glyph);
+}
 
 
 } // namespace jag
