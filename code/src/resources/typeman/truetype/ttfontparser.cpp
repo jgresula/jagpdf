@@ -10,6 +10,7 @@
 #include <msg_resources.h>
 #include <core/generic/assert.h>
 #include <core/errlib/errlib.h>
+#include <core/jstd/tracer.h>
 #include <core/generic/checked_cast.h>
 #include <interfaces/streams.h>
 
@@ -84,7 +85,7 @@ void TTFontParser::verify_file_checksum()
     ubig32_t sum(file_checksum(m_instream, skip_offset));
     sum = 0xB1B0AFBA-static_cast<unsigned int>(sum);
     if (sum != head->m_checksum_adjustment)
-        throw exception_invalid_input(msg_tt_file_checksum_failed()) << JAGLOC;
+        TRACE_WRN << "TrueType checksum failed" ;
 }
 
 
