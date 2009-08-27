@@ -129,6 +129,11 @@ public: //ICanvas
     void text_rendering_mode(Char const* mode);
     void text_rise(Double rise);
     void text_glyphs(Double x, Double y, UInt16 const* array_in, UInt length);
+    void text_glyphs_o(Double x, Double y,
+                       UInt16 const* array_in, UInt length,
+                       Double const* offsets, UInt offsets_length,
+                       Int const* positions, UInt positions_length);
+
 
 
 public: //non-interface

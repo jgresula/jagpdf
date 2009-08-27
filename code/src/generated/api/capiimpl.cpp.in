@@ -233,6 +233,17 @@ JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_descender(jag_Font hobj)
     }
 }
 
+JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_glyph_width(jag_Font hobj, jag_UInt16 glyph_index)
+{
+    try {
+        jag::IFont* this__(handle2ptr<jag::IFont>(hobj));
+        return static_cast<jag_Double>(this__->glyph_width(glyph_index));
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Double();
+    }
+}
+
 JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_height(jag_Font hobj)
 {
     try {
@@ -994,6 +1005,18 @@ JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_glyphs(jag_Canvas hobj, jag_Do
     try {
         jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
         this__->text_glyphs(x, y, array_in, length);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Canvas_text_glyphs_o(jag_Canvas hobj, jag_Double x, jag_Double y, jag_UInt16 const* array_in, jag_UInt lenght, jag_Double const* offsets, jag_UInt offsets_length, jag_Int const* positions, jag_UInt positions_length)
+{
+    try {
+        jag::ICanvas* this__(handle2ptr<jag::ICanvas>(hobj));
+        this__->text_glyphs_o(x, y, array_in, lenght, offsets, offsets_length, positions, positions_length);
         return 0;
     } catch (jag::exception const& exc) {
         jag::tls_set_error_info( exc );

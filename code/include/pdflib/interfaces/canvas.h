@@ -797,7 +797,7 @@ public:
     /// @param offsets glyph offsets expressed in glyph space (i.e. in
     ///        thousandths of a unit of text space).
     /// @param offsets_length number of offsets
-    /// @param positions associates glyph offsets with glyph indices in txt_u
+    /// @param positions associates glyph offsets with indices in txt_u
     /// @param positions_length number of positions
     ///
     /// @pre A text object has been started.
@@ -862,7 +862,7 @@ public:
     /// @param offsets glyph offsets expressed in glyph space (i.e. in
     ///        thousandths of a unit of text space).
     /// @param offsets_length number of offsets
-    /// @param positions associates glyph offsets with glyph indices in txt_u
+    /// @param positions associates glyph offsets with indices in txt_u
     /// @param positions_length number of positions
     ///
     /// @pre A text object has not been started.
@@ -884,6 +884,25 @@ public:
     /// 
     virtual void text_glyphs(Double x, Double y,
                              UInt16 const* array_in, UInt length) = 0;
+
+    /// Shows a text specified by glyph indices.
+    ///
+    /// @param x the x baseline coordinate
+    /// @param y the y baseline coordinate
+    /// @param array_in array of glyph indices
+    /// @param lenght number of glyphs to show
+    /// @param offsets glyph offsets expressed in glyph space (i.e. in
+    ///        thousandths of a unit of text space).
+    /// @param offsets_length number of offsets
+    /// @param positions associates glyph offsets with glyphs in array_in
+    /// @param positions_length number of positions
+    ///
+    /// @pre A text object has not been started.
+    /// 
+    virtual void text_glyphs_o(Double x, Double y,
+                               UInt16 const* array_in, UInt lenght,
+                               Double const* offsets, UInt offsets_length,
+                               Int const* positions, UInt positions_length) = 0;
     //@}
 
 

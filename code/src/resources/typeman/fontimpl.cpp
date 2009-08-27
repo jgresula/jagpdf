@@ -68,6 +68,15 @@ Double FontImpl::height() const
 }
 
 
+//
+//
+// 
+Double FontImpl::glyph_width(UInt16 glyph_index) const
+{
+    return m_coef * m_typeface.gid_horizontal_advance(glyph_index);
+}
+
+
 ///
 ///
 ///
@@ -283,6 +292,12 @@ Double MultiEncFontImpl::advance(jag::Char const* text) const
     }
 
     return result;
+}
+
+
+Double MultiEncFontImpl::glyph_width(UInt16 /*glyph_index*/) const
+{
+    throw exception_invalid_operation() << JAGLOC;
 }
 
 

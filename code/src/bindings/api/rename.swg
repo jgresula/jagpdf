@@ -23,6 +23,8 @@
 %rename(text) jag::ICanvas::text_simple_r;
 %rename(text) jag::ICanvas::text_simple_ro;
 
+%rename(text_glyphs) jag::ICanvas::text_glyphs_o;
+
 %rename(color) jag::ICanvas::color1;
 %rename(color) jag::ICanvas::color3;
 %rename(color) jag::ICanvas::color4;

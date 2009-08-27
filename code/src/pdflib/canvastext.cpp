@@ -586,12 +586,24 @@ void CanvasImpl::text_show_multienc_font(
 void CanvasImpl::text_glyphs(Double x, Double y,
                              UInt16 const* array_in, UInt length)
 {
+    text_glyphs_o(x, y, array_in, length, 0, 0, 0, 0);
+}
+
+//
+//
+// 
+void CanvasImpl::text_glyphs_o(Double x, Double y,
+                               UInt16 const* array_in, UInt length,
+                               Double const* offsets, UInt offsets_length,
+                               Int const* positions, UInt positions_length)
+{
     if (length <= 0)
         return;
 
     PDFFont const* font = current_font();
     JAG_ASSERT(font);
 
+    // only composite fonts allowed here
     if (PDFFontData::COMPOSITE_FONT != font->font_dict().fdict_data().font_type() ||
         ENC_IDENTITY != font->font_dict().fdict_data().font_encoding())
     {
@@ -600,15 +612,26 @@ void CanvasImpl::text_glyphs(Double x, Double y,
 
     ensure_resource_list().add_font(m_graphics_state.top().font()->font_dict());
     commit_graphics_state();
+    font->font_dict().use_gids(array_in, array_in + length);
 
     write_label_prologue(m_fmt, x, y, m_doc_writer.is_topdown());
+    
+    offsets_info_t offsets_info;
+    if (offsets_length)
+    {
+        offsets_info.adj = offsets;
+        offsets_info.pos = positions;
+        offsets_info.len = positions_length;
+    }
 
-    font->font_dict().use_gids(array_in, array_in + length);
     output_cid_font_gids(*font, m_fmt,
-                         array_in, length, 0, m_doc_writer.exec_context());
+                         array_in, length,
+                         offsets_length ? &offsets_info : 0,
+                         m_doc_writer.exec_context());
 
     m_fmt.graphics_op(OP_ET);
 }
+
 
 
 

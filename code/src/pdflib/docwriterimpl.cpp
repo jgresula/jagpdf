@@ -105,6 +105,8 @@ namespace
       Char const* family_name() const { return m_other->family_name(); }
       Char const* style_name() const { return m_other->style_name(); }
       Double advance(Char const* txt_u) const { return m_other->advance(txt_u); }
+      Double glyph_width(UInt16 glyph_index) const {
+          return m_other->glyph_width(glyph_index); }
       Double height() const { return m_other->height(); }
       Double ascender() const { return m_other->ascender(); }
       Double descender() const { return m_other->descender(); }

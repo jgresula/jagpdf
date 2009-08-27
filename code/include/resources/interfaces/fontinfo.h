@@ -34,6 +34,9 @@ public:
     /// If kerning is turned on then the kerning offsets are counted in.
     virtual Double advance(Char const* txt_u) const = 0;
 
+    /// Retrieves width of the given glyph.
+    virtual Double glyph_width(UInt16 glyph_index) const = 0;
+
     
     /// Retrieves baseline distance in user space units.
     virtual Double height() const = 0;
