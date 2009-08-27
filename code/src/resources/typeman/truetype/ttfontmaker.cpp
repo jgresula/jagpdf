@@ -28,8 +28,9 @@
 
 using namespace boost::integer;
 
-namespace jag { namespace resources { namespace truetype
-{
+namespace jag {
+namespace resources {
+namespace truetype {
 
 namespace {
 
@@ -91,6 +92,7 @@ private:
 //////////////////////////////////////////////////////////////////////////
 TTFontMaker::TTFontMaker()
     : m_codepoint_to_glyph(0)
+    , m_glyphs_byte_size(0)
 {
     std::fill(m_table_records.begin(), m_table_records.end(), MemBlock(0,0));
 }
@@ -114,8 +116,20 @@ void TTFontMaker::add_glyph(void const* data,
         ? static_cast<Byte const*>(data)
         : 0
     ;
+    
     m_glyphs.insert(m_glyphs.end(), glyph_data, glyph_data+data_len);
+    m_glyphs_byte_size += data_len;
 }
+
+//
+//
+//
+bool TTFontMaker::has_outlines() const
+{
+    return m_glyphs_byte_size != 0;
+}
+
+ 
 
 
 

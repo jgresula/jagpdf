@@ -43,6 +43,7 @@ public:
      * @param glyph_index desired index of the glyph
      */
     void add_glyph(void const* data, size_t data_len, UInt16 glyph_index);
+    bool has_outlines() const;
 
     /**
      * @brief sets mapping from codepoint to indices
@@ -128,6 +129,7 @@ private:
 
     CodepointToGlyph const* m_codepoint_to_glyph;
     class TableRecordWriter;
+    size_t m_glyphs_byte_size;
 };
 
 

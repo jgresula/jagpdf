@@ -327,7 +327,7 @@ bool FontDescriptor::on_before_output_definition()
     {
         static int i=0;
         char fname[128];
-        sprintf(fname, "/tmp/pdf_%d.ttf", ++i);
+        sprintf(fname, "/tmp/pdf_%d_%s.ttf", ++i, basename());
         FileStreamOutput fout(fname);
         copy_stream(*font_program, fout);
         font_program->seek(0, OFFSET_FROM_BEGINNING);

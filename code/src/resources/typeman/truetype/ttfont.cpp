@@ -113,6 +113,18 @@ void TTFont::make_subset(ISeqStreamOutput& subset_font,
         }
     }
 
+    // The subset can contain no outlines, i.e it for instance could have only
+    // spaces with varying widths. In such case the .notdef glyph (index 0) is
+    // added to the subset. Otherwise, a missing glyf table causes problems for
+    // e.g. Reader or certain FreeType versions.
+    if (!font_maker.has_outlines())
+    {
+        m_ttparser.load_glyph(0);
+        font_maker.add_glyph(m_ttparser.current_glyph_data(),
+                             m_ttparser.current_glyph_size(),
+                             0);
+    }
+
 
     TTFontParser::TableData table_data(m_ttparser.load_table(TT_MAXP));
     font_maker.add_table(TT_MAXP, table_data.first, table_data.second);
