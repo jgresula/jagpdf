@@ -278,6 +278,41 @@ namespace
   }
 
 
+  //
+  //
+  // 
+  void output_cid_font_gids(PDFFont const& font,
+                            ObjFmtBasic& writer,
+                            UInt16 const* gids, int ngids,
+                            offsets_info_t const* offsets,
+                            IExecContext const& exec_ctx)
+  {
+      KerningOffsets kerns;
+      if (exec_ctx.config().get_int("text.kerning"))
+      {
+          process_kerns(gids, ngids,
+                        bind(&IFontEx::kerning_for_gids, font.font(), _1, _2),
+                        kerns, -1000.0/font.font()->size());
+          offsets = kerns.merge(offsets);
+      }
+      
+      if (!offsets)
+      {
+          writer.string_object_2b(gids, ngids).graphics_op(OP_Tj);
+      }
+      else
+      {
+          typedef ObjFmtBasic& (ObjFmtBasic::*my_overload_t)(UInt16 const*, size_t);
+          my_overload_t fn = &ObjFmtBasic::string_object_2b;
+          output_text_with_adjustments(
+              make_text_writer(gids,
+                               boost::bind(fn, boost::ref(writer), _1, _2)),
+              writer,
+              ngids,
+              *offsets);
+      }
+  }
+
   ///
   /// Outputs a text written in a composite font.
   ///
@@ -318,35 +353,13 @@ namespace
 
       // send codepoints to font dictionary and in turn retrieve
       // a corresponding sequence of gids which are sent to output
-      std::vector<Int> gids;
+      std::vector<UInt16> gids;
       font.font_dict().use_codepoints(&codepoints[0],
                                        &codepoints[0] + codepoints.size(),
                                        gids);
 
-      KerningOffsets kerns;
-      if (exec_ctx.config().get_int("text.kerning"))
-      {
-          process_kerns(&gids[0], gids.size(),
-                        bind(&IFontEx::kerning_for_gids, font.font(), _1, _2),
-                        kerns, -1000.0/font.font()->size());
-          offsets = kerns.merge(offsets);
-      }
-      
-      if (!offsets)
-      {
-          writer.string_object_2b(&gids[0], gids.size()).graphics_op(OP_Tj);
-      }
-      else
-      {
-          typedef ObjFmtBasic& (ObjFmtBasic::*my_overload_t)(Int const*, size_t);
-          my_overload_t fn = &ObjFmtBasic::string_object_2b;
-          output_text_with_adjustments(
-              make_text_writer(&gids[0],
-                               boost::bind(fn, boost::ref(writer), _1, _2)),
-              writer,
-              gids.size(),
-              *offsets);
-      }
+      output_cid_font_gids(font, writer, &gids[0], gids.size(),
+                           offsets, exec_ctx);
   }
 
 
@@ -412,7 +425,25 @@ namespace
 } // anonymous namespace
 
 
+//
+//
+// 
+PDFFont const* CanvasImpl::current_font()
+{
+    // get the current font form the graphics state; if there is no
+    // font set by client then used the default one
+    PDFFont const* font = m_graphics_state.top().font();
+    if (!font)
+    {
+        IFont* fontid = m_doc_writer.default_font();
+        if (fontid) {
+            text_font(fontid);
+            font = m_graphics_state.top().font();
+        }
+    }
 
+    return font;
+}
 
 ///
 /// Generic text showing functionality called by all text showing interface
@@ -431,17 +462,7 @@ void CanvasImpl::text_show_generic(Char const* start, Char const* end,
     if (start==end)
         return;
 
-    // get the current font form the graphics state; if there is no
-    // font set by client then used the default one
-    PDFFont const* font = m_graphics_state.top().font();
-    if (!font)
-    {
-        IFont* fontid = m_doc_writer.default_font();
-        if (fontid) {
-            text_font(fontid);
-            font = m_graphics_state.top().font();
-        }
-    }
+    PDFFont const* font = current_font();
 
     // the font retrieval must allways succeed
     JAG_ASSERT(font);
@@ -565,7 +586,29 @@ void CanvasImpl::text_show_multienc_font(
 void CanvasImpl::text_glyphs(Double x, Double y,
                              UInt16 const* array_in, UInt length)
 {
-    return;
+    if (length <= 0)
+        return;
+
+    PDFFont const* font = current_font();
+    JAG_ASSERT(font);
+
+    if (PDFFontData::COMPOSITE_FONT != font->font_dict().fdict_data().font_type() ||
+        ENC_IDENTITY != font->font_dict().fdict_data().font_encoding())
+    {
+        throw exception_invalid_operation() << JAGLOC;        
+    }
+
+    ensure_resource_list().add_font(m_graphics_state.top().font()->font_dict());
+    commit_graphics_state();
+
+    write_label_prologue(m_fmt, x, y, m_doc_writer.is_topdown());
+
+
+    // TBD report used gids
+    output_cid_font_gids(*font, m_fmt,
+                         array_in, length, 0, m_doc_writer.exec_context());
+
+    m_fmt.graphics_op(OP_ET);
 }
 
 
@@ -579,9 +622,9 @@ void CanvasImpl::text_glyphs(Double x, Double y,
 //
 //
 void CanvasImpl::text_simple_ro(Double x, Double y,
-                                 Char const* start, Char const* end,
-                                 Double const* offsets, UInt offsets_length,
-                                 Int const* positions, UInt positions_length)
+                                Char const* start, Char const* end,
+                                Double const* offsets, UInt offsets_length,
+                                Int const* positions, UInt positions_length)
 {
     // the generic text show function is called with a pre-action that writes
     // start of the text object and the offset; upon returning the text object

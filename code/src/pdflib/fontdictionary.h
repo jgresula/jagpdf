@@ -32,7 +32,7 @@ public:
     /// Retrieves used codepoints.
     virtual void get_used_codepoints(std::set<Int>& codepoints, jstd::UnicodeConverter* conv) const = 0;
     virtual void use_char8(Char const* /*start*/, Char const* /*end*/) { JAG_INTERNAL_ERROR; }
-    virtual void use_codepoints(Int const* /*start*/, Int const* /*end*/, std::vector<Int>& /*gids*/) { JAG_INTERNAL_ERROR; }
+    virtual void use_codepoints(Int const* /*start*/, Int const* /*end*/, std::vector<UInt16>& /*gids*/) { JAG_INTERNAL_ERROR; }
     virtual void use_cids(Char const* /*start*/, Char const* /*end*/) { JAG_INTERNAL_ERROR; }
     virtual void output_dictionary(FontDictionary& dict) = 0;
     virtual bool before_output_dictionary(FontDictionary& /*dict*/) { return true; }
@@ -81,7 +81,7 @@ public:
      * @param end end codepoint
      * @param gids filled in with gids corresponding to codepoints
      */
-    void use_codepoints(Int const* start, Int const* end, std::vector<Int>& gids);
+    void use_codepoints(Int const* start, Int const* end, std::vector<UInt16>& gids);
 
     // std::set<Int>
     void use_cids(Char const* start, Char const* end);

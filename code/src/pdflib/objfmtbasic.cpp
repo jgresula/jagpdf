@@ -899,17 +899,16 @@ ObjFmtBasic& ObjFmtBasic::unenc_text_string_hex(Char const* txt, size_t length)
  *
  * string within a content stream
  */
-ObjFmtBasic& ObjFmtBasic::string_object_2b(Int const* txt, size_t length)
+ObjFmtBasic& ObjFmtBasic::string_object_2b(UInt16 const* txt, size_t length)
 {
     JAG_PRECONDITION(length);
     const int buffer_size = 32;
     char buffer[buffer_size];
 
     m_stream->write("<", 1);
-    for(Int const*const end=txt+length; txt!=end; ++txt)
+    for(UInt16 const*const end=txt+length; txt!=end; ++txt)
     {
-        JAG_ASSERT(*txt <= 0xffff);
-        jstd::snprintf(buffer, buffer_size, "%04x", *txt);
+        jstd::snprintf(buffer, buffer_size, "%04x", (unsigned)*txt);
         m_stream->write(buffer, 4);
     }
     m_stream->write(">", 1);

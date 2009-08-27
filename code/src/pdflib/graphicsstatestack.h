@@ -34,6 +34,7 @@ public:
     GraphicsStateHandle commit();
     bool is_empty();
     GraphicsState& top();
+    GraphicsState const& top() const;
 
 private:
     DocWriterImpl&              m_doc;

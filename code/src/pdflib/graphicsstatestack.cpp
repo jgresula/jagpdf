@@ -11,8 +11,8 @@
 #include <core/generic/assert.h>
 #include <msg_pdflib.h>
 
-namespace jag { namespace pdf
-{
+namespace jag {
+namespace pdf {
 
 /// ctor
 GraphicsStateStack::GraphicsStateStack(
@@ -66,6 +66,15 @@ GraphicsStateHandle GraphicsStateStack::commit()
 
 //////////////////////////////////////////////////////////////////////////
 GraphicsState& GraphicsStateStack::top()
+{
+    JAG_PRECONDITION(!m_stack.empty());
+    return m_stack.back();
+}
+
+//
+//
+// 
+GraphicsState const& GraphicsStateStack::top() const
 {
     JAG_PRECONDITION(!m_stack.empty());
     return m_stack.back();

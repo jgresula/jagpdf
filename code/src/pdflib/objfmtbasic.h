@@ -178,7 +178,7 @@ public:
     ObjFmtBasic& unenc_text_string(Char const* txt);
     ObjFmtBasic& unenc_text_string_hex(Char const* txt, size_t length);
 
-    ObjFmtBasic& string_object_2b(Int const* txt, size_t length);
+    ObjFmtBasic& string_object_2b(UInt16 const* txt, size_t length);
     ObjFmtBasic& string_object_2b(Char const* start, Char const* end);
 
     template<class HANDLE>

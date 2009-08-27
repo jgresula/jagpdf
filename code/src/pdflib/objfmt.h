@@ -78,7 +78,7 @@ public:
     ObjFmt& unenc_text_string_hex(Char const* txt, size_t length) { m_fmt_basic.unenc_text_string_hex(txt, length); return *this; }
 
     /// Code points.
-    ObjFmt& string_object_2b(Int const* txt, std::size_t length) { m_fmt_basic.string_object_2b(txt, length); return *this; }
+    ObjFmt& string_object_2b(UInt16 const* txt, std::size_t length) { m_fmt_basic.string_object_2b(txt, length); return *this; }
     ObjFmt& string_object_2b(Char const* start, Char const* end) { m_fmt_basic.string_object_2b(start, end); return *this; }
 
 

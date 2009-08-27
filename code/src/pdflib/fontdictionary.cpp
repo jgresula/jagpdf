@@ -253,7 +253,7 @@ public:
         : m_face(face)
     {}
 
-    void use_codepoints(Int const* start, Int const* end, std::vector<Int>& gids) {
+    void use_codepoints(Int const* start, Int const* end, std::vector<UInt16>& gids) {
         // for each codepoint find its corresponding gid, use m_cp_to_gid as
         // a cache; when codepoint is not present in the font then a warning
         // message is issued (on the first occurence of such codepoint
@@ -546,7 +546,7 @@ void FontDictionary::use_char8(Char const* start, Char const* end)
 
 
 //////////////////////////////////////////////////////////////////////////
-void FontDictionary::use_codepoints(Int const* start, Int const* end, std::vector<Int>& gids)
+void FontDictionary::use_codepoints(Int const* start, Int const* end, std::vector<UInt16>& gids)
 {
     JAG_PRECONDITION(PDFFontData::COMPOSITE_FONT == m_font_data.font_type());
     JAG_PRECONDITION(ENC_IDENTITY == m_font_data.font_encoding());
