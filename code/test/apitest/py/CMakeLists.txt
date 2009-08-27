@@ -86,6 +86,7 @@ set(tests
   #clock
   topdown
   topdown2
+  glyph_index
   # tickets
   symbolswidth
   t0068

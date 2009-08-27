@@ -859,16 +859,6 @@ public:
 #endif
     }
 
-    Result text_glyphs(Double x, Double y, UInt16 const* array_in, UInt lenght, Double const* offsets, UInt offsets_length, Int const* positions, UInt positions_length)
-    {
-#ifndef JAG_DO_NOT_USE_EXCEPTIONS
-        if (jag_Canvas_text_glyphs_o(m_obj, x, y, array_in, lenght, offsets, offsets_length, positions, positions_length))
-            throw Exception();
-#else
-        return jag_Canvas_text_glyphs_o(m_obj, x, y, array_in, lenght, offsets, offsets_length, positions, positions_length);
-#endif
-    }
-
     Result text_glyphs(Double x, Double y, UInt16 const* array_in, UInt length)
     {
 #ifndef JAG_DO_NOT_USE_EXCEPTIONS
@@ -876,6 +866,16 @@ public:
             throw Exception();
 #else
         return jag_Canvas_text_glyphs(m_obj, x, y, array_in, length);
+#endif
+    }
+
+    Result text_glyphs(Double x, Double y, UInt16 const* array_in, UInt length, Double const* offsets, UInt offsets_length, Int const* positions, UInt positions_length)
+    {
+#ifndef JAG_DO_NOT_USE_EXCEPTIONS
+        if (jag_Canvas_text_glyphs_o(m_obj, x, y, array_in, length, offsets, offsets_length, positions, positions_length))
+            throw Exception();
+#else
+        return jag_Canvas_text_glyphs_o(m_obj, x, y, array_in, length, offsets, offsets_length, positions, positions_length);
 #endif
     }
 

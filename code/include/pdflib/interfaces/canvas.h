@@ -878,7 +878,7 @@ public:
     /// @param x the x baseline coordinate
     /// @param y the y baseline coordinate
     /// @param array_in array of glyph indices
-    /// @param lenght number of glyphs to show
+    /// @param length number of glyphs to show
     ///
     /// @pre A text object has not been started.
     /// 
@@ -890,7 +890,7 @@ public:
     /// @param x the x baseline coordinate
     /// @param y the y baseline coordinate
     /// @param array_in array of glyph indices
-    /// @param lenght number of glyphs to show
+    /// @param length number of glyphs to show
     /// @param offsets glyph offsets expressed in glyph space (i.e. in
     ///        thousandths of a unit of text space).
     /// @param offsets_length number of offsets
@@ -900,7 +900,7 @@ public:
     /// @pre A text object has not been started.
     /// 
     virtual void text_glyphs_o(Double x, Double y,
-                               UInt16 const* array_in, UInt lenght,
+                               UInt16 const* array_in, UInt length,
                                Double const* offsets, UInt offsets_length,
                                Int const* positions, UInt positions_length) = 0;
     //@}

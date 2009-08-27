@@ -427,8 +427,10 @@ FaceCharIterator TypefaceImpl::char_iterator() const
 
 Int TypefaceImpl::gid_horizontal_advance(UInt gid) const
 {
-    CHECK_FT(FT_Load_Glyph(m_face, gid, FT_LOAD_NO_SCALE));
-    return m_face->glyph->metrics.horiAdvance;
+    if (!FT_Load_Glyph(m_face, gid, FT_LOAD_NO_SCALE))
+        return m_face->glyph->metrics.horiAdvance;
+    else
+        return 0;
 }
 
 
