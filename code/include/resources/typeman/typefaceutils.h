@@ -12,6 +12,7 @@
 #include <msg_resources.h>
 #include <resources/interfaces/typeface.h>
 #include <boost/shared_ptr.hpp>
+#include <boost/noncopyable.hpp>
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -49,6 +50,9 @@ private:
 
 std::auto_ptr<IStreamInput>
 create_ftopenargs_stream_adapter(FT_Open_Args const& args);
+
+
+
 
 }} // namespace jag::resources
 

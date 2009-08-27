@@ -70,7 +70,8 @@ public:
     int num_streams() const;
     std::auto_ptr<IStreamInput> font_program(int index, unsigned options) const;
     std::auto_ptr<IStreamInput>
-    subset_font_program(UInt const* codepoints, size_t len, unsigned options) const;
+    subset_font_program(UsedGlyphs const& glyphs,
+                        unsigned options) const;
     Hash16 const& hash() const { return m_md5.sum(); }
     //@}
 

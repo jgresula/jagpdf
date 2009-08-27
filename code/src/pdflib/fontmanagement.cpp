@@ -222,9 +222,8 @@ void FontManagement::output_fonts()
             // in case the font program is going to be subset then report used codepoints
             if (font_desc->is_subset())
             {
-                std::set<Int> codepoints;
-                dict->get_used_codepoints(codepoints);
-                font_desc->add_used_codepoints(codepoints);
+                UsedGlyphs const& used_glyphs(dict->get_used_cids());
+                font_desc->add_used_glyphs(used_glyphs);
             }
 
             dict->set_font_descriptor(font_desc);

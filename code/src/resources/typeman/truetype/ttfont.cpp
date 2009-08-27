@@ -9,6 +9,7 @@
 #include <resources/typeman/truetype/ttfont.h>
 #include <resources/typeman/truetype/ttfontmaker.h>
 #include <resources/typeman/truetype/ttstructs.h>
+#include <resources/interfaces/typeface.h>
 #include <core/generic/null_deleter.h>
 #include <core/generic/assert.h>
 #include <map>
@@ -19,6 +20,18 @@ namespace jag {
 namespace resources {
 namespace truetype {
 
+namespace
+{
+  // composite glyph flags
+  enum {
+      ARG_1_AND_2_ARE_WORDS        = 1u << 0,
+      WE_HAVE_A_SCALE            = 1u << 3,
+      MORE_COMPONENTS            = 1u << 5,
+      WE_HAVE_AN_X_AND_Y_SCALE    = 1u << 6,
+      WE_HAVE_A_TWO_BY_TWO        = 1u << 7
+  };
+}
+
 //////////////////////////////////////////////////////////////////////////
 TTFont::TTFont(IStreamInput& font_data)
     : m_ttparser(font_data)
@@ -28,85 +41,78 @@ TTFont::TTFont(IStreamInput& font_data)
 
 
 //////////////////////////////////////////////////////////////////////////
-void TTFont::make_subset(ISeqStreamOutput& subset_font, UInt const subset[], size_t subset_len, bool include_cmap)
-{
-    make_subset(subset_font, subset, subset+subset_len, include_cmap);
-}
-
-
-//////////////////////////////////////////////////////////////////////////
-void TTFont::make_subset_internal(ISeqStreamOutput& subset_font, CodepointToIndex& codepoint_to_index, bool include_cmap)
+void TTFont::make_subset(ISeqStreamOutput& subset_font,
+                         UsedGlyphs const& used_glyphs,
+                         bool include_cmap)
 {
     TTFontMaker font_maker;
-    font_maker.set_codepoint_to_glyph_index(
-        boost::shared_ptr<CodepointToIndex>(&codepoint_to_index,null_deleter)
-       );
+    font_maker.set_codepoint_to_glyph(used_glyphs.codepoint_to_glyph());
 
-    // process composite glyphs
-    // - sorted vector should be better
-    typedef std::map<UInt, unsigned int> GlyphIndexToOffsetMap;
-    GlyphIndexToOffsetMap index_to_offset;
-    CodepointToIndex::iterator end = codepoint_to_index.end();
-    for(CodepointToIndex::iterator it = codepoint_to_index.begin(); it!=end; ++it)
+
+    // Iterate over the used glyphs and insert them to fontmaker. Construct
+    // additonal_glyphs for those referenced from composite glyphs.
+    typedef std::set<UInt16> Glyphs;
+    Glyphs additional_glyphs;
+    typedef UsedGlyphs::Glyphs::iterator GlyphIterator;
+    GlyphIterator end = used_glyphs.glyphs_end();
+    for(GlyphIterator it = used_glyphs.glyphs_begin(); it!=end; ++it)
     {
-        UInt glyph_index = it->second;
-        if (!index_to_offset.count(glyph_index))
+        // load the glyph and add it to font maker
+        m_ttparser.load_glyph(*it);
+        font_maker.add_glyph(m_ttparser.current_glyph_data(),
+                             m_ttparser.current_glyph_size(),
+                             *it);
+
+        // inspect the glyph
+        if (m_ttparser.current_glyph_size())
         {
-            index_to_offset.insert(GlyphIndexToOffsetMap::value_type(glyph_index, 0xffffffff));
+            tt_glyph_data const* glyph_data =
+                static_cast<tt_glyph_data const*>(m_ttparser.current_glyph_data());
 
             // is it a composite glyph?
-            m_ttparser.load_glyph(glyph_index);
-            if (m_ttparser.current_glyph_size())
+            if (static_cast<short>(glyph_data->m_number_of_contours) < 0)
             {
-                tt_glyph_data const* glyph_data = static_cast<tt_glyph_data const*>(m_ttparser.current_glyph_data());
-                if (static_cast<short>(glyph_data->m_number_of_contours) < 0)
-                {
-                    Byte const* curr = static_cast<Byte const*>(m_ttparser.current_glyph_data()) + sizeof(tt_glyph_data);
-
-                    enum {
-                        ARG_1_AND_2_ARE_WORDS        = 1u << 0,
-                        WE_HAVE_A_SCALE            = 1u << 3,
-                        MORE_COMPONENTS            = 1u << 5,
-                        WE_HAVE_AN_X_AND_Y_SCALE    = 1u << 6,
-                        WE_HAVE_A_TWO_BY_TWO        = 1u << 7
-                    };
-                    unsigned short flags;
-                    do {
-                        flags = static_cast<unsigned short>(*reinterpret_cast<ubig16_t const*>(curr));
-                        ubig16_t const* c_glyph_index = reinterpret_cast<ubig16_t const*>(curr+2);
+                Byte const* curr =
+                    static_cast<Byte const*>(m_ttparser.current_glyph_data()) + sizeof(tt_glyph_data);
+                
+                unsigned short flags;
+                do {
+                    flags = static_cast<unsigned short>(*reinterpret_cast<ubig16_t const*>(curr));
+                    ubig16_t const* c_glyph_index = reinterpret_cast<ubig16_t const*>(curr+2);
+                    curr += 4;
+                    
+                    // verify that the glyph is not already in the passed set,
+                    if (!used_glyphs.glyphs().count(*c_glyph_index))
+                        additional_glyphs.insert(*c_glyph_index);
+                    
+                    curr += flags & ARG_1_AND_2_ARE_WORDS ? 4 : 2;
+                    if (flags & WE_HAVE_A_SCALE)
+                        curr += 2;
+                    
+                    if (flags & WE_HAVE_AN_X_AND_Y_SCALE)
                         curr += 4;
-
-                        if (!index_to_offset.count(*c_glyph_index))
-                            index_to_offset.insert(std::make_pair(*c_glyph_index, 0xffffffff));
-
-                        curr += flags & ARG_1_AND_2_ARE_WORDS ? 4 : 2;
-                        if (flags & WE_HAVE_A_SCALE)
-                            curr += 2;
-
-                        if (flags & WE_HAVE_AN_X_AND_Y_SCALE)
-                            curr += 4;
-
-                        if (flags & WE_HAVE_A_TWO_BY_TWO)
-                            curr += 8;
-                    }
-                    while(flags & MORE_COMPONENTS);
+                    
+                    if (flags & WE_HAVE_A_TWO_BY_TWO)
+                        curr += 8;
                 }
+                while(flags & MORE_COMPONENTS);
             }
         }
     }
-
-
-    // upload used glyphs to fontmaker
-    GlyphIndexToOffsetMap::iterator endg = index_to_offset.end();
-    for(GlyphIndexToOffsetMap::iterator it = index_to_offset.begin(); it!=endg; ++it)
+    
+    if (!additional_glyphs.empty())
     {
-        m_ttparser.load_glyph(it->first);
-        font_maker.add_glyph(
-            m_ttparser.current_glyph_data()
-            , m_ttparser.current_glyph_size()
-            , it->first
-           );
+        // upload the additional glyphs to fontmaker
+        Glyphs::iterator endg = additional_glyphs.end();
+        for(Glyphs::iterator it = additional_glyphs.begin(); it!=endg; ++it)
+        {
+            m_ttparser.load_glyph(*it);
+            font_maker.add_glyph(m_ttparser.current_glyph_data(),
+                                 m_ttparser.current_glyph_size(),
+                                 *it);
+        }
     }
+
 
     TTFontParser::TableData table_data(m_ttparser.load_table(TT_MAXP));
     font_maker.add_table(TT_MAXP, table_data.first, table_data.second);
@@ -115,9 +121,8 @@ void TTFont::make_subset_internal(ISeqStreamOutput& subset_font, CodepointToInde
     font_maker.add_table(TT_HEAD, table_data.first, table_data.second);
 
 
-
     // spec (5.8) says that name, os2 and post should not be needed
-    // but when really removed Acrobat does not behave good
+    // but when really removed Acrobat does not behave well
     const int num_const_tables = 8;
     const TTTableType const_tables[num_const_tables] = {
         TT_NAME, TT_OS2, TT_CVT, TT_FPGM, TT_PREP, TT_HHEA, TT_HMTX, TT_POST

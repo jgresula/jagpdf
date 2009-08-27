@@ -16,6 +16,7 @@
 #include "resourcemanagement.h"
 #include "encdifferences.h"
 #include <msg_pdflib.h>
+#include <resources/interfaces/typeface.h>
 #include <resources/typeman/typefaceutils.h>
 #include <core/generic/scopeguard.h>
 #include <core/jstd/unicode.h>
@@ -29,11 +30,10 @@
 
 
 using namespace jag::jstd;
+using namespace boost;
 
 namespace jag {
 namespace pdf {
-
-
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -115,11 +115,6 @@ class FontDictionary::Standard14T1Handler
     IndirectObjectRef m_enc_dict;
 
 public:
-    void get_used_codepoints(std::set<Int>& /*codepoints*/, UnicodeConverter* /*conv*/) const
-    {
-        JAG_INTERNAL_ERROR;
-    }
-
     bool before_output_dictionary(FontDictionary& dict)
     {
         if (supports_differences(dict.m_font_data.font_encoding()))
@@ -189,22 +184,6 @@ class FontDictionary::UsedChars8
     : public SimpleFontHandlerBase
 {
 public:
-    void get_used_codepoints(std::set<Int>& codepoints, UnicodeConverter* conv) const
-    {
-        JAG_PRECONDITION(conv);
-        Char c;
-        for(int i=0; i<256; ++i)
-        {
-            if (m_chars.test(i))
-            {
-                Char const* p = &c;
-                c = static_cast<Char>(static_cast<unsigned char>(i));
-                codepoints.insert(conv->next_code_point(&p, p+1));
-                JAG_ASSERT(p == &c+1);
-            }
-        }
-    };
-
     void output_dictionary(FontDictionary& dict)
     {
     // it is recommended to use true-type simple font only with the predefined
@@ -249,125 +228,127 @@ class FontDictionary::UsedCodepoints
     : public IUsedCharsHandler
 {
 public:
-    UsedCodepoints(ITypeface const& face)
-        : m_face(face)
-    {}
+    UsedCodepoints(ITypeface const& face);
 
-    //
-    //
-    // 
-    void use_codepoints(Int const* start, Int const* end, std::vector<UInt16>& gids) {
-        // for each codepoint find its corresponding gid, use m_cp_to_gid as
-        // a cache; when codepoint is not present in the font then a warning
-        // message is issued (on the first occurence of such codepoint
-        for(; start!=end; ++start)
-        {
-            CodePointToGidMap::iterator it = m_cp_to_gid.find(*start);
-            if (it == m_cp_to_gid.end())
-            {
-                Int gid = m_face.codepoint_to_gid(*start);
-
-                if (!gid)
-                {
-                    write_message(WRN_CODEPOINT_NOT_FOUND_IN_FONT_uw
-                                   , *start
-                                   , m_face.family_name());
-                }
-
-                it = m_cp_to_gid.insert(std::make_pair(*start, gid)).first;
-            }
-            gids.push_back(it->second);
-        }
-    }
-
-    //
-    //
-    // 
-    void use_gids(UInt16 const* start, UInt16 const* end)
-    {
-        // this is suboptimal as we wouuld need reverse association for
-        // m_cp_to_gid (? boost::bimap)
-        //
-        // !!! This approach is flawed as we can miss glyphs with no Unicode
-        // 
-        for(; start != end; ++start)
-        {
-            Int codepoint = m_face.gid_to_codepoint(*start);
-            m_cp_to_gid.insert(std::make_pair(codepoint, *start));
-        }
-    }
-
-    //
-    //
-    // 
-    void get_used_codepoints(std::set<Int>& codepoints, UnicodeConverter*) const
-    {
-        CodePointToGidMap::const_iterator end=m_cp_to_gid.end();
-        for(CodePointToGidMap::const_iterator it=m_cp_to_gid.begin(); it!=end; ++it)
-            codepoints.insert(it->first);
-    };
-
-
-    void get_used_cids(std::vector<UInt16>& cids) const
-    {
-        cids.resize(m_cp_to_gid.size());
-        std::transform(m_cp_to_gid.begin(), m_cp_to_gid.end(), cids.begin(), jag_select2nd<CodePointToGidMap::value_type>());
-        std::sort(cids.begin(), cids.end());
-    }
-
-
-    void output_dictionary(FontDictionary& dict)
-    {
-        dict.object_writer()
-            .dict_start()
-            .dict_key("Type").output("Font")
-            .dict_key("Subtype").output("Type0")
-            .dict_key("BaseFont").name(dict.m_font_descriptor->basename())
-            .dict_key("Encoding").output("Identity-H")
-            .dict_key("DescendantFonts").array_start().ref(m_cid_font).array_end()
-            .dict_key("ToUnicode").space().ref(m_to_unicode)
-            .dict_end()
-    ;
-    }
-
-
-    bool before_output_dictionary(FontDictionary& dict)
-    {
-        if (m_cp_to_gid.empty())
-        {
-            throw exception_operation_failed(
-                msg_no_chars_used_from_font()) << JAGLOC;
-        }
-
-        JAG_ASSERT(m_cp_to_gid.size());
-
-        CIDFontDictionary cid_font_dict(dict.doc(), dict);
-        cid_font_dict.output_definition();
-        m_cid_font = IndirectObjectRef(cid_font_dict);
-
-        ToUnicode to_unicode;
-        std::vector<ToUnicode::GidAndUnicode> gids(m_cp_to_gid.size());
-        ToUnicode::GidAndUnicode* pgid = &gids[0];
-        CodePointToGidMap::iterator end = m_cp_to_gid.end();
-        for (CodePointToGidMap::iterator it=m_cp_to_gid.begin(); it!=end; ++it, ++pgid)
-        {
-            pgid->gid = it->second;
-            pgid->codepoint[0] = it->first;
-        }
-        std::sort(gids.begin(), gids.end());
-        to_unicode.output_definition(dict.doc(), &gids[0], gids.size());
-        m_to_unicode = to_unicode.ref();
-        return true;
-    }
-
+    void use_codepoints(Int const* start, Int const* end, std::vector<UInt16>& gids);
+    void use_gids(UInt16 const* start, UInt16 const* end);
+    UsedGlyphs const& get_used_cids() const;
+    void output_dictionary(FontDictionary& dict);
+    bool before_output_dictionary(FontDictionary& dict);
 
 private:
-    typedef std::map<Int,Int>   CodePointToGidMap;
-    CodePointToGidMap               m_cp_to_gid;
+    UsedGlyphs m_glyphs;
+    
     ITypeface const&                m_face;
     IndirectObjectRef               m_to_unicode;
     IndirectObjectRef               m_cid_font;
 };
+
+
+
+
+FontDictionary::UsedCodepoints::UsedCodepoints(ITypeface const& face)
+    : m_glyphs(face)
+    , m_face(face)
+{}
+
+
+//
+//
+// 
+void FontDictionary::UsedCodepoints::use_codepoints(
+    Int const* start,
+    Int const* end,
+    std::vector<UInt16>& gids)
+{
+    JAG_PRECONDITION(start < end);
+    
+    // for each codepoint find its corresponding gid
+    gids.reserve(end-start);
+    m_glyphs.set_update_glyphs();
+    for(; start!=end; ++start)
+        gids.push_back(m_glyphs.add_codepoint(*start));
+}
+
+
+//
+//
+// 
+void FontDictionary::UsedCodepoints::use_gids(UInt16 const* start, UInt16 const* end)
+{
+    for(; start != end; ++start)
+        m_glyphs.add_glyph(*start);
+}
+
+//
+//
+// 
+UsedGlyphs const &
+FontDictionary::UsedCodepoints::get_used_cids() const
+{
+    return m_glyphs;
+}
+
+
+//
+//
+// 
+void FontDictionary::UsedCodepoints::output_dictionary(FontDictionary& dict)
+{
+    dict.object_writer()
+        .dict_start()
+        .dict_key("Type").output("Font")
+        .dict_key("Subtype").output("Type0")
+        .dict_key("BaseFont").name(dict.m_font_descriptor->basename())
+        .dict_key("Encoding").output("Identity-H")
+        .dict_key("DescendantFonts").array_start().ref(m_cid_font).array_end()
+        .dict_key("ToUnicode").space().ref(m_to_unicode)
+        .dict_end()
+        ;
+}
+
+
+//
+//
+// 
+bool FontDictionary::UsedCodepoints::before_output_dictionary(FontDictionary& dict)
+{
+    m_glyphs.update();
+    
+    if (m_glyphs.glyphs().empty())
+    {
+        throw exception_operation_failed(
+            msg_no_chars_used_from_font()) << JAGLOC;
+    }
+ 
+    CIDFontDictionary cid_font_dict(dict.doc(), dict);
+    cid_font_dict.output_definition();
+    m_cid_font = IndirectObjectRef(cid_font_dict);
+
+    // if only glyphs with no associated codepoints are present then quit
+    if (m_glyphs.codepoint_to_glyph().empty())
+        return true;
+
+    // generate a ToUnicode object
+    typedef UsedGlyphs::CodepointToGlyph CodepointToGlyph;
+    CodepointToGlyph const& codepoint_to_glyph(m_glyphs.codepoint_to_glyph());
+    
+    ToUnicode to_unicode;
+    std::vector<ToUnicode::GidAndUnicode> gids(codepoint_to_glyph.size());
+    ToUnicode::GidAndUnicode* pgid = &gids[0];
+
+    typedef CodepointToGlyph::const_iterator Iter;
+    Iter end = codepoint_to_glyph.end();
+    for (Iter it = codepoint_to_glyph.begin(); it!=end; ++it, ++pgid)
+    {
+        pgid->gid = it->second;
+        pgid->codepoint[0] = it->first;
+    }
+    std::sort(gids.begin(), gids.end());
+    to_unicode.output_definition(dict.doc(), &gids[0], gids.size());
+    m_to_unicode = to_unicode.ref();
+    return true;
+}
 
 
 
@@ -377,41 +358,6 @@ class FontDictionary::UsedCids
     : public IUsedCharsHandler
 {
 public:
-    void use_cids(Char const* start, Char const* end)
-    {
-        JAG_PRECONDITION(start!=end);
-        JAG_PRECONDITION(!((end-start)%2));
-
-        while(start!=end)
-        {
-            UInt16 val = static_cast<unsigned char>(*start++);
-            m_cids.insert(val | static_cast<unsigned char>(*start++));
-        }
-    }
-
-    void get_used_codepoints(std::set<Int>& codepoints, UnicodeConverter* conv) const
-    {
-        JAG_PRECONDITION(conv);
-        Char buffer[2];
-        Cids::const_iterator end(m_cids.end());
-        for(Cids::const_iterator it(m_cids.begin()); it!=end; ++it)
-        {
-            buffer[0] = static_cast<unsigned char>(*it);
-            buffer[1] = static_cast<unsigned char>(*it>>8);
-            Char const* curr=buffer;
-            codepoints.insert(conv->next_code_point(&curr, buffer+2));
-            JAG_ASSERT(curr==buffer+2);
-        }
-    };
-
-
-    void get_used_cids(std::vector<UInt16>& cids) const
-    {
-        cids.resize(m_cids.size());
-        std::copy(m_cids.begin(), m_cids.end(), cids.begin());
-    }
-
-
     void output_dictionary(FontDictionary& dict)
     {
         dict.object_writer()
@@ -478,6 +424,8 @@ FontDictionary::FontDictionary(DocWriterImpl& doc,
         }
         else
         {
+            // this path is not implemented
+            JAG_INTERNAL_ERROR;
             m_used_chars_handler.reset(new UsedCids);
         }
     }
@@ -535,21 +483,13 @@ bool FontDictionary::on_before_output_definition()
 }
 
 
-void FontDictionary::get_used_cids(std::vector<UInt16>& cids) const
+//
+//
+// 
+UsedGlyphs const &FontDictionary::get_used_cids() const
 {
-    m_used_chars_handler->get_used_cids(cids);
+    return m_used_chars_handler->get_used_cids();
 }
-
-
-
-//////////////////////////////////////////////////////////////////////////
-void FontDictionary::get_used_codepoints(std::set<Int>& codepoints) const
-{
-    UnicodeConverter* conv(acquire_converter());
-    ON_BLOCK_EXIT_OBJ(*this, & FontDictionary::release_converter);
-    m_used_chars_handler->get_used_codepoints(codepoints, conv);
-}
-
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -585,16 +525,6 @@ void FontDictionary::use_gids(UInt16 const* start, UInt16 const* end)
     JAG_PRECONDITION(ENC_IDENTITY == m_font_data.font_encoding());
     m_used_chars_handler->use_gids(start, end);
 }
-
-//////////////////////////////////////////////////////////////////////////
-void FontDictionary::use_cids(Char const* start, Char const* end)
-{
-    JAG_PRECONDITION(PDFFontData::COMPOSITE_FONT == m_font_data.font_type());
-    JAG_PRECONDITION(ENC_IDENTITY != m_font_data.font_encoding());
-    m_used_chars_handler->use_cids(start, end);
-}
-
-
 
 //////////////////////////////////////////////////////////////////////////
 boost::shared_ptr<FontDescriptor> const& FontDictionary::font_descriptor() const

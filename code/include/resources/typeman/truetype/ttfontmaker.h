@@ -33,7 +33,7 @@ class TTFontMaker
     : public noncopyable
 {
 public:
-    typedef std::map<UInt, UInt> UnicodeToGlyphIndex;
+    typedef std::map<Int, UInt16> CodepointToGlyph;
 
     TTFontMaker();
     /**
@@ -42,12 +42,12 @@ public:
      * @param data_len glyph data length
      * @param glyph_index desired index of the glyph
      */
-    void add_glyph(void const* data, size_t data_len, UInt glyph_index);
+    void add_glyph(void const* data, size_t data_len, UInt16 glyph_index);
 
     /**
      * @brief sets mapping from codepoint to indices
      */
-    void set_codepoint_to_glyph_index(boost::shared_ptr<UnicodeToGlyphIndex> const& cp2gid);
+    void set_codepoint_to_glyph(CodepointToGlyph const& cp2gid);
 
     /**
      * @brief writes the font
@@ -65,7 +65,8 @@ public:
     typedef std::pair<size_t, size_t> MemBlock;
 
 private:
-    typedef UnicodeToGlyphIndex::iterator MapIter;
+    typedef CodepointToGlyph::const_iterator MapIter;
+
     class RangeRec
     {
     public:
@@ -125,8 +126,7 @@ private:
 
     boost::array<MemBlock,TT_NUM_TABLES> m_table_records;
 
-    typedef std::map<UInt, UInt> GlyphIndexToUnicode;
-    boost::shared_ptr<UnicodeToGlyphIndex> m_unicode_to_glyph;
+    CodepointToGlyph const* m_codepoint_to_glyph;
     class TableRecordWriter;
 };
 

@@ -104,10 +104,14 @@ void CIDFontDictionary::output_widths()
         .output(fs2gs(face.metrics().missing_width))
     ;
 
-    std::vector<UInt16> cids;
-    std::vector<Int> widths;
 
-    m_fdict.get_used_cids(cids);
+    // retrieve used cids
+    UsedGlyphs::Glyphs const& used_glyphs(m_fdict.get_used_cids().glyphs());
+    std::vector<UInt16> cids;
+    cids.reserve(used_glyphs.size());
+    std::copy(used_glyphs.begin(), used_glyphs.end(), std::back_inserter(cids));
+
+    std::vector<Int> widths;
 
     JAG_ASSERT(cids.size());
     fetch_widths(cids, widths);

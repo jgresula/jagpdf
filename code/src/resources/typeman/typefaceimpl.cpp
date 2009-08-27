@@ -12,6 +12,7 @@
 #include <core/jstd/memory_stream.h>
 #include <core/jstd/crt_platform.h>
 #include <core/errlib/errlib.h>
+#include <core/jstd/tracer.h>
 #include <resources/typeman/typefaceimpl.h>
 #include <resources/typeman/typefaceutils.h>
 #include <resources/typeman/truetypetable.h>
@@ -374,7 +375,8 @@ std::string TypefaceImpl::full_name() const
 
 //////////////////////////////////////////////////////////////////////////
 std::auto_ptr<IStreamInput>
-TypefaceImpl::subset_font_program(UInt const* codepoints, size_t len, unsigned options) const
+TypefaceImpl::subset_font_program(UsedGlyphs const& glyphs,
+                                  unsigned options) const
 {
     JAG_PRECONDITION(m_can_subset);
 
@@ -386,7 +388,7 @@ TypefaceImpl::subset_font_program(UInt const* codepoints, size_t len, unsigned o
         boost::shared_ptr<MemoryStreamOutput> mem_out(new MemoryStreamOutput);
         bool include_cmap = !(options & DONT_INCLUDE_CMAP);
 
-        font.make_subset(*mem_out, codepoints, len, include_cmap);
+        font.make_subset(*mem_out, glyphs, include_cmap);
 
         return std::auto_ptr<IStreamInput>(
             new MemoryStreamInputFromOutput(mem_out));
@@ -419,7 +421,7 @@ Int TypefaceImpl::codepoint_to_gid(Int codepoint) const
 // 
 Int TypefaceImpl::gid_to_codepoint(UInt16 gid) const
 {
-    Int codepoint = 0; // TBD: unknonw unicode
+    Int codepoint = 0xfffe; // unassigned unicode
     switch(m_type)
     {
     case FACE_TRUE_TYPE:
@@ -489,6 +491,160 @@ Int TypefaceImpl::kerning_for_chars(Int left, Int right) const
                             codepoint_to_gid(right));
 }
 
+} // namespace resources
 
 
-}} // namespace jag::resources
+// ---------------------------------------------------------------------------
+//                    class jag::UsedGlyphs
+
+UsedGlyphs::UsedGlyphs(ITypeface const& face)
+    : m_face(face)
+    , m_impl(new Impl)
+{
+    m_impl->update_glyphs = false;
+    m_impl->update_map = false;
+}
+
+bool UsedGlyphs::is_updated() const
+{
+    return !m_impl->update_map && !m_impl->update_glyphs;
+}
+
+UsedGlyphs::CodepointToGlyph const& UsedGlyphs::codepoint_to_glyph() const
+{
+    JAG_PRECONDITION(is_updated());
+    return m_impl->codepoint_to_glyph;
+}
+
+UsedGlyphs::Glyphs const& UsedGlyphs::glyphs() const
+{
+    JAG_PRECONDITION(is_updated());
+    return m_impl->glyphs;
+}
+
+UsedGlyphs::GlyphsIter UsedGlyphs::glyphs_begin() const
+{
+    JAG_PRECONDITION(is_updated());
+    return m_impl->glyphs.begin();
+}
+
+UsedGlyphs::GlyphsIter UsedGlyphs::glyphs_end() const
+{
+    JAG_PRECONDITION(is_updated());
+    return m_impl->glyphs.end();
+}
+
+UInt16 UsedGlyphs::add_codepoint(Int codepoint)
+{
+    JAG_PRECONDITION(m_impl.unique());
+        
+    m_impl->update_glyphs = true;
+
+    typedef UsedGlyphs::CodepointToGlyph::iterator Iterator;
+    Iterator it = m_impl->codepoint_to_glyph.find(codepoint);
+    if (it == m_impl->codepoint_to_glyph.end())
+    {
+        UInt16 glyph = m_face.codepoint_to_gid(codepoint);
+        if (!glyph)
+        {
+            TRACE_WRN << "Codepoint " << codepoint
+                      << "not found in " << m_face.family_name();
+        }
+
+        it = m_impl->codepoint_to_glyph.insert(
+            std::make_pair(codepoint, glyph)).first;
+    }
+
+    return it->second;
+}
+
+void UsedGlyphs::add_glyph(UInt16 glyph)
+{
+    JAG_PRECONDITION(m_impl.unique());
+    
+    m_impl->update_map = true;
+    m_impl->glyphs.insert(glyph);
+}
+
+void UsedGlyphs::copy_if_not_unique()
+{
+    if (!m_impl.unique())
+        m_impl.reset(new Impl(*m_impl));
+}
+
+void UsedGlyphs::merge(UsedGlyphs const& other)
+{
+    JAG_ASSERT(m_impl.unique());
+    
+    if (m_impl->glyphs.empty() && m_impl->codepoint_to_glyph.empty())
+    {
+        // fast path
+        JAG_ASSERT(&m_face == &other.m_face);
+        m_impl = other.m_impl;
+    }
+    else
+    {
+        JAG_TO_BE_TESTED;
+
+        Glyphs result;
+        std::set_union(
+            other.m_impl->glyphs.begin(),
+            other.m_impl->glyphs.end(),
+            m_impl->glyphs.begin(),
+            m_impl->glyphs.end(),
+            std::inserter(result, result.begin()));
+
+        m_impl->glyphs.swap(result);
+
+        typedef CodepointToGlyph::const_iterator MapIter;
+        MapIter end = other.m_impl->codepoint_to_glyph.end();
+        for(MapIter it = other.m_impl->codepoint_to_glyph.begin();
+            it != end; ++it)
+        {
+            m_impl->codepoint_to_glyph.insert(*it);
+        }
+
+        if (other.m_impl->update_map)
+            m_impl->update_map = true;
+
+        if (other.m_impl->update_glyphs)
+            m_impl->update_glyphs = true;
+    }
+}
+
+void UsedGlyphs::update()
+{
+    if (m_impl->update_glyphs)
+    {
+        typedef CodepointToGlyph::const_iterator MapIter;
+        MapIter end = m_impl->codepoint_to_glyph.end();
+        for(MapIter it = m_impl->codepoint_to_glyph.begin();
+            it != end; ++it)
+        {
+            m_impl->glyphs.insert(it->second);
+        }
+
+        m_impl->update_glyphs = false;
+    }
+
+    JAG_ASSERT(!m_impl->update_map);
+}
+
+void UsedGlyphs::set_update_glyphs()
+{
+    JAG_ASSERT(m_impl.unique());
+    m_impl->update_glyphs = true;
+}
+
+void UsedGlyphs::set_update_map()
+{
+    JAG_ASSERT(m_impl.unique());
+    m_impl->update_map = true;
+}
+
+
+
+
+
+
+} // namespace jag

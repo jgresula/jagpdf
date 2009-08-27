@@ -389,12 +389,7 @@ namespace
           }
           else
           {
-              // check this path - renegade
-              JAG_TBD;
-              // we have an encoding PDF understands to; so just forward
-              // it to font dictionary and send it to output as such
-              font.font_dict().use_cids(start, end);
-              writer.string_object_2b(start, end).graphics_op(OP_Tj);
+              JAG_INTERNAL_ERROR;
           }
       }
   }

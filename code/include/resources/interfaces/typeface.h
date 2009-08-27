@@ -10,14 +10,68 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
 #include <string>
+#include <set>
+#include <map>
 
 #if !defined(__GCCXML__) && !defined(__DOXYGEN__)
 #include <core/errlib/errlib.h>
 #endif
 
+#if defined(__GCCXML__)
+#error "no gccxml" 
+#endif 
+
 namespace jag {
 
 class IStreamInput;
+class ITypeface;
+
+//
+//
+// 
+class UsedGlyphs
+    : public boost::noncopyable
+{
+public:
+    typedef std::set<UInt16> Glyphs;
+    typedef Glyphs::const_iterator GlyphsIter;
+    
+    typedef std::map<Int, UInt16> CodepointToGlyph;
+
+public:
+    UsedGlyphs(ITypeface const& face);
+    CodepointToGlyph const& codepoint_to_glyph() const;
+    
+    Glyphs const& glyphs() const;
+    GlyphsIter glyphs_begin() const;
+    GlyphsIter glyphs_end() const;
+    
+    UInt16 add_codepoint(Int codepoint);
+    void add_glyph(UInt16 glyph);
+    bool is_updated() const;
+    void set_update_glyphs();
+    void set_update_map();
+        
+
+public:
+    void update();
+    void merge(UsedGlyphs const& other);
+
+private:
+    void copy_if_not_unique();
+    ITypeface const& m_face;
+    struct Impl{
+        // all glyphs, including those without a codepoint assigned
+        Glyphs glyphs;
+        // Unicode to glyph index dictionary
+        CodepointToGlyph codepoint_to_glyph;
+        bool update_glyphs;
+        bool update_map;
+    };
+
+    boost::shared_ptr<Impl> m_impl;
+};
+
 
 
 /// Face metrics.
@@ -207,8 +261,7 @@ public: // not going to be exported
 
     /**
      * @brief Subsets a font program.
-     * @param codepoints unicode codepoints to be included in the subset
-     * @param len number of codepoints
+     * @param glyphs glyphs to be included in the subset
      * @param options combination of FontProgramOptions values
      *
      * @pre true==can_subset()
@@ -216,8 +269,7 @@ public: // not going to be exported
      * @return an input stream with the subset font
      */
     virtual std::auto_ptr<IStreamInput> subset_font_program(
-        UInt const* codepoints,
-        size_t len,
+        UsedGlyphs const& glyphs,
         unsigned options) const PURE_FUNCTION;
 
 

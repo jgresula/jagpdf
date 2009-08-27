@@ -20,6 +20,8 @@
 
 namespace jag {
 namespace jstd { class UnicodeConverter; }
+class UsedGlyphs;
+
 namespace pdf {
 class FontDescriptor;
 class FontDictionary;
@@ -30,14 +32,14 @@ class IUsedCharsHandler
 {
 public:
     /// Retrieves used codepoints.
-    virtual void get_used_codepoints(std::set<Int>& codepoints, jstd::UnicodeConverter* conv) const = 0;
     virtual void use_char8(Char const* /*start*/, Char const* /*end*/) { JAG_INTERNAL_ERROR; }
     virtual void use_codepoints(Int const* /*start*/, Int const* /*end*/, std::vector<UInt16>& /*gids*/) { JAG_INTERNAL_ERROR; }
-    virtual void use_cids(Char const* /*start*/, Char const* /*end*/) { JAG_INTERNAL_ERROR; }
     virtual void use_gids(UInt16 const* /*start*/, UInt16 const* /*end*/) { JAG_INTERNAL_ERROR; }
     virtual void output_dictionary(FontDictionary& dict) = 0;
     virtual bool before_output_dictionary(FontDictionary& /*dict*/) { return true; }
-    virtual void get_used_cids(std::vector<UInt16>& /*cids*/) const { JAG_INTERNAL_ERROR; }
+    
+    virtual UsedGlyphs const& get_used_cids() const {
+        JAG_INTERNAL_ERROR; }
 
     virtual ~IUsedCharsHandler() {}
 };
@@ -58,7 +60,6 @@ protected: // IIndirectObject
 
 public:
     /// Retrieves used codepoints.
-    void get_used_codepoints(std::set<Int>& codepoints) const;
     void set_font_descriptor(boost::shared_ptr<FontDescriptor> const& desc);
     PDFFontDictData const& fdict_data() const { return m_font_data; }
     /**
@@ -68,9 +69,8 @@ public:
      * character codes encoded by some 2-byte encoding (depends on dictionary
      * encoding).
      */
-    void get_used_cids(std::vector<UInt16>& cids) const;
-
-
+    UsedGlyphs const& get_used_cids() const;
+    
 public:
     int id() const { return m_id; }
     void use_char8(Char const* start, Char const* end);
@@ -84,8 +84,6 @@ public:
      */
     void use_codepoints(Int const* start, Int const* end, std::vector<UInt16>& gids);
 
-    // std::set<Int>
-    void use_cids(Char const* start, Char const* end);
     void use_gids(UInt16 const* start, UInt16 const* end);
 
 

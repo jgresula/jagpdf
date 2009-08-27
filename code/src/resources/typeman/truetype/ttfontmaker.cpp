@@ -90,6 +90,7 @@ private:
 
 //////////////////////////////////////////////////////////////////////////
 TTFontMaker::TTFontMaker()
+    : m_codepoint_to_glyph(0)
 {
     std::fill(m_table_records.begin(), m_table_records.end(), MemBlock(0,0));
 }
@@ -97,10 +98,17 @@ TTFontMaker::TTFontMaker()
 
 
 //////////////////////////////////////////////////////////////////////////
-void TTFontMaker::add_glyph(void const* data, size_t data_len, UInt glyph_index)
+void TTFontMaker::add_glyph(void const* data,
+                            size_t data_len,
+                            UInt16 glyph_index)
 {
-    JAG_PRECONDITION_MSG(!m_glyph_map.count(glyph_index), "glyph index already in map");
-    m_glyph_map.insert(std::make_pair(glyph_index, MemBlock(m_glyphs.size(), m_glyphs.size()+data_len)));
+    JAG_PRECONDITION_MSG(!m_glyph_map.count(glyph_index),
+                         "glyph index already in map");
+    
+    m_glyph_map.insert(
+        std::make_pair(glyph_index,
+                       MemBlock(m_glyphs.size(),
+                                m_glyphs.size()+data_len)));
 
     Byte const* glyph_data = data_len
         ? static_cast<Byte const*>(data)
@@ -238,7 +246,7 @@ void TTFontMaker::copy_cmap_array(std::vector<ubig16_t> const& data, size_t offs
  */
 void TTFontMaker::write_cmap()
 {
-    JAG_PRECONDITION(m_unicode_to_glyph);
+    JAG_PRECONDITION(!m_codepoint_to_glyph->empty());
 
     // platform 3, encoding 1, format 4
     tt_cmap_header cmap_desc;
@@ -257,8 +265,8 @@ void TTFontMaker::write_cmap()
 
     // phase1
     RangeRecords ranges1;
-    MapIter it=m_unicode_to_glyph->begin();
-    MapIter map_end = m_unicode_to_glyph->end();
+    MapIter it=m_codepoint_to_glyph->begin();
+    MapIter map_end = m_codepoint_to_glyph->end();
     MapIter first = it;
     TT_PRINTF("cmap - phase1 - detecting code ranges\n");
     TT_PRINTF("%04x -> %d\n", it->first, it->second);
@@ -761,9 +769,9 @@ void TTFontMaker::output(ISeqStreamOutput& outstream, bool include_cmap)
 
 
 //////////////////////////////////////////////////////////////////////////
-void TTFontMaker::set_codepoint_to_glyph_index(boost::shared_ptr<UnicodeToGlyphIndex> const& cp2gid)
+void TTFontMaker::set_codepoint_to_glyph(CodepointToGlyph const& cp2gid)
 {
-    m_unicode_to_glyph = cp2gid;
+    m_codepoint_to_glyph = &cp2gid;
 }
 
 

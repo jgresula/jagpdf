@@ -150,12 +150,10 @@ T1AdobeStandardFace::font_program(int /*index*/, unsigned /*options*/) const
 }
 
 std::auto_ptr<IStreamInput>
-T1AdobeStandardFace::subset_font_program(UInt const* /*codepoints*/,
-                                         size_t /*len*/,
+T1AdobeStandardFace::subset_font_program(UsedGlyphs const& /*glyphs*/,
                                          unsigned /*options*/) const
 {
-    JAG_PRECONDITION(!"should not be invoked");
-    return std::auto_ptr<IStreamInput>();
+    JAG_INTERNAL_ERROR;
 }
 
 

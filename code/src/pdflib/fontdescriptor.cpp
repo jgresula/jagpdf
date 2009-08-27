@@ -102,6 +102,7 @@ FontDescriptor::FontDescriptor(DocWriterImpl& doc, PDFFontData const& font_data)
     : IndirectObjectImpl(doc)
     , m_font_data(font_data)
     , m_force_embedding(false)
+    , m_used_glyphs(font_data.typeface())
     , m_method_depending_on_force_embedding_flag_invoked(false)
     , m_embedded_regardless_of_copyright(false)
 {
@@ -145,16 +146,18 @@ char const* FontDescriptor::basename() const
 
         if (is_subset())
         {
-            // For a font subset, the PostScript name of the font-the value of the font's
-            // BaseFont entry and the font descriptor's FontName entry-begins with a tag
-            // followed by a plus sign (+). The tag consists of exactly six uppercase letters; the
-            // choice of letters is arbitrary, but different subsets in the same PDF file must have
-            // different tags. For example, EOODIA+Poetica is the name of a subset of Poetica®, a
-            // Type 1 font. (See implementation note 62 in Appendix H.)
+            // For a font subset, the PostScript name of the font-the value of
+            // the font's BaseFont entry and the font descriptor's FontName
+            // entry-begins with a tag followed by a plus sign (+). The tag
+            // consists of exactly six uppercase letters; the choice of letters
+            // is arbitrary, but different subsets in the same PDF file must
+            // have different tags. For example, EOODIA+Poetica is the name of a
+            // subset of Poetica®, a Type 1 font. (See implementation note 62 in
+            // Appendix H.)
             const size_t subset_prefix_len = 7;
             Char subset_prefix[subset_prefix_len];
             for(int i=0; i<6; ++i)
-        subset_prefix[i] = static_cast<char>(rand()%('Z'-'A'+1) + 'A');
+                subset_prefix[i] = static_cast<char>(rand()%('Z'-'A'+1) + 'A');
             subset_prefix[6]='+';
 
             std::string subset_basename(subset_prefix, subset_prefix+subset_prefix_len);
@@ -163,11 +166,12 @@ char const* FontDescriptor::basename() const
         }
 
         {
-            // If the font in a source document uses a bold or italic style but there is no font data
-            // for that style, the host operating system synthesizes the style. In this case, a comma
-            // and the style name (one of Bold, Italic, or BoldItalic) are appended to the font
-            // name. For example, for a TrueType font that is a bold variant of the New York
-            // font, the BaseFont value is written as /NewYork,Bold
+            // If the font in a source document uses a bold or italic style but
+            // there is no font data for that style, the host operating system
+            // synthesizes the style. In this case, a comma and the style name
+            // (one of Bold, Italic, or BoldItalic) are appended to the font
+            // name. For example, for a TrueType font that is a bold variant of
+            // the New York font, the BaseFont value is written as /NewYork,Bold
             std::string synthesized_part;
             if (m_font_data.synthesized_bold())
                 synthesized_part += "Bold";
@@ -256,15 +260,9 @@ void FontDescriptor::force_embedding()
 
 
 //////////////////////////////////////////////////////////////////////////
-void FontDescriptor::add_used_codepoints(std::set<Int> const& codepoints)
+void FontDescriptor::add_used_glyphs(UsedGlyphs const& used_glyphs)
 {
-    std::set<Int> result;
-    std::set_union(
-        codepoints.begin(), codepoints.end()
-        , m_used_codepoints.begin(), m_used_codepoints.end()
-        , std::inserter(result, result.begin()));
-
-    m_used_codepoints.swap(result);
+    m_used_glyphs.merge(used_glyphs);
 }
 
 
@@ -293,25 +291,21 @@ bool FontDescriptor::on_before_output_definition()
     std::auto_ptr<IStreamInput> font_program;
     if (typeface.can_subset())
     {
-        std::vector<UInt> codepoints;
-        codepoints.reserve(m_used_codepoints.size());
-        std::copy(m_used_codepoints.begin(),
-                  m_used_codepoints.end(),
-                  std::back_inserter(codepoints));
-        JAG_ASSERT(!codepoints.empty());
-
         unsigned subset_options = 0;
+#if 0
         // spec (5.8) says that embedded TrueType CID fonts do not need cmap but
         // without it does not work in acrobat, (also it might be some problem
         // in the subsetting code)
-//         if (ITypeface::TRUE_TYPE==typeface->type() &&
-//             PDFFontData::COMPOSITE_FONT == m_font_data.font_type())
-//         {
-//             subset_options |= ITypeface::DONT_INCLUDE_CMAP;
-//         }
-        font_program = typeface.subset_font_program(&codepoints[0],
-                                                    codepoints.size(),
-                                                    subset_options);
+        if (ITypeface::TRUE_TYPE==typeface->type() &&
+            PDFFontData::COMPOSITE_FONT == m_font_data.font_type())
+        {
+            subset_options |= ITypeface::DONT_INCLUDE_CMAP;
+        }
+#endif
+
+        m_used_glyphs.update();
+        font_program =
+            typeface.subset_font_program(m_used_glyphs, subset_options);
     }
     else
     {
@@ -373,7 +367,7 @@ bool FontDescriptor::on_before_output_definition()
 //////////////////////////////////////////////////////////////////////////
 void FontDescriptor::on_output_definition()
 {
-    JAG_PRECONDITION(!is_subset() || !m_used_codepoints.empty());
+    JAG_PRECONDITION(!is_subset() || !m_used_glyphs.glyphs().empty());
 
     ObjFmt& writer = object_writer();
     ITypeface const& face(m_font_data.typeface());

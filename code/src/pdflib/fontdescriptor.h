@@ -28,7 +28,7 @@ public:
     char const* basename() const;
     bool is_subset() const;
     bool is_embedded() const;
-    void add_used_codepoints(std::set<Int> const& used);
+    void add_used_glyphs(UsedGlyphs const& used_glyphs);
     void force_embedding();
 
 public: // IndirectObjectImpl
@@ -48,17 +48,8 @@ private:
 
     bool m_force_embedding;
 
-    /**
-     * @brief Codepoints used.
-     *
-     * This variable is set only if the typeface is gonna be subset.
-     *
-     * Whereas this approach is perfectly ok for TrueType fonts having
-     * unicode char map, it is questionable what we actually need when
-     * dealing with other font types and also with  CJK encodings
-     * (even in TrueType).
-     */
-    std::set<Int> m_used_codepoints;
+    // set only if the typeface is gonna be subset.
+    UsedGlyphs m_used_glyphs;
 
 
     /**
