@@ -603,8 +603,7 @@ void CanvasImpl::text_glyphs(Double x, Double y,
 
     write_label_prologue(m_fmt, x, y, m_doc_writer.is_topdown());
 
-
-    // TBD report used gids
+    font->font_dict().use_gids(array_in, array_in + length);
     output_cid_font_gids(*font, m_fmt,
                          array_in, length, 0, m_doc_writer.exec_context());
 

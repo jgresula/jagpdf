@@ -64,6 +64,7 @@ public:
     Int can_embed() const { return m_can_embed; }
     Int can_subset() const { return m_can_subset; }
     Int codepoint_to_gid(Int codepoint) const;
+    Int gid_to_codepoint(UInt16 gid) const;
 
     Char const* encoding_scheme() const { return ""; }
     int num_streams() const;

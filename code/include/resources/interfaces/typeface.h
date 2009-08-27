@@ -159,6 +159,7 @@ public:
      * Implementations are allowed not to implement this method.
      */
     virtual Int codepoint_to_gid(Int codepoint) const PURE_FUNCTION;
+    virtual Int gid_to_codepoint(UInt16 gid) const PURE_FUNCTION;
 
 
 

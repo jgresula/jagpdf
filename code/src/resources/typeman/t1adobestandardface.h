@@ -87,6 +87,7 @@ public: //ITypeface
     }
 
     Int codepoint_to_gid(Int codepoint) const;
+    Int gid_to_codepoint(UInt16 gid) const;
 
     Char const* encoding_scheme() const {
         return m_face->EncodingScheme;

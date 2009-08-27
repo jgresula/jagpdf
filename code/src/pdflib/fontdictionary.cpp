@@ -253,6 +253,9 @@ public:
         : m_face(face)
     {}
 
+    //
+    //
+    // 
     void use_codepoints(Int const* start, Int const* end, std::vector<UInt16>& gids) {
         // for each codepoint find its corresponding gid, use m_cp_to_gid as
         // a cache; when codepoint is not present in the font then a warning
@@ -277,6 +280,26 @@ public:
         }
     }
 
+    //
+    //
+    // 
+    void use_gids(UInt16 const* start, UInt16 const* end)
+    {
+        // this is suboptimal as we wouuld need reverse association for
+        // m_cp_to_gid (? boost::bimap)
+        //
+        // !!! This approach is flawed as we can miss glyphs with no Unicode
+        // 
+        for(; start != end; ++start)
+        {
+            Int codepoint = m_face.gid_to_codepoint(*start);
+            m_cp_to_gid.insert(std::make_pair(codepoint, *start));
+        }
+    }
+
+    //
+    //
+    // 
     void get_used_codepoints(std::set<Int>& codepoints, UnicodeConverter*) const
     {
         CodePointToGidMap::const_iterator end=m_cp_to_gid.end();
@@ -556,12 +579,21 @@ void FontDictionary::use_codepoints(Int const* start, Int const* end, std::vecto
 
 
 //////////////////////////////////////////////////////////////////////////
+void FontDictionary::use_gids(UInt16 const* start, UInt16 const* end)
+{
+    JAG_PRECONDITION(PDFFontData::COMPOSITE_FONT == m_font_data.font_type());
+    JAG_PRECONDITION(ENC_IDENTITY == m_font_data.font_encoding());
+    m_used_chars_handler->use_gids(start, end);
+}
+
+//////////////////////////////////////////////////////////////////////////
 void FontDictionary::use_cids(Char const* start, Char const* end)
 {
     JAG_PRECONDITION(PDFFontData::COMPOSITE_FONT == m_font_data.font_type());
     JAG_PRECONDITION(ENC_IDENTITY != m_font_data.font_encoding());
     m_used_chars_handler->use_cids(start, end);
 }
+
 
 
 //////////////////////////////////////////////////////////////////////////

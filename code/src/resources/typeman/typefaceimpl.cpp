@@ -414,6 +414,38 @@ Int TypefaceImpl::codepoint_to_gid(Int codepoint) const
     return gid;
 }
 
+//
+// O(N), where N is number of glyphs in font
+// 
+Int TypefaceImpl::gid_to_codepoint(UInt16 gid) const
+{
+    Int codepoint = 0; // TBD: unknonw unicode
+    switch(m_type)
+    {
+    case FACE_TRUE_TYPE:
+    case FACE_OPEN_TYPE_CFF:
+    {
+        FT_ULong charcode;
+        FT_UInt gindex;
+
+        charcode = FT_Get_First_Char(m_face, &gindex);
+        while (gindex != 0)
+        {
+            if (gid == gindex)
+                return charcode;
+            
+            charcode = FT_Get_Next_Char(m_face, charcode, &gindex);
+        }
+        break;
+    }
+
+    default:
+        JAG_TBD;
+    };
+    
+    return codepoint;
+}
+
 
 Int TypefaceImpl::gid_horizontal_advance(UInt gid) const
 {

@@ -34,6 +34,7 @@ public:
     virtual void use_char8(Char const* /*start*/, Char const* /*end*/) { JAG_INTERNAL_ERROR; }
     virtual void use_codepoints(Int const* /*start*/, Int const* /*end*/, std::vector<UInt16>& /*gids*/) { JAG_INTERNAL_ERROR; }
     virtual void use_cids(Char const* /*start*/, Char const* /*end*/) { JAG_INTERNAL_ERROR; }
+    virtual void use_gids(UInt16 const* /*start*/, UInt16 const* /*end*/) { JAG_INTERNAL_ERROR; }
     virtual void output_dictionary(FontDictionary& dict) = 0;
     virtual bool before_output_dictionary(FontDictionary& /*dict*/) { return true; }
     virtual void get_used_cids(std::vector<UInt16>& /*cids*/) const { JAG_INTERNAL_ERROR; }
@@ -85,6 +86,7 @@ public:
 
     // std::set<Int>
     void use_cids(Char const* start, Char const* end);
+    void use_gids(UInt16 const* start, UInt16 const* end);
 
 
     /**
