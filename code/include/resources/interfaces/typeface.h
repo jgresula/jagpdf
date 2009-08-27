@@ -237,7 +237,7 @@ public:
      * @return corresponding gid or 0 if no gid is found (standard convention)
      * Implementations are allowed not to implement this method.
      */
-    virtual Int codepoint_to_gid(Int codepoint) const PURE_FUNCTION;
+    virtual UInt16 codepoint_to_gid(Int codepoint) const PURE_FUNCTION;
     virtual FaceCharIterator char_iterator() const PURE_FUNCTION;
 
 

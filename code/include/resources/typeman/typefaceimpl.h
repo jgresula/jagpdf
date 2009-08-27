@@ -63,7 +63,7 @@ public:
 
     Int can_embed() const { return m_can_embed; }
     Int can_subset() const { return m_can_subset; }
-    Int codepoint_to_gid(Int codepoint) const;
+    UInt16 codepoint_to_gid(Int codepoint) const;
     FaceCharIterator char_iterator() const;
 
     Char const* encoding_scheme() const { return ""; }

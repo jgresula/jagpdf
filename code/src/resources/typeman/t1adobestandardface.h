@@ -86,7 +86,7 @@ public: //ITypeface
         return false;
     }
 
-    Int codepoint_to_gid(Int codepoint) const;
+    UInt16 codepoint_to_gid(Int codepoint) const;
     FaceCharIterator char_iterator() const;
 
     Char const* encoding_scheme() const {

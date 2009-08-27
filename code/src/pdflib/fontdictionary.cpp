@@ -426,7 +426,7 @@ FontDictionary::FontDictionary(DocWriterImpl& doc,
         {
             // this path is not implemented
             JAG_INTERNAL_ERROR;
-            m_used_chars_handler.reset(new UsedCids);
+            //m_used_chars_handler.reset(new UsedCids);
         }
     }
 

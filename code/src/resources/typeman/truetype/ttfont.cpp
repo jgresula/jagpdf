@@ -53,7 +53,7 @@ void TTFont::make_subset(ISeqStreamOutput& subset_font,
     // additonal_glyphs for those referenced from composite glyphs.
     typedef std::set<UInt16> Glyphs;
     Glyphs additional_glyphs;
-    typedef UsedGlyphs::Glyphs::iterator GlyphIterator;
+    typedef UsedGlyphs::Glyphs::const_iterator GlyphIterator;
     GlyphIterator end = used_glyphs.glyphs_end();
     for(GlyphIterator it = used_glyphs.glyphs_begin(); it!=end; ++it)
     {

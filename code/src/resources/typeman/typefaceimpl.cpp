@@ -400,14 +400,14 @@ TypefaceImpl::subset_font_program(UsedGlyphs const& glyphs,
 
 
 //////////////////////////////////////////////////////////////////////////
-Int TypefaceImpl::codepoint_to_gid(Int codepoint) const
+UInt16 TypefaceImpl::codepoint_to_gid(Int codepoint) const
 {
-    Int gid=0;
+    UInt16 gid=0;
     switch(m_type)
     {
     case FACE_TRUE_TYPE:
     case FACE_OPEN_TYPE_CFF:
-        gid = FT_Get_Char_Index(m_face, codepoint);
+        gid = static_cast<UInt16>(FT_Get_Char_Index(m_face, codepoint));
         break;
 
     default:
@@ -614,7 +614,7 @@ void UsedGlyphs::update()
         for(; !it.done(); it.next())
         {
             Item const& item = it.current();
-            if (m_impl->glyphs.count(item.glyph))
+            if (m_impl->glyphs.count(static_cast<UInt16>(item.glyph)))
             {
                 m_impl->codepoint_to_glyph.insert(
                     std::make_pair(item.codepoint, item.glyph));

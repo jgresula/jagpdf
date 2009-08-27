@@ -113,7 +113,7 @@ Int T1AdobeStandardFace::gid_horizontal_advance(UInt /*gid*/) const
 }
 
 
-Int T1AdobeStandardFace::codepoint_to_gid(Int /*codepoint*/) const
+UInt16 T1AdobeStandardFace::codepoint_to_gid(Int /*codepoint*/) const
 {
     throw exception_invalid_operation() << JAGLOC;
 }
