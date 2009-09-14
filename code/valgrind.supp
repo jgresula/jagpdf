@@ -15,7 +15,6 @@
 }
 
 
-
 # The chain for python errors can contain only libpython on the first line
 # (previously we had it on four lines), because dyn python modules like array.so
 # or pyexpat.so might appear near the front
