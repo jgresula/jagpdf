@@ -119,6 +119,15 @@ if(GCCXML)
     if(NOT GCCXML_EXIT EQUAL 0)
       message(STATUS "GCCXML does not work, disabling.")
       set(GCCXML OFF CACHE FILEPATH "Path to gccxml removed because of failed sanity test" FORCE)
+    else()
+      # store value of GCCXML_FLAGS retrieved from `gccxml --print` to
+      # GCCXML_FLAGS_CFG cache variable, it will be used later to filter out
+      # the list of supplied include directories
+      execute_process(
+        COMMAND "${GCCXML}" "--print"
+        OUTPUT_VARIABLE GCCXML_CONFIG)
+      string(REGEX MATCH "GCCXML_FLAGS=([^\n]*)" GCCXML_FLAGS_CFG "${GCCXML_CONFIG}")
+      set(GCCXML_FLAGS_CFG "${CMAKE_MATCH_1}" CACHE STRING "" FORCE)
     endif()
   endif()
   # macro providing common gccxml flags for generator.py
@@ -127,10 +136,15 @@ if(GCCXML)
       _GCCXML_INCLUDES
       DIRECTORY "${CMAKE_SOURCE_DIR}/code/src/pdflib"
       INCLUDE_DIRECTORIES)
-    
+
     set(_GCCXML_INCLUDE_ARG)
     foreach(INC_DIR ${_GCCXML_INCLUDES})
-      list(APPEND _GCCXML_INCLUDE_ARG "-I${INC_DIR}")
+      # specify only those directories which are not already in GCCXML_FLAGS as
+      # the order is important and might confuse gccxml
+      string(REGEX MATCH "-[iI](${INC_DIR}[ \"])" IS_IN_GCCXML_CONFIG "${GCCXML_FLAGS_CFG}")
+      if(NOT CMAKE_MATCH_1)
+        list(APPEND _GCCXML_INCLUDE_ARG "-I${INC_DIR}")
+      endif()
     endforeach(INC_DIR)
 
     set(_GCCXML_COMPILER_FLAGS "--gccxml-path=${GCCXML}" "--gccxml-cache=${CMAKE_BINARY_DIR}/gcccache")
