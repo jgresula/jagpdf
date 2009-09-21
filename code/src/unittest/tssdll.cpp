@@ -109,16 +109,16 @@ public:
     {
         jag::jstd::atomic_increment(&tss_instance_count);
         printf("TSSData(0x%p) constructed on thread 0x%x\n",
-                this,
-                jag::jstd::current_thread_id());
+               this,
+               static_cast<unsigned int>(jag::jstd::current_thread_id()));
     }
 
     ~TSSData() {
         jag::jstd::atomic_decrement(&tss_instance_count);
         printf("TSSData(0x%p) destroyed on thread 0x%x with value set to 0x%x\n",
-                this,
-                jag::jstd::current_thread_id(),
-                m_val);
+               this,
+               static_cast<unsigned int>(jag::jstd::current_thread_id()),
+               m_val);
     }
 
 
@@ -190,7 +190,7 @@ void dll_entrypoint()
 {
 
     TSSData* data = static_cast<TSSData*>(jag::jstd::get_tls_data(id_tls_my_data));
-    ULong tid = jag::jstd::current_thread_id();
+    jag::ULong tid = jag::jstd::current_thread_id();
     if (data)
         JAG_ASSERT(data->get() == tid);
 
