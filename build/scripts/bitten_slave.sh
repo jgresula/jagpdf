@@ -83,8 +83,6 @@ LOCKFILE=/var/lock/$BUILD_CONFIG
 LOGFILE=${LOGFILE:=$BUILD_CONFIG.`date +%Y`.log}
 lock
 
-renice +14 -p $$
-
 "$BITTEN_SLAVE" --verbose\
  --log=$LOGFILE\
  --keep-files\
