@@ -12,6 +12,7 @@
 #include <core/generic/unused.h>
 
 #include <boost/io/ios_state.hpp>
+#include <boost/version.hpp>
 #include <iomanip>
 
 #ifdef _WIN32
@@ -67,17 +68,28 @@ exception::~exception() throw()
 {
 }
 
-
-
-
 namespace
 {
+
+  // handles breaking change in boost.exception
+  // https://svn.boost.org/trac/boost/changeset/52225/trunk/boost/exception/get_error_info.hpp
+  template <class T>
+  struct err_info
+  {
+#if BOOST_VERSION >= 103900
+      typedef T const* type;
+#else
+      typedef boost::shared_ptr<T const> type;
+#endif
+  };
+
+  
   //
   // message formatters
   //
   void msg_fmt_errno(exception const& exc, std::ostream& stream)
   {
-      if (boost::shared_ptr<const int> errnr = boost::get_error_info<errno_info>(exc))
+      if (err_info<int>::type errnr = boost::get_error_info<errno_info>(exc))
       {
           const int BUFF_SIZE = 255;
           char buffer[BUFF_SIZE+1];
@@ -89,7 +101,7 @@ namespace
 
   void msg_fmt_user_errno(exception const& exc, std::ostream& stream)
   {
-      if (boost::shared_ptr<jag_Int const> errnr = boost::get_error_info<user_errno_info>(exc))
+      if (err_info<jag_Int>::type errnr = boost::get_error_info<user_errno_info>(exc))
           stream << "usrerr: " << *errnr << std::endl;
   }
 
@@ -97,7 +109,7 @@ namespace
   void msg_fmt_getlasterror(exception const& exc, std::ostream& stream)
   {
 #ifdef _WIN32
-      if (boost::shared_ptr<unsigned const> err = boost::get_error_info<win_error_info>(exc))
+      if (err_info<unsigned>::type err = boost::get_error_info<win_error_info>(exc))
       {
           const int BUFF_SIZE = 255;
           char buffer[BUFF_SIZE+1];
@@ -120,12 +132,12 @@ namespace
 
   void msg_fmt_location(exception const& exc, std::ostream& stream)
   {
-      boost::shared_ptr<char const* const> throw_file = boost::get_error_info<boost::throw_file>(exc);
-      boost::shared_ptr<const int> throw_line = boost::get_error_info<boost::throw_line>(exc);
+      err_info<char const*>::type throw_file = boost::get_error_info<boost::throw_file>(exc);
+      err_info<int>::type throw_line = boost::get_error_info<boost::throw_line>(exc);
       if (throw_file && throw_line)
       {
           stream << "source: " << *throw_file << '(' << *throw_line << ')';
-          if(boost::shared_ptr<char const* const> throw_fn = boost::get_error_info<boost::throw_function>(exc))
+          if(err_info<char const*>::type throw_fn = boost::get_error_info<boost::throw_function>(exc))
               stream << ": " << *throw_fn;
 
           stream << std::endl;
@@ -135,7 +147,7 @@ namespace
   void msg_fmt_message(exception const& exc, std::ostream& stream)
   {
 
-      if (boost::shared_ptr<const std::string> msg = boost::get_error_info<err_msg_info>(exc))
+      if (err_info<std::string>::type msg = boost::get_error_info<err_msg_info>(exc))
       {
           boost::io::ios_flags_saver ifs(stream);
 
@@ -151,7 +163,7 @@ namespace
   {
       msg_fmt_message(exc, stream);
 
-      if (boost::shared_ptr<std::string const> io_object = boost::get_error_info<io_object_info>(exc))
+      if (err_info<std::string>::type io_object = boost::get_error_info<io_object_info>(exc))
           stream << "io obj: " << *io_object << std::endl;
 
       msg_fmt_user_errno(exc, stream);
