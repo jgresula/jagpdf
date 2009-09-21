@@ -10,14 +10,15 @@
 
 #include <pthread.h>
 #include <boost/static_assert.hpp>
+#include <interfaces/stdtypes.h>
 
 namespace jag {
 namespace jstd {
 
 
-inline unsigned current_thread_id()
+inline ULong current_thread_id()
 {
-    BOOST_STATIC_ASSERT(sizeof(unsigned)==sizeof(pthread_t));
+    BOOST_STATIC_ASSERT(sizeof(ULong)==sizeof(pthread_t));
     return (unsigned)pthread_self();
 //    return reinterpret_cast<unsigned>(static_cast<void*>());
 }

@@ -190,7 +190,7 @@ void dll_entrypoint()
 {
 
     TSSData* data = static_cast<TSSData*>(jag::jstd::get_tls_data(id_tls_my_data));
-    unsigned tid = jag::jstd::current_thread_id();
+    ULong tid = jag::jstd::current_thread_id();
     if (data)
         JAG_ASSERT(data->get() == tid);
 

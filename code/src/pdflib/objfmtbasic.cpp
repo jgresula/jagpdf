@@ -513,7 +513,7 @@ ObjFmtBasic& ObjFmtBasic::output(Int value)
  *
  * @param value value to output
  */
-ObjFmtBasic& ObjFmtBasic::output(size_t value)
+ObjFmtBasic& ObjFmtBasic::output(UInt value)
 {
     // the value is subject PDF speficiation limit:
     // -2^31 <= allowed-integral-value <= 2^31-1

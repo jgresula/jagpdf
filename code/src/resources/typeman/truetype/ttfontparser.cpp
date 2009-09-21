@@ -85,7 +85,9 @@ void TTFontParser::verify_file_checksum()
     ubig32_t sum(file_checksum(m_instream, skip_offset));
     sum = 0xB1B0AFBA-static_cast<unsigned int>(sum);
     if (sum != head->m_checksum_adjustment)
+    {
         TRACE_WRN << "TrueType checksum failed" ;
+    }
 }
 
 

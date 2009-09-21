@@ -155,7 +155,7 @@ public:
     ObjFmtBasic& space();
 
     ObjFmtBasic& output(Int value);
-    ObjFmtBasic& output(size_t value);
+    ObjFmtBasic& output(UInt value);
     ObjFmtBasic& output(Double value);
     ObjFmtBasic& output(Char const* value);
     ObjFmtBasic& output_bool(bool value);

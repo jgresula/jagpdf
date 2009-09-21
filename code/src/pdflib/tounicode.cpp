@@ -67,9 +67,9 @@ void ToUnicode::output_definition(DocWriterImpl& doc, GidAndUnicode const* gids,
     ;
 
     std::ostringstream ranges_str;
-    size_t range_lines = 0;
+    UInt range_lines = 0;
     std::ostringstream chars;
-    size_t char_lines = 0;
+    UInt char_lines = 0;
 
 
     // collect ranges and chars into string streams

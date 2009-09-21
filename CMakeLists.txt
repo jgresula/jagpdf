@@ -16,12 +16,13 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   set(CMAKE_PREFIX_PATH /usr/local)
 endif()
 
+
 # 64-bit check
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-  message(FATAL_ERROR "\nJagPDF has not been ported to 64-bit systems yet.")
+if(CMAKE_SIZEOF_VOID_P EQUAL 8 )
+  if (WIN32)
+    message(FATAL_ERROR "\nJagPDF has not been ported to 64-bit Windows.")
+  endif()
 endif()
-
-
 
 # ---------------------------------------------------------------------------
 #                           configuration

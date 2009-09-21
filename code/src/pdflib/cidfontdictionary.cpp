@@ -121,7 +121,7 @@ void CIDFontDictionary::output_widths()
         .array_start()
     ;
 
-    size_t start_cid = cids[0];
+    UInt start_cid = cids[0];
     size_t start_cid_index = 0;
     enum { RANGE_CLOSED, RANGE_OPENED } status = RANGE_CLOSED;
     const size_t cids_len = cids.size();

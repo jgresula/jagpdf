@@ -55,7 +55,7 @@ public:
     ObjFmt& dict_key(Char const* key) { m_fmt_basic.dict_key(key); return *this; }
     ObjFmt& space()  { m_fmt_basic.space(); return *this; }
     ObjFmt& output(Int value) { m_fmt_basic.output(value); return *this; }
-    ObjFmt& output(size_t value) { m_fmt_basic.output(value); return *this; }
+    ObjFmt& output(UInt value) { m_fmt_basic.output(value); return *this; }
     ObjFmt& output(double value)  { m_fmt_basic.output(value); return *this; }
     ObjFmt& output(Char const* value)  { m_fmt_basic.output(value); return *this; }
     ObjFmt& output_bool(bool value) { m_fmt_basic.output_bool(value); return *this; }

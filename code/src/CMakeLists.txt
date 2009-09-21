@@ -40,7 +40,12 @@ elseif(NOT ALL_IN_ONE)
   set(REQ_ICU_VERSION 3.6.0) 
 
   FIND_PACKAGE(Boost ${REQ_BOOST_VERSION})
-  list(APPEND JAG_THIRD_PARTY_LIBS ${Boost_LIBRARIES})
+  if (Boost_FOUND)
+    #message(STATUS ">> ${Boost_MAJOR_VERSION}.${Boost_MINOR_VERSION}.${Boost_SUBMINOR_VERSION}")
+      list(APPEND JAG_THIRD_PARTY_LIBS ${Boost_LIBRARIES})
+  else()
+      message(SEND_ERROR "Boost C++ libraries not found")
+  endif()
   # free type
   FIND_PACKAGE(Freetype ${REQ_FREETYPE_VERSION} REQUIRED)
   check_freetype_version(${REQ_FREETYPE_VERSION} "${FREETYPE_INCLUDE_DIRS}")

@@ -439,7 +439,7 @@ void ColorSpaceObj::output_indexed(PaletteImpl& obj, ObjFmt& fmt)
 
     fmt
         .space()
-        .output((data_len-1)/bytes_per_color)
+        .output(static_cast<UInt>((data_len-1)/bytes_per_color))
         .space()
         .text_string_hex(jag_reinterpret_cast<Char const*>(data), data_len)
         .array_end()

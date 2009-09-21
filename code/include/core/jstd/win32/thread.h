@@ -8,13 +8,15 @@
 #ifndef THREAD_UTILS_JG236_H__
 #define THREAD_UTILS_JG236_H__
 
+#include <interfaces/stdtypes.h>
+
 namespace jag {
 namespace jstd {
 
 //
 //
 //
-inline unsigned current_thread_id()
+inline ULong current_thread_id()
 {
     return ::GetCurrentThreadId();
 }

@@ -25,10 +25,17 @@
 #  define JAG_EXPORT
 # endif
 #else
-  /* JAG_CALLSPEC should be defined for other compilers than gcc and msvc */
+/* JAG_CALLSPEC should be defined for other compilers than gcc and msvc */
 # define JAG_CALLSPEC
 # define JAG_EXPORT
 #endif
+
+/* TBD: cdecl is not supported on amd64, not sure for IA64 or other platforms*/
+#ifdef JAG_64BIT_ADDRESS_MODEL
+# undef JAG_CALLSPEC
+# define JAG_CALLSPEC
+#endif 
+
 
 
 #define JAG_GEN_UNIQUE_HANDLE(_name)    \
