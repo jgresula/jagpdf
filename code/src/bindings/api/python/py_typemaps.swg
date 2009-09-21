@@ -26,7 +26,7 @@
     if ( PyObject_CheckReadBuffer($input) )
     {
         void const* tmp=0;
-        int tmp2=0;
+        Py_ssize_t tmp2=0;
         if ( -1==PyObject_AsReadBuffer( $input, &tmp, &tmp2) )
             PyErr_SetString(PyExc_ValueError,"Cannot access the buffer");
 
