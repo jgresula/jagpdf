@@ -38,6 +38,44 @@
   obj:*/libpython*
 }
 
+
+{
+  PYTHON_VAL_BIN
+  Memcheck:Value4
+  obj:*/python?.?
+
+}
+
+
+{
+  PYTHON_ADDR_BIN
+  Memcheck:Addr4
+  obj:*/python?.?
+}
+
+
+{
+  PYTHON_COND_BIN
+  Memcheck:Cond
+  obj:*/python?.?
+}
+
+{
+  PYTHON_VAL_BIN8
+  Memcheck:Value8
+  obj:*/python?.?
+
+}
+
+
+{
+  PYTHON_ADDR_BIN8
+  Memcheck:Addr8
+  obj:*/python?.?
+}
+
+
+
 {
   LD_SO_READ
   Memcheck:Addr4
