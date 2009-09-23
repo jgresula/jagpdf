@@ -53,7 +53,6 @@ set(ALL_IN_ONE OFF CACHE BOOL "Builds the all-in-one version of the library.")
 
 if(ALL_IN_ONE)
   set(BINARY_DISTRIBUTION ON CACHE BOOL "Installation goes inside the build directory." FORCE)
-  set(CMAKE_VERBOSE_MAKEFILE TRUE)
 endif()
 
 if(BINARY_DISTRIBUTION)
@@ -215,6 +214,10 @@ enable_testing()
 # note: valgrind settings are in ${CMAKE_SOURCE_DIR}/CTestConfig.cmake
 #set(CTEST_MEMORYCHECK_SUPPRESSIONS_FILE "${CMAKE_SOURCE_DIR}/code/valgrind.supp")
 set(MEMORYCHECK_SUPPRESSIONS_FILE "${CMAKE_SOURCE_DIR}/code/valgrind.supp" CACHE STRING "changed by me" FORCE)
+set(MEMORYCHECK_COMMAND_OPTIONS 
+  "-q --tool=memcheck --leak-check=yes --show-reachable=yes --workaround-gcc296-bugs=yes --num-callers=50" 
+  CACHE STRING "my valgrind settings" FORCE)
+
 
 
 # ---------------------------------------------------------------------------

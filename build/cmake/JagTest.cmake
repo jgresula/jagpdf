@@ -6,6 +6,4 @@
 
 
 include(CTest)
-set(MEMORYCHECK_COMMAND valgrind)
-
 SET (CTEST_CVS_CHECKOUT  "${CTEST_CVS_COMMAND} -d:pserver:hoffman@www.cmake.org:/cvsroot/CMake co -d\"${CTEST_SOURCE_DIRECTORY}\" CMake")
