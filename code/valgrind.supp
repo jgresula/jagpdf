@@ -21,73 +21,42 @@
 {
   PYTHON_VAL
   Memcheck:Value4
-  obj:*/libpython*
+  obj:*/*python*
 }
 
 
 {
   PYTHON_ADDR
   Memcheck:Addr4
-  obj:*/libpython*
+  obj:*/*python*
 }
 
 
 {
   PYTHON_COND
   Memcheck:Cond
-  obj:*/libpython*
+  obj:*/*python*
 }
-
-
-{
-  PYTHON_VAL_BIN
-  Memcheck:Value4
-  obj:*/python?.?
-
-}
-
-
-{
-  PYTHON_ADDR_BIN
-  Memcheck:Addr4
-  obj:*/python?.?
-}
-
-
-{
-  PYTHON_COND_BIN
-  Memcheck:Cond
-  obj:*/python?.?
-}
-
-{
-  PYTHON_VAL_BIN8
-  Memcheck:Value8
-  obj:*/python?.?
-
-}
-
-
-{
-  PYTHON_ADDR_BIN8
-  Memcheck:Addr8
-  obj:*/python?.?
-}
-
 
 
 {
   LD_SO_READ
   Memcheck:Addr4
-  obj:/lib/ld-2.3.6.so
-  obj:/lib/ld-2.3.6.so
-  obj:/lib/ld-2.3.6.so
+  obj:/lib/ld-2.7.so
+  obj:/lib/ld-2.7.so
+  obj:/lib/ld-2.7.so
 }
 
 {
   LD_SO_COND
   Memcheck:Cond
-  obj:/lib/ld-2.3.6.so
+  obj:/lib/ld-2.7.so
+}
+
+{
+  LD_SO_COND2
+  Memcheck:Cond
+  obj:/lib/ld-2.7.so
 }
 
 # see http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=270070
