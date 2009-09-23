@@ -39,9 +39,18 @@ if (DOXYGEN_EXECUTABLE AND GCCXML)
   file(MAKE_DIRECTORY ${GENERATED_DOC_DIR})
 
   get_gccxml_flags(GCCXML_FLAGS)
+
+  FIND_PACKAGE(Boost ${REQ_BOOST_VERSION})
+
+  # add boost include directories as some of the processed files depend on it
+  if (Boost_FOUND)
+    list(APPEND GCCXML_FLAGS "-I${Boost_INCLUDE_DIRS}")
+  endif()
+
   add_custom_target(doc-from-sources
     COMMAND
-    ${PYTHON_EXECUTABLE} "${CMAKE_SOURCE_DIR}/code/tools/source_parsing/generator.py" 
+    # use system default python instead of ${PYTHON_EXECUTABLE} because of PyXML
+    python "${CMAKE_SOURCE_DIR}/code/tools/source_parsing/generator.py"
     ${GCCXML_FLAGS}
     -d
     --doc-dir="${GENERATED_DOC_DIR}"

@@ -70,8 +70,8 @@ set -e # exit immediatelly on error
 #
 # constants
 # 
-SVN_BASE_URL="svn://jarda-home"
-SVN_WWW_URL=$SVN_BASE_URL/trunk/jagpdf-www
+SVN_BASE_URL="svn://192.168.1.100"
+GIT_WWW_REPO=~/repos/jagpdf-www.git
 ROOT_DIR=.
 
 #
@@ -191,7 +191,7 @@ PUBLIC_HTML_DIR="$TOP/release.out/public_html/www"
 WEB_SOURCE_DIR="$TOP/jagpdf-www"
 WEB_BUILD_DIR="$WEB_SOURCE_DIR.build"
 DOC_BUILD_DIR="$BUILD_DIR.doc"
-if [ "`uname`" == "Linux" ]; then
+if [ "`uname -n`" == "mamut" ]; then
     # on platforms other than linux only building sources is allowed
     IS_RELEASE_PLATFORM=1
 fi
@@ -311,7 +311,7 @@ if [ -n "$CMD_INIT" ]; then
         ./create_build_dir.sh --config=Release -DDOCUMENTATION_ONLY=ON `svn_file_path "$DOC_BUILD_DIR"`
         cd -
         # web sources and configuration
-        svn checkout $SVN_WWW_URL $WEB_SOURCE_DIR
+        git clone $GIT_WWW_REPO $WEB_SOURCE_DIR
         rm -rf $WEB_BUILD_DIR
         mkdir $WEB_BUILD_DIR
         cd $WEB_BUILD_DIR
