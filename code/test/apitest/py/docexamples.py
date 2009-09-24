@@ -1432,7 +1432,7 @@ def annotation_link(argv):
     width = img.width() / img.dpi_x() * 72
     height =img.height() / img.dpi_y() * 72
     """` And use them to associate a URI with the image:"""
-    doc.page().annotation_uri(50, 750, width, height, "http://jagdpf.com")
+    doc.page().annotation_uri(50, 750, width, height, "http://jagdpf.org")
     #]
     doc.page_end()
     """` """
