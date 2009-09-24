@@ -192,7 +192,12 @@ void DocOutlineImpl::item(Char const* title)
     DestinationDef* dest = m_destinations.construct(ref(doc()));
     const int page_num = doc().page_number();
     dest->set_page_num(page_num);
-    dest->set_xyz(DestinationDef::no_change, doc().page_height(page_num));
+
+    Double page_y = doc().is_topdown()
+        ? 0.0
+        : doc().page_height(page_num);
+    
+    dest->set_xyz(DestinationDef::no_change, page_y);
 
     add_outline_rec(title, dest);
 }

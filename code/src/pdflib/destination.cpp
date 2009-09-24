@@ -119,19 +119,32 @@ void DestinationDef::ensure_key(unsigned sym) const
 ///
 void DestinationDef::output_double(ObjFmt& fmt, unsigned sym) const
 {
+    double val;
     if (m_mask.test(sym))
     {
         JAG_ASSERT(sym<NUM_EXPLICIT_SYMBOLS);
-        fmt.output(get<double>(m_explicit_values[sym]));
+        val = get<double>(m_explicit_values[sym]);
     }
     else if (is_valid(m_parsed) && m_parsed.has_symbol(sym))
     {
-        fmt.output(m_parsed.to_<double>(sym, 0.0));
+        val = m_parsed.to_<double>(sym, 0.0);
     }
     else
     {
         fmt.null();
+        return;
     }
+
+    if (sym == TOP && m_doc->is_topdown())
+    {
+        // handle top-down
+        const int page_num = to_<int>(PAGE);
+        JAG_ASSERT(page_num < m_doc->page_number()); // should be catched earlier
+        Double pheight = m_doc->page_height(page_num);
+        val = pheight - val;
+    }
+    fmt.output(val);
+
 }
 
 ///
