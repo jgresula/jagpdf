@@ -26,7 +26,7 @@ namespace pdf {
 namespace
 {
 
-  const OutlineStyle default_style = { 0, 0.0, 0.0, 0.0 };
+  const OutlineStyle default_style = { 0 };
 
   bool is_default_style(OutlineStyle const& style)
   {
