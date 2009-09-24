@@ -15,9 +15,13 @@
 }
 
 
-# The chain for python errors can contain only libpython on the first line
-# (previously we had it on four lines), because dyn python modules like array.so
-# or pyexpat.so might appear near the front
+# 1. The chain for python errors can contain only libpython on the first line
+#    (previously we had it on four lines), because dyn python modules like
+#    array.so or pyexpat.so might appear near the front
+#   
+# 2. The python wildcard is quite loose as it can be either libpython.so or
+#    pythonM.m
+# 
 {
   PYTHON_VAL
   Memcheck:Value4
@@ -30,6 +34,20 @@
   Memcheck:Addr4
   obj:*/*python*
 }
+
+{
+  PYTHON_VAL8
+  Memcheck:Value8
+  obj:*/*python*
+}
+
+
+{
+  PYTHON_ADDR8
+  Memcheck:Addr8
+  obj:*/*python*
+}
+
 
 
 {
