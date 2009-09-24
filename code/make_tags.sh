@@ -7,13 +7,13 @@
 #
 
 
-
+CTAGS=ctags-exuberant
 ALL_FILES=/tmp/ctags_all_files-$$
 
 find . -name '*.h' > $ALL_FILES
 find . -name '*.cpp' >> $ALL_FILES
 
-cat $ALL_FILES | ctags -e -f ~/JAGBASE-TAGS -L -
+cat $ALL_FILES | $CTAGS -e -f ~/JAGBASE-TAGS -L -
 
 rm $ALL_FILES
 
