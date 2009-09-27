@@ -17,12 +17,8 @@ SET(SRC_IN ${CMAKE_SOURCE_DIR}/build/cmake/cpack)
 
 if(CPACK_COMMAND)
   IF(UNIX)
-    SET(CPACK_GENERATOR "TBZ2;DEB")
+    SET(CPACK_GENERATOR "TBZ2")
     SET(CPACK_SOURCE_GENERATOR "TBZ2")
-    execute_process(
-      COMMAND "dpkg" "--print-architecture"
-      OUTPUT_VARIABLE CPACK_DEBIAN_PACKAGE_ARCHITECTURE
-      ERROR_QUIET)
   ELSEIF(WIN32)
     SET(CPACK_GENERATOR "ZIP")
     SET(CPACK_SOURCE_GENERATOR "ZIP")
@@ -55,39 +51,30 @@ if(CPACK_COMMAND)
     ${CPACK_COMMAND} --config CPackSourceApitestsConfig CPackSourceApitestsConfig)
   ADD_DEPENDENCIES(ALL_PACKAGES PACKAGE_apitests)
 
+  # get platform
+  string(REGEX MATCH "^(x86|i.86)$" MATCH "${CMAKE_SYSTEM_PROCESSOR}")
+  if (MATCH)
+    set(JAG_SYSTEM_PROCESSOR "x86")
+  else()
+    set(JAG_SYSTEM_PROCESSOR "${CMAKE_SYSTEM_PROCESSOR}")
+  endif()
+  if(WIN32 AND NOT CYGWIN)
+    set(JAG_SYSTEM_NAME "win32")
+  else()
+    set(JAG_SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
+  endif()
+  SET(JAGPDF_PACK_PLATFORM "${JAG_SYSTEM_NAME}.${JAG_SYSTEM_PROCESSOR}")
+  STRING(TOLOWER ${JAGPDF_PACK_PLATFORM} JAGPDF_PACK_PLATFORM)
+
+
   #
   # binaries
   #
-  MACRO(ADD_COMPONENT_PACKAGE 
-      __component
-      # ARGV1 - optionally package file name stem, otherwise __component
-      )
-    SET(PACKAGE_COMPONENT ${__component})
-    IF("${ARGV1}" STREQUAL "")
-      SET(PACKAGE_COMPONENT_NAME ${PACKAGE_COMPONENT})
-    ELSE()
-      SET(PACKAGE_COMPONENT_NAME ${ARGV1})
-    ENDIF()
+  MACRO(ADD_COMPONENT_PACKAGE _component _stem _debname)
+    SET(PACKAGE_COMPONENT ${_component})
+    SET(PACKAGE_COMPONENT_NAME ${_stem})
+    SET(CPACK_PACKAGE_NAME ${_debname})
 
-    # get platform
-    string(REGEX MATCH "x86|i.86" MATCH "${CMAKE_SYSTEM_PROCESSOR}")
-    if (MATCH)
-      set(JAG_SYSTEM_PROCESSOR "x86")
-    else()
-      set(JAG_SYSTEM_PROCESSOR "CMAKE_SYSTEM_PROCESSOR")
-    endif()
-    if(WIN32 AND NOT CYGWIN)
-      set(JAG_SYSTEM_NAME "win32")
-    else()
-      set(JAG_SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
-    endif()
-    SET(JAGPDF_PACK_PLATFORM "${JAG_SYSTEM_NAME}.${JAG_SYSTEM_PROCESSOR}")
-    STRING(TOLOWER ${JAGPDF_PACK_PLATFORM} JAGPDF_PACK_PLATFORM)
-    # special case, if we are packing documentation, do not include platform
-    IF("${__component}" MATCHES "jagpdf-doc")
-      SET(JAGPDF_PACK_PLATFORM)
-    ENDIF()
-    
     SET(__packageTarget PACKAGE_${PACKAGE_COMPONENT})
     SET(__packageConfig ${CMAKE_CURRENT_BINARY_DIR}/CPackConfig-${PACKAGE_COMPONENT}.cmake)
     

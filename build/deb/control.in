@@ -1,0 +1,10 @@
+Package: %package-name%
+Version: @JAGPDF_VERSION@
+Section: devel
+Priority: optional
+Architecture: %deb-arch%
+Depends:  @DEBIAN_PKG_DEP@
+Maintainer: Jaroslav Gresula <jarda@jagpdf.org>
+Homepage: http://jagpdf.org
+Description: Library for generating PDF documents
+

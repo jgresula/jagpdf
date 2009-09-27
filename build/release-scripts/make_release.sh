@@ -95,6 +95,7 @@ START_LOCAL_SERVER=
 CHECK_BASE_CSS=1
 MEMCHECK_SUFFIX="-memcheck"
 CHECK_CODE_TXT=1
+HOSTNAME=`hostname`
 
 #
 # parse command line
@@ -183,8 +184,7 @@ SVN_REVISION_FLAG="--revision $SVN_REVISION"
 TOP=`cd $ROOT_DIR && pwd`
 SRC_DIR="$TOP/jagbase"
 BUILD_DIR="$TOP/jagbase.build"
-BUILD_DIR_RELEASE="$BUILD_DIR.release"
-BUILD_DIR_DEBUG="$BUILD_DIR.debug"
+BUILD_DIR_RELEASE="$BUILD_DIR.GA"
 PACKAGES_DIR="$TOP/release.out/binaries"
 PKG_TEST_DIR="$TOP/release.test"
 PUBLIC_HTML_DIR="$TOP/release.out/public_html/www"
@@ -203,10 +203,9 @@ fi
 #
 function create_build_dir()
 {
-    rm -rf $BUILD_DIR_RELEASE $BUILD_DIR_DEBUG
+    rm -rf $BUILD_DIR_RELEASE
     cd $SRC_DIR/build/scripts
     ./create_build_dir.sh --config=Release --python=$1 $BUILD_DIR_RELEASE
-    ./create_build_dir.sh --config=Debug --python=$1 $BUILD_DIR_DEBUG
     cd -
 }
 
@@ -216,12 +215,6 @@ function create_build_dir()
 
 function build_c()
 {
-#     cd $BUILD_DIR_DEBUG
-#     make -s dist-c
-#     make -s unit-tests
-#     make -s apitests-cpp apitests-c
-#     cd -
-
     cd $BUILD_DIR_RELEASE
     # cache rebuild is needed, otherwise there is a problem with our valgrind
     # suppression file
@@ -240,11 +233,6 @@ function build_c()
 
 function build_python()
 {
-#     cd $BUILD_DIR_DEBUG
-#     make -s dist-py
-#     make -s apitests-py
-#     cd -
-
     cd $BUILD_DIR_RELEASE
     # cache rebuild is needed, otherwise there is a problem with our valgrind
     # suppression file
@@ -259,11 +247,6 @@ function build_python()
 
 function build_java()
 {
-#     cd $BUILD_DIR_DEBUG
-#     make -s dist-java
-#     make -s apitests-java
-#     cd -
-
     cd $BUILD_DIR_RELEASE
     make -s dist-java
     #make -s apitests-java$MEMCHECK_SUFFIX
@@ -285,7 +268,12 @@ function svn_file_path()
 
 function copy_packages()
 {
-    find "$1" \( -name '*.zip' -o -name '*.bz2' \) ! -regex '.*CPack.*' -exec cp {} $PACKAGES_DIR \;
+    find "$1" \( -name '*.deb' -o -name '*.zip' -o -name '*.bz2' \) ! -regex '.*CPack.*' -exec cp {} $PACKAGES_DIR \;
+}
+
+function strip-binaries()
+{
+    find "$1" -type f -name '*.so' -exec strip {} \;
 }
 
 
@@ -331,19 +319,22 @@ if [ -n "$CMD_BUILD_CODE" ]; then
         $SRC_DIR/build/release-scripts/spellcheck.sh $SRC_DIR/*.txt
     fi
 
-    create_build_dir 2.5
-    build_c
-    build_python
-    build_java
-    copy_packages $BUILD_DIR_RELEASE
+    source "$TOP/jagbase/build/release-scripts/build.$HOSTNAME"
+    do_build
 
-    create_build_dir 2.4
-    build_python
-    copy_packages $BUILD_DIR_RELEASE
- 
-    create_build_dir 2.6
-    build_python
-    copy_packages $BUILD_DIR_RELEASE
+    # create_build_dir 2.5
+    # build_c
+    # build_python
+    # build_java
+    # copy_packages $BUILD_DIR_RELEASE
+    # 
+    # create_build_dir 2.4
+    # build_python
+    # copy_packages $BUILD_DIR_RELEASE
+    # 
+    # create_build_dir 2.6
+    # build_python
+    # copy_packages $BUILD_DIR_RELEASE
 fi
 
 

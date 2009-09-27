@@ -91,4 +91,23 @@ add_custom_target(check-pyjagpdf-binaries
   )
 
 
-ADD_COMPONENT_PACKAGE(pyjagpdf py${PY_MmVERSION})
+ADD_COMPONENT_PACKAGE(pyjagpdf py${PY_MmVERSION} python${PY_MmVERSION}-jagpdf)
+
+#
+# .deb
+# 
+set(DEB_SRC_DIR "${CMAKE_SOURCE_DIR}/build/deb/py")
+set(DEB_BIN_DIR "${CMAKE_BINARY_DIR}/deb/py/debian")
+
+configure_file("${DEB_SRC_DIR}/prepare.in" "${CMAKE_BINARY_DIR}/deb/py/prepare" @ONLY)
+configure_file("${DEB_SRC_DIR}/postinst" "${DEB_BIN_DIR}/DEBIAN/postinst" COPYONLY)
+configure_file("${DEB_SRC_DIR}/prerm" "${DEB_BIN_DIR}/DEBIAN/prerm" COPYONLY)
+configure_file("${CMAKE_SOURCE_DIR}/build/deb/control.in" "${CMAKE_BINARY_DIR}/deb/py/control.stage" @ONLY)
+
+add_custom_target(deb-py
+  COMMAND "${CMAKE_BINARY_DIR}/deb/deb-build.sh" "py" "${PYTHON_INSTALL_DIR}"
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/deb/")
+
+add_dependencies(deb-py dist-py)
+add_dependencies(deb-all deb-py)
+

@@ -1,0 +1,18 @@
+# -*- mode: sh -*-
+
+# sourced by deb-build.sh
+
+PKG=java-jagpdf
+PKG_FILE_SUFFIX=.java
+
+JAVA_LIB_DIR=debian/usr/lib
+JAVA_JAR_DIR=debian/usr/share/java
+
+rm -rf $JAVA_LIB_DIR $JAVA_JAR_DIR
+mkdir -p $JAVA_LIB_DIR $JAVA_JAR_DIR
+
+cp $JAGPDF_INSTALL_DIR/lib/libjagpdf_java-*.so $JAVA_LIB_DIR
+cp $JAGPDF_INSTALL_DIR/lib/jagpdf-*.jar $JAVA_JAR_DIR
+for f in $JAVA_JAR_DIR/jagpdf-*.jar; do
+    ln -s `basename $f` $JAVA_JAR_DIR/jagpdf.jar
+done

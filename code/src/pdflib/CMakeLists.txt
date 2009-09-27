@@ -229,6 +229,21 @@ add_custom_target(check-jagpdf-binaries
 #add_dependencies(check-jagpdf-binaries dist-c)
 
 
-ADD_COMPONENT_PACKAGE(jagpdf c_cpp)
+ADD_COMPONENT_PACKAGE(jagpdf c_cpp jagpdf)
 
+#
+# .deb
+# 
+set(DEB_SRC_DIR "${CMAKE_SOURCE_DIR}/build/deb/c")
+set(DEB_BIN_DIR "${CMAKE_BINARY_DIR}/deb/c/debian")
 
+configure_file("${DEB_SRC_DIR}/prepare.in" "${CMAKE_BINARY_DIR}/deb/c/prepare" @ONLY)
+configure_file("${DEB_SRC_DIR}/postinst" "${DEB_BIN_DIR}/DEBIAN/postinst" COPYONLY)
+configure_file("${CMAKE_SOURCE_DIR}/build/deb/control.in" "${CMAKE_BINARY_DIR}/deb/c/control.stage" @ONLY)
+
+add_custom_target(deb-c
+  COMMAND "${CMAKE_BINARY_DIR}/deb/deb-build.sh" "c" "${CMAKE_INSTALL_PREFIX}"
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/deb/")
+
+add_dependencies(deb-c dist-c)
+add_dependencies(deb-all deb-c)

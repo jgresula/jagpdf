@@ -1,0 +1,19 @@
+# -*- mode: sh -*-
+
+# sourced by deb-build.sh
+
+PKG=python@PY_Mm_DOT_VERSION@-jagpdf
+PKG_FILE_SUFFIX=.py@PY_MmVERSION@
+
+PY_LIB_DIR=debian/usr/lib/python-support/python-jagpdf/python@PY_Mm_DOT_VERSION@
+PY_SHARE_DIR=debian/usr/share/python-support/python-jagpdf
+
+rm -rf $PY_LIB_DIR $PY_SHARE_DIR
+mkdir -p $PY_LIB_DIR $PY_SHARE_DIR
+
+cp $JAGPDF_INSTALL_DIR/_jagpdf.so $PY_LIB_DIR
+cp $JAGPDF_INSTALL_DIR/jagpdf.py $PY_LIB_DIR
+
+
+
+

@@ -31,13 +31,6 @@ elseif(NOT ALL_IN_ONE)
   # boost
   #set(Boost_DEBUG on)
 
-  set(REQ_BOOST_VERSION 1.36)
-  set(REQ_FREETYPE_VERSION 2.3.5)
-  set(REQ_ZLIB_VERSION 1.2.3)
-  # static version uses 1.2.25
-  set(REQ_PNG_VERSION 1.2.15)
-  # static version uses 3.8.1
-  set(REQ_ICU_VERSION 3.6.0) 
 
   FIND_PACKAGE(Boost ${REQ_BOOST_VERSION})
   if (Boost_FOUND)

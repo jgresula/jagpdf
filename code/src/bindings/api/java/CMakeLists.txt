@@ -138,5 +138,22 @@ add_custom_target(check-jagpdf-java-binaries
   ${PYTHON_EXECUTABLE} ${JAG_TOOLS_DIR}/check_package.py ${CMAKE_CURRENT_BINARY_DIR}
   )
 
-ADD_COMPONENT_PACKAGE(jagpdf_java java)
+ADD_COMPONENT_PACKAGE(jagpdf_java java java-jagpdf)
 
+
+#
+# .deb
+# 
+set(DEB_SRC_DIR "${CMAKE_SOURCE_DIR}/build/deb/java")
+set(DEB_BIN_DIR "${CMAKE_BINARY_DIR}/deb/java/debian")
+
+configure_file("${DEB_SRC_DIR}/prepare.in" "${CMAKE_BINARY_DIR}/deb/java/prepare" @ONLY)
+configure_file("${DEB_SRC_DIR}/postinst" "${DEB_BIN_DIR}/DEBIAN/postinst" COPYONLY)
+configure_file("${CMAKE_SOURCE_DIR}/build/deb/control.in" "${CMAKE_BINARY_DIR}/deb/java/control.stage" @ONLY)
+
+add_custom_target(deb-java
+  COMMAND "${CMAKE_BINARY_DIR}/deb/deb-build.sh" "java" "${CMAKE_INSTALL_PREFIX}"
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/deb/")
+
+add_dependencies(deb-java dist-java)
+add_dependencies(deb-all deb-java)

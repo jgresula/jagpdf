@@ -69,6 +69,23 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build, options are Release or Debug" FORCE)
 endif()
 
+set(REQ_BOOST_VERSION 1.36)
+set(REQ_FREETYPE_VERSION 2.3.5)
+set(REQ_ZLIB_VERSION 1.2.3)
+# static version uses 1.2.25
+set(REQ_PNG_VERSION 1.2.15)
+# static version uses 3.8.1
+set(REQ_ICU_VERSION 3.6.0) 
+
+# eu-readelf ->
+#  libc6 (>= 2.2.5)
+#  libstdc++6 (>= 3.4)
+set(DEBIAN_PKG_DEP "libfreetype6 (>= ${REQ_FREETYPE_VERSION}), zlib1g (>= 1:${REQ_ZLIB_VERSION}), libpng12-0 (>= ${REQ_PNG_VERSION}), libicu38 (>= ${REQ_ICU_VERSION})")
+set(DEBIAN_PKG_DEP "libc6 (>= 2.2.5), libstdc++6 (>= 3.4), ${DEBIAN_PKG_DEP}")
+
+
+
+
 list(APPEND CMAKE_MODULE_PATH ${JagPDF_SOURCE_DIR}/build/cmake)
 include(JagConfig)
 include(JagCore)
@@ -164,6 +181,7 @@ if(BUILD_PYTHON)
     set(JAG_PYTHON_LIB_LOCATION "${CMAKE_BINARY_DIR}/code/src/bindings/api/python/")
     set(JAG_BUILD_PYTHON ON)
     jag_exec_pycmd("import sys; print '%d%d' % sys.version_info[:2]" PY_MmVERSION)
+    jag_exec_pycmd("import sys; print '%d.%d' % sys.version_info[:2]" PY_Mm_DOT_VERSION)
     jag_exec_pycmd("import sys; print sys.hexversion" PY_HEXVERSION)
     configure_file(
       "${CMAKE_SOURCE_DIR}/code/src/bindings/api/python/setup.py.in"
@@ -205,6 +223,7 @@ endif()
 #                         common targets
 #  
 add_custom_target(dist-all)
+add_custom_target(deb-all)
 
 
 # ---------------------------------------------------------------------------
@@ -254,6 +273,10 @@ configure_file(
   "${CMAKE_SOURCE_DIR}/code/include/jagpdf/detail/config.h.in"
   "${CMAKE_BINARY_DIR}/include/jagpdf/detail/config.h")
 
+configure_file(
+  "${CMAKE_SOURCE_DIR}/build/deb/deb-build.sh.in"
+  "${CMAKE_BINARY_DIR}/deb/deb-build.sh"
+  @ONLY)
 
 # Globally disable questionable Microsoft warnings.
 if(MSVC_VERSION)

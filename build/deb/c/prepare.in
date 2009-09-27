@@ -1,0 +1,20 @@
+# -*- mode: sh -*-
+
+# sourced by deb-build.sh
+
+PKG=libjagpdf
+PKG_FILE_SUFFIX=.c_cpp
+
+C_LIB_DIR=debian/usr/lib
+C_INCLUDE_DIR=debian/usr/include
+
+rm -rf $C_LIB_DIR $C_INCLUDE_DIR
+mkdir -p $C_LIB_DIR $C_INCLUDE_DIR
+
+cp -d $JAGPDF_INSTALL_DIR/lib/libjagpdf.so* $C_LIB_DIR
+cp -r $JAGPDF_INSTALL_DIR/include/* $C_INCLUDE_DIR
+
+
+
+
+
