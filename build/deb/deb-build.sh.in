@@ -8,17 +8,19 @@ JAGPDF_INSTALL_DIR=$2
 VERSION=@JAGPDF_VERSION@
 ARCH_OS=linux # hard-wired for now
 ARCH_CPU=`dpkg --print-architecture`
-ARCH=$ARCH_OS.$ARCH_CPU
+ARCH=$ARCH_OS.@JAG_SYSTEM_PROCESSOR@
 SRC_DIR=@CMAKE_SOURCE_DIR@
 
 cd $DEB_DIR
+cp control.stage debian/DEBIAN/control
+
 source prepare
 
 DEB=jagpdf-$VERSION-$ARCH$PKG_FILE_SUFFIX.deb
 
 find ./debian -type d | xargs chmod 755
 find ./debian -type f -name '*~' -delete
-find ./debian -type f -name '*.so' -exec strip {} \;
+find ./debian -type f -name '*.so*' -exec strip {} \;
 
 #DOC_DIR=debian/usr/share/doc/$PKG
 # echo "$PKG Debian maintainer and upstream author are identical.
@@ -28,9 +30,9 @@ find ./debian -type f -name '*.so' -exec strip {} \;
 # gzip --best $DOC_DIR/changelog.Debian
 #cp $SRC_DIR/LICENSE.txt $DOC_DIR/copyright
 
-cp control.stage debian/DEBIAN/control
 sed -i "s/%package-name%/$PKG/g" debian/DEBIAN/control
 sed -i "s/%deb-arch%/$ARCH_CPU/g" debian/DEBIAN/control
+sed -i "s/%package-extra-dep%//g" debian/DEBIAN/control
 
 fakeroot dpkg-deb --build debian
 mv debian.deb $DEB

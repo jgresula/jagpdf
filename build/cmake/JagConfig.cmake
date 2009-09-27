@@ -12,6 +12,24 @@ else()
   set(JAG_HAVE_MEMCHECK "")
 endif()
 
+# ------------------------------------------------------------
+ 
+# get platform
+string(REGEX MATCH "^(x86|i.86)$" MATCH "${CMAKE_SYSTEM_PROCESSOR}")
+if (MATCH)
+  set(JAG_SYSTEM_PROCESSOR "x86")
+else()
+  set(JAG_SYSTEM_PROCESSOR "${CMAKE_SYSTEM_PROCESSOR}")
+endif()
+if(WIN32 AND NOT CYGWIN)
+  set(JAG_SYSTEM_NAME "win32")
+else()
+  set(JAG_SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
+endif()
+STRING(TOLOWER "${JAG_SYSTEM_NAME}" JAG_SYSTEM_NAME)
+STRING(TOLOWER "${JAG_SYSTEM_PROCESSOR}" JAG_SYSTEM_PROCESSOR)
+SET(JAGPDF_PACK_PLATFORM "${JAG_SYSTEM_NAME}.${JAG_SYSTEM_PROCESSOR}")
+
 
 #---------------------------------------------------------------------------
 #                         COMPILER VARIABLES

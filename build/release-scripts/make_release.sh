@@ -196,6 +196,11 @@ if [ "`uname -n`" == "mamut" ]; then
     IS_RELEASE_PLATFORM=1
 fi
 
+source ~/.jagbase.cfg
+
+# ------------------------------------------------------------
+#           build dir configuration
+# ------------------------------------------------------------
 
 #
 # configures debug/release build directories, required python version is passed
@@ -209,52 +214,91 @@ function create_build_dir()
     cd -
 }
 
-#
-# do not run memcheck for debug builds, that is done on nightly basis
 
+# configures the build directory for a .deb build
+function prepare_deb_build()
+{
+    PY_VER=$1
+    rm -rf $BUILD_DIR_RELEASE
+    mkdir $BUILD_DIR_RELEASE
+    cd $BUILD_DIR_RELEASE
+    cmake \
+        -DBOOST_ROOT=$JAG_BOOST_ROOT \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=distribution \
+        -DPYTHON_INSTALL_DIR=distribution/lib \
+        -DJAVA_HOME=$JAG_JAVA_HOME \
+        -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python$PY_VER \
+        -DPYTHON_INCLUDE_PATH=/usr/include/python$PY_VER \
+        -DPYTHON_LIBRARY:FILEPATH=/usr/lib/python$PY_VER/config/libpython$PY_VER.so \
+        ../jagbase
+    cd -
+}
+
+# ------------------------------------------------------------
+#                    C/C++ build
+#                    
+function build_c_base()
+{
+    cd $BUILD_DIR_RELEASE
+    make rebuild_cache
+    make dist-c
+    make unit-tests
+    make apitests-cpp$MEMCHECK_SUFFIX apitests-c$MEMCHECK_SUFFIX
+    cd -
+}
 
 function build_c()
 {
+    build_c_base $@
     cd $BUILD_DIR_RELEASE
-    # cache rebuild is needed, otherwise there is a problem with our valgrind
-    # suppression file
-    make -s rebuild_cache
-    make -s dist-c
-    make -s unit-tests
-    make -s apitests-cpp$MEMCHECK_SUFFIX apitests-c$MEMCHECK_SUFFIX
-    #make -s apitests-cpp apitests-c
-    make -s check-jagpdf-binaries
-    make -s PACKAGE_jagpdf
-    make -s PACKAGE_source
-    make -s PACKAGE_source_all
-    make -s PACKAGE_apitests
+    make check-jagpdf-binaries
+    make PACKAGE_jagpdf
+    cd -
+}
+
+# ------------------------------------------------------------
+#                    Python build
+#                    
+function build_python_base()
+{
+    cd $BUILD_DIR_RELEASE
+    make rebuild_cache
+    make -j 4 dist-py
+    make apitests-py$MEMCHECK_SUFFIX
     cd -
 }
 
 function build_python()
 {
+    build_python_base $@
     cd $BUILD_DIR_RELEASE
-    # cache rebuild is needed, otherwise there is a problem with our valgrind
-    # suppression file
-    make -s rebuild_cache
-    make -s dist-py
-    make -s apitests-py$MEMCHECK_SUFFIX
-    #make -s apitests-py
     make -s check-pyjagpdf-binaries
     make -s PACKAGE_pyjagpdf
     cd -
 }
 
-function build_java()
+# ------------------------------------------------------------
+#                    Java build
+
+function build_java_base()
 {
     cd $BUILD_DIR_RELEASE
-    make -s dist-java
-    #make -s apitests-java$MEMCHECK_SUFFIX
-    make -s apitests-java
+    make -j 4 dist-java
+    make apitests-java
+    cd -
+}
+
+function build_java()
+{
+    build_java_base $@
+    cd $BUILD_DIR_RELEASE
     make -s check-jagpdf-java-binaries
     make -s PACKAGE_jagpdf_java
     cd -
 }
+
+
 
 HAS_CYGPATH=`which cygpath` || echo
 function svn_file_path()
@@ -321,20 +365,6 @@ if [ -n "$CMD_BUILD_CODE" ]; then
 
     source "$TOP/jagbase/build/release-scripts/build.$HOSTNAME"
     do_build
-
-    # create_build_dir 2.5
-    # build_c
-    # build_python
-    # build_java
-    # copy_packages $BUILD_DIR_RELEASE
-    # 
-    # create_build_dir 2.4
-    # build_python
-    # copy_packages $BUILD_DIR_RELEASE
-    # 
-    # create_build_dir 2.6
-    # build_python
-    # copy_packages $BUILD_DIR_RELEASE
 fi
 
 

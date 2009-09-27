@@ -51,22 +51,6 @@ if(CPACK_COMMAND)
     ${CPACK_COMMAND} --config CPackSourceApitestsConfig CPackSourceApitestsConfig)
   ADD_DEPENDENCIES(ALL_PACKAGES PACKAGE_apitests)
 
-  # get platform
-  string(REGEX MATCH "^(x86|i.86)$" MATCH "${CMAKE_SYSTEM_PROCESSOR}")
-  if (MATCH)
-    set(JAG_SYSTEM_PROCESSOR "x86")
-  else()
-    set(JAG_SYSTEM_PROCESSOR "${CMAKE_SYSTEM_PROCESSOR}")
-  endif()
-  if(WIN32 AND NOT CYGWIN)
-    set(JAG_SYSTEM_NAME "win32")
-  else()
-    set(JAG_SYSTEM_NAME ${CMAKE_SYSTEM_NAME})
-  endif()
-  SET(JAGPDF_PACK_PLATFORM "${JAG_SYSTEM_NAME}.${JAG_SYSTEM_PROCESSOR}")
-  STRING(TOLOWER ${JAGPDF_PACK_PLATFORM} JAGPDF_PACK_PLATFORM)
-
-
   #
   # binaries
   #

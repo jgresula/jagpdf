@@ -14,6 +14,10 @@ mkdir -p $PY_LIB_DIR $PY_SHARE_DIR
 cp $JAGPDF_INSTALL_DIR/_jagpdf.so $PY_LIB_DIR
 cp $JAGPDF_INSTALL_DIR/jagpdf.py $PY_LIB_DIR
 
+EXTRA_DEP="python-support (>= 0.7.1),"
+
+sed -i "s/%package-extra-dep%/$EXTRA_DEP/g" debian/DEBIAN/control
+
 
 
 
