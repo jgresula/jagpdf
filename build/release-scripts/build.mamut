@@ -1,0 +1,90 @@
+# -*- mode: shell -*-
+
+# sourced by make_release.sh
+
+source ~/.jagbase.cfg
+
+function prepare_deb_build()
+{
+    PY_VER=$1
+    rm -rf $BUILD_DIR_RELEASE
+    mkdir $BUILD_DIR_RELEASE
+    cd $BUILD_DIR_RELEASE
+    cmake \
+        -DBOOST_ROOT=$JAG_BOOST_ROOT \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=distribution \
+        -DPYTHON_INSTALL_DIR=distribution/lib \
+        -DJAVA_HOME=$JAG_JAVA_HOME \
+        -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python$PY_VER \
+        -DPYTHON_INCLUDE_PATH=/usr/include/python$PY_VER \
+        -DPYTHON_LIBRARY:FILEPATH=/usr/lib/python$PY_VER/config/libpython$PY_VER.so \
+        ../jagbase
+    cd -
+}
+
+function build_c_base()
+{
+    cd $BUILD_DIR_RELEASE
+    make rebuild_cache
+    make -j 4 dist-c
+    make unit-tests
+    make apitests-cpp$MEMCHECK_SUFFIX apitests-c$MEMCHECK_SUFFIX
+    #make check-jagpdf-binaries
+    #make -s PACKAGE_jagpdf
+    # make PACKAGE_source
+    # make PACKAGE_source_all
+    # make PACKAGE_apitests
+    cd -
+}
+
+function build_python_base()
+{
+    cd $BUILD_DIR_RELEASE
+    make rebuild_cache
+    make -j 4 dist-py
+    make apitests-py$MEMCHECK_SUFFIX
+    #make check-pyjagpdf-binaries
+    #make PACKAGE_pyjagpdf
+    cd -
+}
+
+function build_java_base()
+{
+    cd $BUILD_DIR_RELEASE
+    make -j 4 dist-java
+    #make -s apitests-java$MEMCHECK_SUFFIX
+    make apitests-java
+    #make -s check-jagpdf-java-binaries
+    #make -s PACKAGE_jagpdf_java
+    cd -
+}
+
+
+
+function do_build()
+{
+    prepare_deb_build 2.5
+    build_c_base
+    build_python_base
+    build_java_base
+
+    cd $BUILD_DIR_RELEASE
+    make deb-all
+    make PACKAGE_source
+    make PACKAGE_source_all
+    make PACKAGE_apitests
+    cd -
+    copy_packages $BUILD_DIR_RELEASE
+    
+    prepare_deb_build 2.4
+    build_python_base
+
+    cd $BUILD_DIR_RELEASE
+    make install/strip
+    make deb-py
+    cd -
+    copy_packages $BUILD_DIR_RELEASE
+    
+    echo DONE
+}
