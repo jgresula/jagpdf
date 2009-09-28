@@ -12,7 +12,7 @@
 OUTPUT=/tmp/myctest.sh.$$
 
 # retain only the last 15 log files, the sed command skips the first 15 lines
-rm -f `ls -1t /tmp/myctest.sh* | sed -n '16,${p}'`
+rm -f `ls -1t /tmp/myctest.sh* 2>/dev/null | sed -n '16,${p}'`
 
 function quit()
 {
