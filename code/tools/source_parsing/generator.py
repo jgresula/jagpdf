@@ -106,7 +106,7 @@ def swig( cfg, intro, opts ):
     renames = swig_rename_types(cfg, intro)
     contents = g_license
     contents = contents + '\n//-------\n'.join(['', ignored, renames, ''])
-    open(cfg['swig_output'], "wt").write(contents)
+    open(cfg['swig_output'], "w").write(contents)
 
 
 def c_wrapper( cfg, intro, opts ):
