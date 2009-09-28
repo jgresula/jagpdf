@@ -14,7 +14,7 @@ def get_streams( cfg, *stems ):
     """writes appropriate prologue for each stream (if any)"""
     files = {}
     for stem in stems:
-        f = open( cfg[stem], 'w+t' )
+        f = open( cfg[stem], 'w' )
         prologue = stem + '_prologue'
         if prologue in cfg:
             f.write( cfg[prologue] )
