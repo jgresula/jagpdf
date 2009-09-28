@@ -1,0 +1,19 @@
+# -*- mode: sh -*-
+
+function do_build()
+{
+    #build all-in-one
+    create_build_dir 2.5
+    build_c
+    build_python
+    build_java
+    copy_packages $BUILD_DIR_RELEASE
+    
+    create_build_dir 2.4
+    build_python
+    copy_packages $BUILD_DIR_RELEASE
+    
+    create_build_dir 2.6
+    build_python
+    copy_packages $BUILD_DIR_RELEASE
+}
