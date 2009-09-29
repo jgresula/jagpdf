@@ -5,7 +5,7 @@
 PKG=java-jagpdf
 PKG_FILE_SUFFIX=.java
 
-JAVA_LIB_DIR=debian/usr/lib
+JAVA_LIB_DIR=debian/usr/lib/jni
 JAVA_JAR_DIR=debian/usr/share/java
 
 rm -rf $JAVA_LIB_DIR $JAVA_JAR_DIR

@@ -16,7 +16,7 @@ cp control.stage debian/DEBIAN/control
 
 source prepare
 
-DEB=jagpdf-$VERSION-$ARCH$PKG_FILE_SUFFIX.deb
+DEB=jagpdf-$VERSION.$ARCH$PKG_FILE_SUFFIX.deb
 
 find ./debian -type d | xargs chmod 755
 find ./debian -type f -name '*~' -delete

@@ -59,6 +59,7 @@ function do_test()
     cd -
 }
 
+
 function unpack_package()
 {
     if [ -f $1.tar.bz2 ]; then
@@ -80,20 +81,34 @@ function prepare_package()
 }
 
 if [ "`uname`" == "Linux" ]; then
-    CFG_PLATFORM=linux.x86
+    if [[ "x86_64" =~ 'x86_64' ]]; then
+        CFG_PLATFORM=linux.amd64
+    else
+        CFG_PLATFORM=linux.x86
+    fi
 else
     CFG_PLATFORM=win32.x86
 fi
 
-CFG_VERSION=1.3.0
+function install_deb()
+{
+    sudo dpkg -i $1
+}
+
+function remove_deb()
+{
+    sudo dpkg -r $1
+}
+
+CFG_VERSION=1.4.0
 
 echo Unpacking ...
 
-prepare_package jagpdf-$CFG_VERSION.$CFG_PLATFORM.java
-prepare_package jagpdf-$CFG_VERSION.$CFG_PLATFORM.c_cpp
-prepare_package jagpdf-$CFG_VERSION.$CFG_PLATFORM.py25
-prepare_package jagpdf-$CFG_VERSION.$CFG_PLATFORM.py26
-prepare_package jagpdf-$CFG_VERSION.$CFG_PLATFORM.py24
+# prepare_package jagpdf-$CFG_VERSION.$CFG_PLATFORM.java
+# prepare_package jagpdf-$CFG_VERSION.$CFG_PLATFORM.c_cpp
+# prepare_package jagpdf-$CFG_VERSION.$CFG_PLATFORM.py25
+# prepare_package jagpdf-$CFG_VERSION.$CFG_PLATFORM.py26
+# prepare_package jagpdf-$CFG_VERSION.$CFG_PLATFORM.py24
 
 if [ ! -d jagpdf-$CFG_VERSION.all ]; then
     # unpack source packages and check that src + test = all
@@ -111,6 +126,7 @@ cp --update -R jagpdf-$CFG_VERSION/code/test/apitest/* ./apitest/
 #set -x
 
 source $SCRIPT_DIR/test_$HOSTNAME.cfg
+
 
 
 
