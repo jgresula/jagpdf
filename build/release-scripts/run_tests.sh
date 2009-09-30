@@ -15,6 +15,10 @@ set -e
 # apitest/ ... suite
 # build/   ... build dir
 
+# source the sw configuration for this machine
+# 
+source ~/.jagbase.cfg
+
 function normpath()
 {
     if [[ "`uname`" =~ "CYGWIN" ]]; then
@@ -41,6 +45,121 @@ EOF
 }
 
 
+#
+# checks that no jagpdf .deb package is currently installed
+#
+function no_installed_deb_allowed()
+{
+    set +e
+    npackages=`aptitude search jagpdf | grep -e '^i' | wc -l`
+    set -e
+    if [ "$npackages" != "0" ]; then
+        echo 'Found these jagpdf packages:'
+        aptitude search jagpdf | grep -e '^i'
+        echo 'Remove them before using this script.'
+        exit 1
+    fi
+}
+
+#
+# creates a symbolic link $2/lib -> $1
+# 
+function create_lib_link()
+{
+    TARGET=$1
+    LINK=$2
+
+    if [ ! -h $LINK/lib ]; then
+        mkdir $LINK
+        ln -s $TARGET $LINK/lib
+    fi
+}
+
+#
+# test jagpdf for c/c++ installed from .deb
+# 
+function deb_test_cpp()
+{
+    install_deb jagpdf-$CFG_VERSION.$CFG_PLATFORM.c_cpp.deb
+    do_test /usr
+    remove_deb libjagpdf
+}
+
+#
+# test jagpdf for python installed from .deb
+# it takes python M.m version (e.g. 2.5)
+# 
+function deb_test_python()
+{
+    M_m=$1
+    Mm=${M_m//./}
+
+    install_deb jagpdf-$CFG_VERSION.$CFG_PLATFORM.py$Mm.deb
+
+    if [ ! -h jagpdf-python$M_m/lib ]; then
+        mkdir jagpdf-python$M_m
+        ln -s /var/lib/python-support/python$M_m jagpdf-python$M_m/lib
+    fi
+
+    create_lib_link /var/lib/python-support/python$M_m jagpdf-python$M_m
+
+    do_test \
+        jagpdf-python$M_m \
+        -DPYTHON_EXECUTABLE=/usr/bin/python$M_m
+    remove_deb python$M_m-jagpdf
+}
+
+#
+# tests jagpdf for java installed from .deb
+# it takes a list of paths to java home
+# 
+function deb_test_java()
+{
+    JAVA_HOME=$1
+
+    install_deb jagpdf-$CFG_VERSION.$CFG_PLATFORM.java.deb
+    create_lib_link /usr/share/java jagpdf-java
+    
+    for java_dir in $@; do
+        ( export LD_LIBRARY_PATH=/usr/lib/jni ;
+            do_test jagpdf-java -DCMAKE_PREFIX_PATH=$java_dir )
+    done
+    
+    remove_deb java-jagpdf
+}
+
+# install from sources and test result, the arguments (if any) are passed
+# cmake
+function install_from_source()
+{
+    JAGPDF_SOURCE_DIR=jagpdf-$CFG_VERSION
+    JAGPDF_BUILD_DIR=`cd $JAGPDF_SOURCE_DIR && pwd`.build
+    JAGPDF_DIST_DIR=$JAGPDF_BUILD_DIR/distribution
+
+    rm -rf $JAGPDF_BUILD_DIR
+    mkdir -p $JAGPDF_BUILD_DIR
+    cd  $JAGPDF_BUILD_DIR
+
+    env BOOST_ROOT=$JAG_BOOST_ROOT cmake \
+        -DJAVA_HOME=$JAG_JAVA_HOME \
+        -DCMAKE_INSTALL_PREFIX=$JAGPDF_DIST_DIR \
+        -DPYTHON_INSTALL_DIR=$JAGPDF_DIST_DIR/lib \
+        $* \
+        ../$JAGPDF_SOURCE_DIR
+
+    make $MAKE_ARGS
+    make unit-tests
+    make apitests
+    make install
+    cd -
+
+    do_test $JAGPDF_DIST_DIR
+}
+
+
+#
+# configures and runs apitests
+# 
 function do_test()
 {
     DIST_DIR=`cd $1 && pwd`
@@ -81,7 +200,7 @@ function prepare_package()
 }
 
 if [ "`uname`" == "Linux" ]; then
-    if [[ "x86_64" =~ 'x86_64' ]]; then
+    if [[ "`uname -m`" =~ 'x86_64' ]]; then
         CFG_PLATFORM=linux.amd64
     else
         CFG_PLATFORM=linux.x86
@@ -102,13 +221,6 @@ function remove_deb()
 
 CFG_VERSION=1.4.0
 
-echo Unpacking ...
-
-# prepare_package jagpdf-$CFG_VERSION.$CFG_PLATFORM.java
-# prepare_package jagpdf-$CFG_VERSION.$CFG_PLATFORM.c_cpp
-# prepare_package jagpdf-$CFG_VERSION.$CFG_PLATFORM.py25
-# prepare_package jagpdf-$CFG_VERSION.$CFG_PLATFORM.py26
-# prepare_package jagpdf-$CFG_VERSION.$CFG_PLATFORM.py24
 
 if [ ! -d jagpdf-$CFG_VERSION.all ]; then
     # unpack source packages and check that src + test = all
