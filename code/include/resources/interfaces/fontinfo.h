@@ -35,6 +35,8 @@ public:
     virtual Double advance(Char const* txt_u) const = 0;
 
     /// Retrieves width of the given glyph.
+    ///
+    /// @version 1.4
     virtual Double glyph_width(UInt16 glyph_index) const = 0;
 
     

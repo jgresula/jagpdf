@@ -881,6 +881,8 @@ public:
     /// @param length number of glyphs to show
     ///
     /// @pre A text object has not been started.
+    ///
+    /// @version 1.4
     /// 
     virtual void text_glyphs(Double x, Double y,
                              UInt16 const* array_in, UInt length) = 0;
@@ -898,6 +900,8 @@ public:
     /// @param positions_length number of positions
     ///
     /// @pre A text object has not been started.
+    ///
+    /// @version 1.4
     /// 
     virtual void text_glyphs_o(Double x, Double y,
                                UInt16 const* array_in, UInt length,
