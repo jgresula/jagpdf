@@ -153,7 +153,7 @@ function install_from_source()
     make install
     cd -
 
-    do_test $JAGPDF_DIST_DIR
+    do_test $JAGPDF_DIST_DIR -DCMAKE_PREFIX_PATH=$JAG_JAVA_HOME
 }
 
 
