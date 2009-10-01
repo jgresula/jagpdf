@@ -1,3 +1,14 @@
+Changes in JagPDF 1.4.0 (?? ??? 2009)
+- Ported to amd64/Linux.
+- Added pair kerning.
+- Added top-down mode.
+- Added showing text using glyph indices.
+- [Python] Added setuptools support.
+- Optimized the output of color and text font operators.
+- Fixed JPEG parsing - XXC4 mistakenly considered to be a start of a frame marker.
+- Fixed locale dependent output.
+- Fixed empty glyf table problem in Reader.
+
 Changes in JagPDF 1.3.0 (30 May 2009)
 - JagPDF relicensed under the MIT license.
 - Added transparent Unicode support for core fonts.

@@ -87,6 +87,7 @@ CMD_DEPLOY_WEB=
 CMD_DEPLOY_LIB=
 CMD_REMOTE_DEPLOY=
 CMD_TEST_PKG=
+CMD_PACK_TEST=
 # options
 SVN_BRANCH_URL="trunk/jagbase"
 SVN_REVISION=HEAD
@@ -111,6 +112,7 @@ commands:
  doc        builds documentation and creates an archive
  web        builds web
  test-pkg   tests distributed packages
+ pack-test  packs test scripts
  deploy-web deploys web files
  deploy-lib deploys library files
  deploy-all deploys library and web files
@@ -156,6 +158,8 @@ do
         CMD_DEPLOY_LIB=1; CMD_DEPLOY_WEB=1; shift
     elif [ "$1" == "test-pkg" ]; then
         CMD_TEST_PKG=1; shift
+    elif [ "$1" == "pack-test" ]; then
+        CMD_PACK_TEST=1; shift
     elif [ "$1" == "--revision" ]; then
         shift; SVN_REVISION=$1; shift
     elif [ "$1" == "--branch" ]; then
@@ -218,7 +222,8 @@ function create_build_dir()
 # configures the build directory for a .deb build
 function prepare_deb_build()
 {
-    PY_VER=$1
+    configure_python $1
+
     rm -rf $BUILD_DIR_RELEASE
     mkdir $BUILD_DIR_RELEASE
     cd $BUILD_DIR_RELEASE
@@ -228,9 +233,9 @@ function prepare_deb_build()
         -DCMAKE_INSTALL_PREFIX=distribution \
         -DPYTHON_INSTALL_DIR=distribution/lib \
         -DJAVA_HOME=$JAG_JAVA_HOME \
-        -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python$PY_VER \
-        -DPYTHON_INCLUDE_PATH=/usr/include/python$PY_VER \
-        -DPYTHON_LIBRARY:FILEPATH=/usr/lib/python$PY_VER/config/libpython$PY_VER.so \
+        -DPYTHON_EXECUTABLE:FILEPATH=$JAG_PYTHON_EXECUTABLE \
+        -DPYTHON_INCLUDE_PATH=$JAG_PYTHON_INCLUDE_PATH \
+        -DPYTHON_LIBRARY:FILEPATH=$JAG_PYTHON_LIBRARY \
         ../jagbase
     cd -
 }
@@ -242,7 +247,7 @@ function build_c_base()
 {
     cd $BUILD_DIR_RELEASE
     make rebuild_cache
-    make dist-c
+    make $MAKE_ARGS dist-c
     make unit-tests
     make apitests-cpp$MEMCHECK_SUFFIX apitests-c$MEMCHECK_SUFFIX
     cd -
@@ -264,7 +269,7 @@ function build_python_base()
 {
     cd $BUILD_DIR_RELEASE
     make rebuild_cache
-    make -j 4 dist-py
+    make $MAKE_ARGS dist-py
     make apitests-py$MEMCHECK_SUFFIX
     cd -
 }
@@ -284,7 +289,7 @@ function build_python()
 function build_java_base()
 {
     cd $BUILD_DIR_RELEASE
-    make -j 4 dist-java
+    make $MAKE_ARGS dist-java
     make apitests-java
     cd -
 }
@@ -352,6 +357,15 @@ if [ -n "$CMD_INIT" ]; then
         # create other directories
         mkdir -p $PUBLIC_HTML_DIR
     fi
+fi
+
+#
+#
+#
+if [ -n $"CMD_PACK_TEST" ]; then
+    cd $TOP/jagbase/build/release-scripts
+    tar -cvzf $TOP/jagpdf-tests.tgz run_tests.sh test_*.cfg
+    cd -
 fi
 
 #
