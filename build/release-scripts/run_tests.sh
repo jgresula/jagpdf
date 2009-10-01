@@ -104,8 +104,10 @@ function deb_test_python()
     create_lib_link /var/lib/python-support/python$M_m jagpdf-python$M_m
 
     do_test \
-        jagpdf-python$M_m \
-        -DPYTHON_EXECUTABLE=/usr/bin/python$M_m
+        '<system>' \
+        -DPYTHON_EXECUTABLE=/usr/bin/python$M_m \
+        -DJAGPDF_PY_SYSTEM=ON
+
     remove_deb python$M_m-jagpdf
 }
 
@@ -162,16 +164,21 @@ function install_from_source()
 # 
 function do_test()
 {
-    DIST_DIR=`cd $1 && pwd`
-    DIST_DIR=`normpath $DIST_DIR`
+    if [ "$1" != "<system>" ]; then 
+        DIST_DIR=`cd $1 && pwd`
+        DIST_DIR=`normpath $DIST_DIR`
+        DIST_DIR_ARG="-DJAG_INSTALL_PREFIX=$DIST_DIR"
+    else
+        DIST_DIR_ARG="-DJAG_INSTALL_PREFIX=/this/dir/does/not/exist"
+    fi
     shift
+
     SRC_DIR=`cd apitest && pwd`
     SRC_DIR=`normpath $SRC_DIR`
     rm -rf ./build/*
     mkdir -p ./build
     cd ./build
-    cmake -G "Unix Makefiles" \
-        -DJAG_INSTALL_PREFIX=$DIST_DIR \
+    cmake -G "Unix Makefiles" $DIST_DIR_ARG \
         $@ \
         "$SRC_DIR"
     make apitests
