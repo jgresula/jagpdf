@@ -80,7 +80,11 @@ set(REQ_ICU_VERSION 3.6.0)
 # eu-readelf ->
 #  libc6 (>= 2.2.5)
 #  libstdc++6 (>= 3.4)
-set(DEBIAN_PKG_DEP "libfreetype6 (>= ${REQ_FREETYPE_VERSION}), zlib1g (>= 1:${REQ_ZLIB_VERSION}), libpng12-0 (>= ${REQ_PNG_VERSION}), libicu38 (>= ${REQ_ICU_VERSION})")
+#  
+# version details:
+#   http://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-Version
+#   tilde ~ sorts before anything else
+set(DEBIAN_PKG_DEP "libfreetype6 (>= ${REQ_FREETYPE_VERSION}), zlib1g (>= 1:${REQ_ZLIB_VERSION}), libpng12-0 (>= ${REQ_PNG_VERSION}~~), libicu38 (>= ${REQ_ICU_VERSION})")
 set(DEBIAN_PKG_DEP "libc6 (>= 2.2.5), libstdc++6 (>= 3.4), ${DEBIAN_PKG_DEP}")
 
 

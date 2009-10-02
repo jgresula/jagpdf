@@ -362,7 +362,7 @@ fi
 #
 #
 #
-if [ -n $"CMD_PACK_TEST" ]; then
+if [ -n "$CMD_PACK_TEST" ]; then
     cd $TOP/jagbase/build/release-scripts
     tar -cvzf $TOP/jagpdf-tests.tgz run_tests.sh test_*.cfg
     cd -
