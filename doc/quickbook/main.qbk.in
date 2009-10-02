@@ -263,37 +263,26 @@ You can post [lib] related questions to the [lib] mailing list. See
 [section:installation Installation]
 [/ ====================================================================== ]
 
-[template runtime_tips[]
-* Linux - [url_shlib_howto]
-* Windows - [url_windll_search_order]
-]
+You can either [ref_install_source_t install from source] or download a prebuilt
+binary for your platform.
 
-Follow these steps to create PDF documents from your application:
+DEB binary packages are provided for recent Debian and Ubuntu distributions. For
+other platforms, we distribute all-in-one binary packages that have no external
+dependencies. Installation of an all-in-one package usually requires that you
+manually copy JagPDF files to proper locations on your system.
 
-# Obtain the library. You can either [ref_install_source_t build from source] or
-  [url_lib_download_t download] prebuilt libraries. The prebuilt libraries do
-  not have any dependencies, they should just work on any supported platform.
-
-# [ref_install_embed_t Embed] it into your application.
-
-# Run your application. In runtime, the [lib] shared library is loaded
-  statically (C/C++) or dynamically (Java) into your application. It must reside
-  in a directory which is searched by the OS program loader.
+Further details are provided in the [ref_install_embed_t chapter] describing how
+to use JagPDF in your applications.
 
 
-[tip 
-The following provide more information about shared libraries on individual
-platforms.
-[runtime_tips]
-] 
 
 
 [/ -------------------------------------------------- ]
 [section:install_from_source Installation From Source]
 [/ -------------------------------------------------- ]
 
-Installation from source is currently supported on x86/Linux and x86/Windows
-platforms. More recent versions of GCC and MSVC are supported.
+Installation from source is currently supported on x86/Linux, amd64/Linux and
+x86/Windows platforms. More recent versions of GCC and MSVC are supported.
 
 You can either [url_lib_download_t download] the latest stable release or
 retrieve the development branch. The development branch is mirrored on
@@ -478,8 +467,23 @@ To run regression tests, do
 [section:embed Embedding Into Your Application]
 [/ ------------------------- ]
 
-This section outlines how to use [lib] in your application. Additional, more
-detailed information for each language can be found in [ref_langspecific].
+[lib] is implemented as a shared library. Language bindings provided with JagPDF
+expose the library functionality to individual programming languages. If you
+install JagPDF in a standard way (i.e. from source, DEBs, or Python's
+setuptools) the installation process places JagPDF files into proper locations
+and hence makes JagPDF available to your applications.
+
+If you install JagPDF manually then you have to ensure that the library is
+visible to your ?environment?.
+
+[template runtime_tips[]
+* Linux - [url_shlib_howto]
+* Windows - [url_windll_search_order]
+]
+
+[tip The following articles provide more information about shared libraries on
+individual platforms.  [runtime_tips] ]
+
 
 [/ ------------------------- ]
 [section C/C++]
@@ -508,14 +512,6 @@ compilers:
   [[MSVC] [[^cl.exe /I<jagpdf-include-dir> <your-files> [libcore_linkname_win] /link /LIBPATH:<jagpdf-lib-dir>]]]
 ]
 
-[/
-[heading Runtime]
-
-To run your application the location of the [lib] shared library ([path
-[libcore_win]] on Windows and [path [libcore_lin]] on Linux) must be known to
-the OS program loader.
-]
-
 [heading C++ API vs. C API]
 
 [lib] provides two separate APIs - one to be used by pure C
@@ -531,7 +527,7 @@ conforming C++ compiler. [lib] implements the C++ API using a C bridge between
 your C++ application and [lib]. The C bridge works around the fact that there is
 no unified C++ ABI embraced by all compiler vendors.]
 
-What next? Continue to the commented Hello World examples in [ref_hello_cpp_t
+Now you can proceed to your first application in [ref_hello_cpp_t
 C++] or [ref_hello_c_t C].
 
 [endsect] [/ C/C++]
@@ -541,26 +537,24 @@ C++] or [ref_hello_c_t C].
 [/ ------------------------- ]
 [python]
 
-[lib] for Python is implemented as an extension module. To enable the [lib]
-functionality in your application, the module must be correctly installed on
-your system.
+If you use the source distribution, follow the instructions in the section
+[ref_install_source].
 
-If you use the source distribution, follow the instructions in the
-section [ref_install_source].
+The prebuilt all-in-one package supports setuptools, so you can install it by
+doing
 
-The prebuilt [lib] package contains the standard [path setup.py], so you can
-install it by doing
-
-```
+[pre
 $ python setup.py install
-```
+]
 
+[/
 Or you can install the prebuilt package manually by extracting it into your
 system's built-in or optional site-packages directory. For more information,
 consult the Python documentation on __py_search_path_url__ and
 __py_site_specific_hook__.
+]
 
-What next? Continue to the commented [ref_hello_py_t Hello World example].
+Now you can proceed to your first [ref_hello_py_t application].
 
 [endsect] [/ Python]
 
@@ -570,18 +564,27 @@ What next? Continue to the commented [ref_hello_py_t Hello World example].
 [/ ------------------------- ]
 
 [lib] for Java is implemented as a [url_wiki_jni JNI module]. It is compatible
-with JDK 1.4 and later. It is known to work with Sun's JVM and should work with
-any JVM implementation with JNI support.
+with JDK 1.4 and later. It is known to work with Sun's JVM and OpenJDK, and it
+should work with any JVM implementation with JNI support.
 
 The [lib] functionality is provided in namespace [^com.jagpdf]. To compile and
 run your application, point the classpath to [path [lib_java_jar]]:
 
-```
-$ javac -classpath /path/to/``[lib_java_jar]`` <your_java_files>
-$ java -classpath /path/to/``[lib_java_jar]`` <your_app>
-```
+[pre
+$ javac -classpath /path\/to/[lib_java_jar] <your_java_files>
+$ java -classpath /path\/to/[lib_java_jar] <your_app>
+]
 
-What next? Continue to the commented [ref_hello_java_t Hello World example].
+If you install from DEB you should use the following:
+
+[pre
+$ export LD_LIBRARY_PATH=/usr/lib/jni:$LD_LIBRARY_PATH
+$ javac -classpath /usr/share/java/jagpdf.jar <your_java_files>
+$ java -classpath /usr/share/java/jagpdf.jar <your_app>
+]
+
+
+Now you can proceed to your first [ref_hello_java_t application].
 
 [endsect] [/ Java]
 
@@ -1642,6 +1645,33 @@ preferred.]
 ]]
 [[PDF Reference][[url_pdfref_chapter Text | Text Objects | Text-Showing Operators]]]
 ]
+
+[endsect]
+
+[section Glyph Indices]
+
+Advanced layout engines (e.g. [@http://userguide.icu-project.org/layoutengine
+ICU Layout Engine]) usually output glyph indices instead of Unicode code
+points. The reason is that a font can contain glyphs that do not have
+correspoding Unicode code points. A typical example are
+[@http://en.wikipedia.org/wiki/Complex_script complex scripts] fonts.
+
+Let's show an example of how [lib] supports showing of text specified by glyph
+indices:
+
+[py_example_glyph_indices]
+
+[heading Glyph Indices Summary]
+
+[table
+[[] []]
+[[Examples] [[@samples/jagpdf_doc_glyph_indices.pdf __pdficon_small] glyph indices]]
+[[Glyph Indices Reference] [
+[code_canvas_text_glyphs], 
+[code_canvas_text_glyphs_o],
+]]
+]
+
 
 [endsect]
 

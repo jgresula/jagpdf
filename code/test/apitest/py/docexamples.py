@@ -1658,6 +1658,31 @@ def strings(argv):
     doc.page_end()
     doc.finalize()
 
+# ------------------------------------------------------------------------
+#                          Glyph Indices
+#
+def glyph_indices(argv):
+    import jagpdf
+    doc = testlib.create_test_doc(argv, 'glyph_indices.pdf')
+    doc = DocumentProxy(doc)
+    doc.page_start(*paperA4)
+    canvas = doc.page().canvas()
+    #[py_example_glyph_indices
+    dejavu = doc.font_load("file=DejaVuSans.ttf; size=14")
+    canvas.text_font(dejavu)
+    # glyph indices for 'g', 'l', 'y', 'p', 'h', and 's'
+    glyphs = [74, 79, 92, 83, 75, 86]
+    canvas.text_glyphs(50, 800, glyphs)
+    canvas.text_glyphs(50, 780, glyphs, [-130.0, -130.0], [2, 3])
+    """` Note that the second [^text_glyphs()] individually positions the 2nd and
+    3rd glyph. We can also retrieve width of the glyph at a given index:"""
+    # width of the glyph at index 74, i.e. 'g'
+    dejavu.glyph_width(74)
+    #]
+    doc.page_end()
+    doc.finalize()
+    
+
 
 # ------------------------------------------------------------------------
 #                    Main
@@ -1698,6 +1723,7 @@ def test_main(argv=None):
     encryption(argv)
     doc_conventions()
     functions()
+    glyph_indices(argv)
     strings(argv)
     if 'win32' in sys.platform:
         text_win32(argv)
