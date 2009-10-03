@@ -38,38 +38,59 @@ endif()
 # Installation definition.
 #
 
-# Python installation path needs to relativized, otherwise cpack ignores it. The
-# trailing '/.' is important, because if the two paths are equal then the result
-# is an empty variable, which confuses the install command
-file(RELATIVE_PATH PYTHON_INSTALL_RELDIR ${CMAKE_INSTALL_PREFIX} ${PYTHON_INSTALL_DIR}/.)
+if (USE_DISTUTILS)
+  SET(SETUP_PY_PKG_DIR "")
+  configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/distutils.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/distutils.cmake" 
+    @ONLY)
+  
+  install(
+    SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/distutils.cmake
+    COMPONENT pyjagpdf)
+else()
+  # Python installation path needs to relativized, otherwise cpack ignores it. The
+  # trailing '/.' is important, because if the two paths are equal then the result
+  # is an empty variable, which confuses the install command
+  file(RELATIVE_PATH PYTHON_INSTALL_RELDIR ${CMAKE_INSTALL_PREFIX} ${PYTHON_INSTALL_DIR}/.)
 
-install( # extension
-  TARGETS _jagpdf
-  DESTINATION ${PYTHON_INSTALL_RELDIR}
-  COMPONENT pyjagpdf)
+  install( # extension
+    TARGETS _jagpdf
+    DESTINATION ${PYTHON_INSTALL_RELDIR}
+    COMPONENT pyjagpdf)
 
-install( # python file
-  FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/jagpdf.py
-  DESTINATION ${PYTHON_INSTALL_RELDIR}
-  COMPONENT pyjagpdf)
+  install( # python file
+    FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/jagpdf.py
+    DESTINATION ${PYTHON_INSTALL_RELDIR}
+    COMPONENT pyjagpdf)
 
 
-install( # other files
-  FILES
-  ${JAG_DIST_ACCOMPANYING_FILES}
-  DESTINATION "."
-  COMPONENT pyjagpdf)
+  install( # other files
+    FILES
+    ${JAG_DIST_ACCOMPANYING_FILES}
+    DESTINATION "${PYTHON_INSTALL_RELDIR}/.."
+    COMPONENT pyjagpdf)
 
-install( # setup.py - requires executable permissions
-  FILES
-  ${CMAKE_BINARY_DIR}/setup.py
-  PERMISSIONS 
-  OWNER_EXECUTE OWNER_READ OWNER_WRITE
-  GROUP_EXECUTE GROUP_READ
-  WORLD_EXECUTE WORLD_READ
-  DESTINATION "."
-  COMPONENT pyjagpdf)
+  install( # setup.py - requires executable permissions
+    FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/setup.py
+    PERMISSIONS 
+    OWNER_EXECUTE OWNER_READ OWNER_WRITE
+    GROUP_EXECUTE GROUP_READ
+    WORLD_EXECUTE WORLD_READ
+    DESTINATION "${PYTHON_INSTALL_RELDIR}/.."
+    COMPONENT pyjagpdf)
+
+  SET(SETUP_PY_PKG_DIR "lib")
+
+  ADD_COMPONENT_PACKAGE(pyjagpdf py${PY_MmVERSION} python${PY_MmVERSION}-jagpdf)
+endif()
+
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/setup.py.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/setup.py"
+  @ONLY)
 
 
 #
@@ -89,9 +110,6 @@ add_dependencies(dist-all dist-py)
 add_custom_target(check-pyjagpdf-binaries
   COMMAND ${PYTHON_EXECUTABLE} ${JAG_TOOLS_DIR}/check_package.py ${CMAKE_CURRENT_BINARY_DIR}
   )
-
-
-ADD_COMPONENT_PACKAGE(pyjagpdf py${PY_MmVERSION} python${PY_MmVERSION}-jagpdf)
 
 #
 # .deb

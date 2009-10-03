@@ -176,20 +176,20 @@ if(BUILD_PYTHON)
         message(STATUS "WARNING: JagPDF for Python will be linked with static library.")
       endif()
     endif()
-    #
-    execute_process(
-      COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib;print get_python_lib()"
-      OUTPUT_VARIABLE PYTHON_SITE_PACKAGES)
-    string(STRIP ${PYTHON_SITE_PACKAGES} PYTHON_SITE_PACKAGES)
-    set(PYTHON_INSTALL_DIR ${PYTHON_SITE_PACKAGES} CACHE PATH "Python installation path")
+    # If PYTHON_INSTALL_DIR is specified then the files are copied to that
+    # location and setup.py is not executed. Otherwise the standard distutils
+    # installation is performed.
+    set(PYTHON_INSTALL_DIR "/use-distutils" CACHE PATH "")
+    if (PYTHON_INSTALL_DIR STREQUAL "/use-distutils")
+      set(USE_DISTUTILS TRUE)
+    else()
+      set(USE_DISTUTILS FALSE)
+    endif()
     set(JAG_PYTHON_LIB_LOCATION "${CMAKE_BINARY_DIR}/code/src/bindings/api/python/")
     set(JAG_BUILD_PYTHON ON)
     jag_exec_pycmd("import sys; print '%d%d' % sys.version_info[:2]" PY_MmVERSION)
     jag_exec_pycmd("import sys; print '%d.%d' % sys.version_info[:2]" PY_Mm_DOT_VERSION)
     jag_exec_pycmd("import sys; print sys.hexversion" PY_HEXVERSION)
-    configure_file(
-      "${CMAKE_SOURCE_DIR}/code/src/bindings/api/python/setup.py.in"
-      "${CMAKE_BINARY_DIR}/setup.py")
   else()
     set(JAG_BUILD_PYTHON NOTFOUND)
   endif()
@@ -365,8 +365,12 @@ else()
   
   message(STATUS "Build JagPDF for Python: ${JAG_BUILD_PYTHON}")
   if (JAG_BUILD_PYTHON)
-    message(STATUS " install dir: ${PYTHON_INSTALL_DIR}")
-    message(STATUS " Python library: ${PYTHON_LIBRARIES}")
+    if(USE_DISTUTILS)
+      message(STATUS " will use distutils")
+    else()
+      message(STATUS " install dir: ${PYTHON_INSTALL_DIR}")
+    endif()
+      message(STATUS " Python library: ${PYTHON_LIBRARIES}")
     message(STATUS " Python include: ${PYTHON_INCLUDE_PATH}")
   endif()
 

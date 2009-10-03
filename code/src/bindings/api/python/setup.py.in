@@ -23,11 +23,15 @@ import os
 data_files = []
 if 'install' in sys.argv:
     ext = sys.platform == 'win32' and '.pyd' or '.so'
-    shared_lib = 'lib/_jagpdf' + ext
+    shared_lib = os.path.join('@SETUP_PY_PKG_DIR@', '_jagpdf' + ext)
     dest = get_python_lib(plat_specific=True)
     n = len(os.path.commonprefix([sys.exec_prefix, dest]))
     dest = dest[n+1:]
     data_files += [(dest, [shared_lib])]
+    if "@SETUP_PY_PKG_DIR@":
+        package_dir={'':'@SETUP_PY_PKG_DIR@'}
+    else:
+        package_dir={}
 
 setup(name='JagPDF',
       version='@JAGPDF_VERSION@',
@@ -36,7 +40,7 @@ setup(name='JagPDF',
       author_email='jarda@jagpdf.org',
       url='http://www.jagpdf.org/',
       license="License :: OSI Approved :: MIT License",
-      package_dir={'': 'lib'},
+      package_dir=package_dir,
       py_modules=['jagpdf'],
       data_files=data_files,
       classifiers=["Development Status :: 5 - Production/Stable",

@@ -3,7 +3,7 @@ Changes in JagPDF 1.4.0 (?? ??? 2009)
 - Added pair kerning.
 - Added top-down mode.
 - Added showing text using glyph indices.
-- [Python] Added setuptools support.
+- [Python] Added distutils support.
 - Optimized the output of color and text font operators.
 - Fixed JPEG parsing - XXC4 mistakenly considered to be a start of a frame marker.
 - Fixed locale dependent output.

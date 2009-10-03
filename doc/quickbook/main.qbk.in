@@ -470,7 +470,7 @@ To run regression tests, do
 [lib] is implemented as a shared library. Language bindings provided with JagPDF
 expose the library functionality to individual programming languages. If you
 install JagPDF in a standard way (i.e. from source, DEBs, or Python's
-setuptools) the installation process places JagPDF files into proper locations
+distutils) the installation process places JagPDF files into proper locations
 and hence makes JagPDF available to your applications.
 
 If you install JagPDF manually then you have to ensure that the library is
@@ -540,7 +540,7 @@ C++] or [ref_hello_c_t C].
 If you use the source distribution, follow the instructions in the section
 [ref_install_source].
 
-The prebuilt all-in-one package supports setuptools, so you can install it by
+The prebuilt all-in-one package supports distutils, so you can install it by
 doing
 
 [pre
