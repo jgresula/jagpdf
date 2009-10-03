@@ -53,7 +53,6 @@ Installation:
  CMAKE_INSTALL_PREFIX    installation prefix
  INCLUDE_INSTALL_DIR     where to install JagPDF C/C++ include files
  LIB_INSTALL_DIR         where to install JagPDF C/C++ and Java libraries
- PYTHON_INSTALL_DIR      where to install Python modules
 
 Configuration:
  JAVA_HOME               path to Java JDK

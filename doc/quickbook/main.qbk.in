@@ -398,8 +398,11 @@ The following variables control the [lib] installation location.
 
  [[INCLUDE_INSTALL_DIR][where to install [lib] C/C++ include files][['include]]]
  [[LIB_INSTALL_DIR]    [where to install [lib] C/C++ and Java libraries][['lib]]]
- [[PYTHON_INSTALL_DIR] [where to install [lib] Python modules][detected during configuration]]
 ]
+
+[lib] for Python is installed using
+[@http://docs.python.org/library/distutils.html distutils] during the [^make
+install] step.
 
 [/ -------------------]
 [heading Configuration]
@@ -453,9 +456,6 @@ To run regression tests, do
   interactive CMake utilities ([^ccmake], [^cmake-gui.exe], [^cmake -i]) might work
   but were not tested.
 
-* CMake version 2.6.3 and later is recommended as this version improves support
-  for Boost libraries.
-
 
 
 [endsect]
@@ -474,7 +474,7 @@ distutils) the installation process places JagPDF files into proper locations
 and hence makes JagPDF available to your applications.
 
 If you install JagPDF manually then you have to ensure that the library is
-visible to your ?environment?.
+visible to your environment.
 
 [template runtime_tips[]
 * Linux - [url_shlib_howto]
@@ -527,7 +527,7 @@ conforming C++ compiler. [lib] implements the C++ API using a C bridge between
 your C++ application and [lib]. The C bridge works around the fact that there is
 no unified C++ ABI embraced by all compiler vendors.]
 
-Now you can proceed to your first application in [ref_hello_cpp_t
+Now proceed to your first application in [ref_hello_cpp_t
 C++] or [ref_hello_c_t C].
 
 [endsect] [/ C/C++]
@@ -537,24 +537,14 @@ C++] or [ref_hello_c_t C].
 [/ ------------------------- ]
 [python]
 
-If you use the source distribution, follow the instructions in the section
-[ref_install_source].
-
-The prebuilt all-in-one package supports distutils, so you can install it by
-doing
+If you installed from source or DEBs then your environment should be ready. The
+prebuilt all-in-one package supports distutils, so you can install it by doing
 
 [pre
 $ python setup.py install
 ]
 
-[/
-Or you can install the prebuilt package manually by extracting it into your
-system's built-in or optional site-packages directory. For more information,
-consult the Python documentation on __py_search_path_url__ and
-__py_site_specific_hook__.
-]
-
-Now you can proceed to your first [ref_hello_py_t application].
+Now proceed to your first [ref_hello_py_t application].
 
 [endsect] [/ Python]
 
@@ -584,7 +574,7 @@ $ java -classpath /usr/share/java/jagpdf.jar <your_app>
 ]
 
 
-Now you can proceed to your first [ref_hello_java_t application].
+Now proceed to your first [ref_hello_java_t application].
 
 [endsect] [/ Java]
 
