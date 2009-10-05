@@ -36,13 +36,33 @@ HOSTNAME=`hostname`
 function usage()
 {
     cat <<EOF
-usage: run_tests.sh 
+usage: run_tests.sh [remote-maching]
 
 options:
  <none yet>
 
 EOF
 }
+
+if [ -n "$1" ]; then
+    # run tests on a remote machine
+    MACHINE=$1
+    RDIR=tmp/release_test
+
+    echo "$0"
+    if [ "$0" -nt "jagpdf-tests.tgz" ]; then
+        echo "jagpdf-tests.tgz is out of date"
+        echo "run \"make_release pack-test\""
+        exit 1
+    fi
+
+    for MACHINE in $@; do
+        ssh $MACHINE "rm -rf $RDIR ; mkdir -p $RDIR"
+        scp jagpdf-tests.tgz release.out/binaries/* $MACHINE:tmp/release_test
+        ssh -t $MACHINE "cd $RDIR && tar -xzf jagpdf-tests.tgz && ./run_tests.sh"
+    done
+    exit 0
+fi
 
 
 #
@@ -137,15 +157,20 @@ function install_from_source()
     JAGPDF_SOURCE_DIR=jagpdf-$CFG_VERSION
     JAGPDF_BUILD_DIR=`cd $JAGPDF_SOURCE_DIR && pwd`.build
     JAGPDF_DIST_DIR=$JAGPDF_BUILD_DIR/distribution
+    PYENV=pyenv
 
     rm -rf $JAGPDF_BUILD_DIR
     mkdir -p $JAGPDF_BUILD_DIR
     cd  $JAGPDF_BUILD_DIR
 
+    rm -rf $PYENV
+    $VIRTUALENV $PYENV
+    source $PYENV/bin/activate
+
     env BOOST_ROOT=$JAG_BOOST_ROOT cmake \
         -DJAVA_HOME=$JAG_JAVA_HOME \
         -DCMAKE_INSTALL_PREFIX=$JAGPDF_DIST_DIR \
-        -DPYTHON_INSTALL_DIR=$JAGPDF_DIST_DIR/lib \
+        -DPYTHON_EXECUTABLE=`which python` \
         $* \
         ../$JAGPDF_SOURCE_DIR
 
@@ -156,7 +181,36 @@ function install_from_source()
     cd -
 
     do_test $JAGPDF_DIST_DIR -DCMAKE_PREFIX_PATH=$JAG_JAVA_HOME
+
+    # deactivate virtualenv
+    deactivate
 }
+
+# tests distutils for the all-in-one versions
+function test_setup_py()
+{
+    python_interpreter=$1
+    Mm=$2
+    ( # execute in a new shell due to virtenv
+        ENV_DIR=env$Mm
+        $python_interpreter $VIRTUALENV $ENV_DIR
+        source $ENV_DIR/bin/activate
+        PYEXEC=`which python`
+        cd jagpdf-$CFG_VERSION.$CFG_PLATFORM.py$Mm
+        $PYEXEC setup.py install
+        cd -
+            
+        do_test \
+            "<system>" \
+            -DJAGPDF_PY_SYSTEM=ON \
+            -DPYTHON_EXECUTABLE=$PYEXEC
+            
+            
+        deactivate
+        rm -rf $ENV_DIR
+        )
+}
+
 
 
 #
