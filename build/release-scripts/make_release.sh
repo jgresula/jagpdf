@@ -450,16 +450,40 @@ if [ -n "$CMD_DEPLOY_WEB" ]; then
     cp -r $WEB_BUILD_DIR/html/* $WEB_BUILD_DIR/html/.??* $PUBLIC_HTML_DIR
 fi
 
+function copy_to_downloads()
+{
+    if [ -z "$VERSION" ]; then
+        echo "version not set"
+        exit 1
+    fi
+    DEST=$PUBLIC_HTML_DIR/downloads/releases/$VERSION/$1
+    mkdir -p $DEST
+    shift
+    pushd $PACKAGES_DIR/  > /dev/null
+    cp $@ $DEST
+    cd $DEST
+    find . \( -name '*.bz2' -o -name '*.zip' -o -name '*.deb' \) -print \
+        | while read f; do md5sum "$f" > "$f.md5"; done
+    popd  > /dev/null
+}
+
 if [ -n "$CMD_DEPLOY_LIB" ]; then
     # copy documentation
     cp -r $DOC_BUILD_DIR/distribution/doc/* $PUBLIC_HTML_DIR
+    
+    fname=`ls -1 $PACKAGES_DIR/*.deb | head -n 1`
+    if [[ "$fname" =~ jagpdf-([0-9]+\.[0-9]+\.[0-9]+)\. ]]; then
+        VERSION="${BASH_REMATCH[1]}"
+    else
+        echo "can't detect version from file nam"
+    fi
+
     # copy archives, create sums
-    mkdir $PUBLIC_HTML_DIR/downloads
-    cp -r $PACKAGES_DIR/* $PUBLIC_HTML_DIR/downloads
-    cd $PUBLIC_HTML_DIR/downloads
-    find . \( -name '*.bz2' -o -name '*.zip' \) -print \
-        | while read f; do md5sum "$f" > "$f.md5"; sha1sum "$f" > "$f.sha1"; done
-    cd -
+    rm -rf $PUBLIC_HTML_DIR/downloads
+    copy_to_downloads deb *.linux.*.deb
+    copy_to_downloads linux *.linux.*.bz2
+    copy_to_downloads windows *.win*.zip
+    copy_to_downloads src *.src.* *.doc.*
 fi
 
 
