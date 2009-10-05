@@ -7,6 +7,9 @@ function do_build()
     build_c
     build_python
     build_java
+    cd $BUILD_DIR_RELEASE
+    make PACKAGE_source PACKAGE_source_all PACKAGE_apitests
+    cd -
     copy_packages $BUILD_DIR_RELEASE
     
     create_build_dir 2.4

@@ -381,7 +381,6 @@ if [ -n "$CMD_BUILD_CODE" ]; then
     do_build
 fi
 
-
 if [ -n "$CMD_TEST_PKG" ]; then
     mkdir -p $PKG_TEST_DIR
     cp $PACKAGES_DIR/* $PKG_TEST_DIR

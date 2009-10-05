@@ -24,7 +24,7 @@ cmake -G "NMake Makefiles" ^
 -DSWIG_EXECUTABLE=C:/usr/swigwin-1.3.39/swig.exe ^
 -DBOOST_ROOT=c:/home/jarda/code/external/boost/boost_1_38_0 ^
 -DBOOST_LIBRARYDIR=c:/home/jarda/code/external/boost/boost_1_38_0/lib ^
--DPYTHON_HOME=c:/programs/python/2.6.1 ^
+-DPYTHON_HOME=c:/programs/python26 ^
 %* ../%JAGPDF_SOURCE_DIR%
 
 if ERRORLEVEL 1 goto error
