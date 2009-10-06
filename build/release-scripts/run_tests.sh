@@ -22,15 +22,15 @@ source ~/.jagbase.cfg
 function normpath()
 {
     if [[ "`uname`" =~ "CYGWIN" ]]; then
-        cygpath -w $1
+        cygpath -w "$1"
     else
         echo $1
     fi
 }
 
-SCRIPT_DIR=`dirname $0`
-SCRIPT_DIR=`cd $SCRIPT_DIR && pwd`
-SCRIPT_DIR=`normpath $SCRIPT_DIR`
+SCRIPT_DIR="`dirname $0`"
+SCRIPT_DIR="`cd $SCRIPT_DIR && pwd`"
+SCRIPT_DIR="`normpath \"$SCRIPT_DIR\"`"
 HOSTNAME=`hostname`
 
 function usage()
@@ -220,7 +220,7 @@ function do_test()
 {
     if [ "$1" != "<system>" ]; then 
         DIST_DIR=`cd $1 && pwd`
-        DIST_DIR=`normpath $DIST_DIR`
+        DIST_DIR="`normpath \"$DIST_DIR\"`"
         DIST_DIR_ARG="-DJAG_INSTALL_PREFIX=$DIST_DIR"
     else
         DIST_DIR_ARG="-DJAG_INSTALL_PREFIX=/this/dir/does/not/exist"
@@ -228,11 +228,11 @@ function do_test()
     shift
 
     SRC_DIR=`cd apitest && pwd`
-    SRC_DIR=`normpath $SRC_DIR`
+    SRC_DIR="`normpath \"$SRC_DIR\"`"
     rm -rf ./build/*
     mkdir -p ./build
     cd ./build
-    cmake -G "Unix Makefiles" $DIST_DIR_ARG \
+    cmake -G "Unix Makefiles" "$DIST_DIR_ARG" \
         $@ \
         "$SRC_DIR"
     make apitests
@@ -298,7 +298,8 @@ cp --update -R jagpdf-$CFG_VERSION/code/test/apitest/* ./apitest/
 
 #set -x
 
-source $SCRIPT_DIR/test_$HOSTNAME.cfg
+
+source "$SCRIPT_DIR/test_$HOSTNAME.cfg"
 
 
 
