@@ -36,7 +36,7 @@ HOSTNAME=`hostname`
 function usage()
 {
     cat <<EOF
-usage: run_tests.sh [remote-maching]
+usage: run_tests.sh [remote-machines]
 
 options:
  <none yet>
@@ -45,9 +45,10 @@ EOF
 }
 
 if [ -n "$1" ]; then
-    # run tests on a remote machine
+    #
+    # run tests on remote machines
+    #
     MACHINE=$1
-    RDIR=tmp/release_test
 
     echo "$0"
     if [ "$0" -nt "jagpdf-tests.tgz" ]; then
@@ -56,10 +57,31 @@ if [ -n "$1" ]; then
         exit 1
     fi
 
+    read -s -p "password: " PWD
+    echo
+
     for MACHINE in $@; do
+        remote_system=`ssh $MACHINE uname -a`
+        echo -------------------------------------------------------------------
+        echo $remote_system
+        echo -------------------------------------------------------------------
+        if [[ "$remote_system" =~ ^CYGWIN ]]; then
+            # google for 'C1902 cygwin'
+            SSH_ARGS="-o PubkeyAuthentication=no"
+            # work around the problem with whithespace in directory names
+            RDIR=/cygdrive/c/home/jarda/tmp/release_test
+            # sshpass reads pwd from stdin
+            SSHPASS=sshpass
+        else
+            SSH_ARGS=""
+            RDIR=tmp/release_test
+            SSHPASS=
+        fi
+        
         ssh $MACHINE "rm -rf $RDIR ; mkdir -p $RDIR"
-        scp jagpdf-tests.tgz release.out/binaries/* $MACHINE:tmp/release_test
-        ssh -t $MACHINE "cd $RDIR && tar -xzf jagpdf-tests.tgz && ./run_tests.sh"
+        files=`find release.out/binaries/ -maxdepth 1 -type f`
+        scp jagpdf-tests.tgz $files $MACHINE:tmp/release_test
+        yes $PWD | $SSHPASS ssh -t $SSH_ARGS $MACHINE "cd $RDIR && tar -xzf jagpdf-tests.tgz && ./run_tests.sh"
     done
     exit 0
 fi
