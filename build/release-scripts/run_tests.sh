@@ -80,7 +80,7 @@ if [ -n "$1" ]; then
         
         ssh $MACHINE "rm -rf $RDIR ; mkdir -p $RDIR"
         files=`find release.out/binaries/ -maxdepth 1 -type f`
-        scp jagpdf-tests.tgz $files $MACHINE:tmp/release_test
+        scp jagpdf-tests.tgz $files $MACHINE:$RDIR
         yes $PWD | $SSHPASS ssh -t $SSH_ARGS $MACHINE "cd $RDIR && tar -xzf jagpdf-tests.tgz && ./run_tests.sh"
     done
     exit 0
