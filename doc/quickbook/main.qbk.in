@@ -527,7 +527,7 @@ conforming C++ compiler. [lib] implements the C++ API using a C bridge between
 your C++ application and [lib]. The C bridge works around the fact that there is
 no unified C++ ABI embraced by all compiler vendors.]
 
-Now proceed to your first application in [ref_hello_cpp_t
+Now you can proceed to your first application in [ref_hello_cpp_t
 C++] or [ref_hello_c_t C].
 
 [endsect] [/ C/C++]
@@ -544,7 +544,7 @@ prebuilt all-in-one package supports distutils, so you can install it by doing
 $ python setup.py install
 ]
 
-Now proceed to your first [ref_hello_py_t application].
+Now you can proceed to your first [ref_hello_py_t application].
 
 [endsect] [/ Python]
 
@@ -574,7 +574,7 @@ $ java -classpath /usr/share/java/jagpdf.jar <your_app>
 ]
 
 
-Now proceed to your first [ref_hello_java_t application].
+Now you can proceed to your first [ref_hello_java_t application].
 
 [endsect] [/ Java]
 
@@ -1643,7 +1643,7 @@ preferred.]
 Advanced layout engines (e.g. [@http://userguide.icu-project.org/layoutengine
 ICU Layout Engine]) usually output glyph indices instead of Unicode code
 points. The reason is that a font can contain glyphs that do not have
-corresponding Unicode code points. A typical example are
+correspoding Unicode code points. A typical example are
 [@http://en.wikipedia.org/wiki/Complex_script complex scripts] fonts.
 
 Let's show an example of how [lib] supports showing of text specified by glyph
