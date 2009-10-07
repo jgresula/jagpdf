@@ -302,7 +302,7 @@ function remove_deb()
     sudo dpkg -r $1
 }
 
-CFG_VERSION=1.4.0
+CFG_VERSION=1.5.0
 
 
 if [ ! -d jagpdf-$CFG_VERSION.all ]; then
