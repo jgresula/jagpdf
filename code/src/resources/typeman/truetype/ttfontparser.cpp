@@ -139,7 +139,12 @@ void TTFontParser::read_table(TTTableType type, void* dest, size_t length)
     }
 
     if (m_table_dict[type].m_check_sum != sum)
-        throw exception_invalid_input(msg_tt_table_checksum_failed()) << JAGLOC ;
+    {
+        // Originally, an exception was thrown here, but this was too
+        // restrictive as some fonts (e.g. included in Debian distributions)
+        // have wrong checksums but otherwise are ok.
+        TRACE_WRN << "invalid ttf table checksum";
+    }
 }
 
 
