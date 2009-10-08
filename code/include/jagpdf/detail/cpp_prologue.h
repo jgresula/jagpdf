@@ -46,7 +46,7 @@ namespace detail
       {
           Char const* start=jag_error_msg();
           Char const* end=start;
-          while(*++end);
+          while(*++end) {}
           m_msg = new Char[end-start+1];
           memcpy(m_msg, start, end-start+1);
       }
