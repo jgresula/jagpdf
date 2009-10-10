@@ -88,6 +88,8 @@ set(tests
   topdown2
   topdown3
   glyph_index
+  dark_reader
+  compressed_pattern
   # tickets
   symbolswidth
   t0068
