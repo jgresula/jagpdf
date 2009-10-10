@@ -949,16 +949,6 @@ public:
     //                     UNDOCUMENTED METHODS
     //
 
-    /// Places the command verbatim into the content stream.
-    ///
-    /// For PDF experts. Use only for experimental purposes or if there really
-    /// is not any other way to achieve your goal.
-    ///
-    /// Using this function might cause undefined effects with the future
-    /// library versions. Especially if it is a part of a sequence of other
-    /// canvas functions.
-    ///
-    ///
     virtual void scaled_image(IImage* image, Double x, Double y, Double sx, Double sy) API_ATTR("undocumented") = 0;
     virtual void alpha_is_shape(Int bool_val) API_ATTR("undocumented") = 0;
 };
