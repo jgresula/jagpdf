@@ -31,9 +31,19 @@ def test_main(argv=None):
     canvas = doc.page().canvas()
     canvas.color_space_pattern('f')
     canvas.pattern('f', pattern)
-    canvas.rectangle(20, 20, 400, 400)
+    canvas.rectangle(0, 0, 200, 200)
+    canvas.rectangle(200, 200, 200, 200)
     canvas.path_paint('f')
     doc.page_end()
+
+    doc.page_start(400, 400)
+    canvas = doc.page().canvas()
+    canvas.color_space_pattern('f')
+    canvas.pattern('f', pattern)
+    canvas.rectangle(0, 0, 200, 200)
+    canvas.path_paint('f')
+    doc.page_end()
+
     doc.finalize()
 
 if __name__ == '__main__':
