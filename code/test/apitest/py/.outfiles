@@ -88,8 +88,6 @@ adobefont_reusing.pdf
 adobefont_grstate.pdf
 kerning2.pdf
 glyph_index.pdf
-
-# to be checked
 topdown_on.pdf
 topdown2_on.pdf
 topdown2_on_enc.pdf
@@ -97,6 +95,9 @@ topdown3.pdf
 jagpdf_doc_glyph_indices.pdf
 dark_reader.pdf
 compressed_pattern.pdf
+
+# to be checked
+
 
 # -----------------------------------------------------------------
 #            encrypted files
