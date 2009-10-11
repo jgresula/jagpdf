@@ -16,8 +16,7 @@
 
 #include <interfaces/streams.h>
 #include <core/jstd/memory_stream.h>
-#include <boost/shared_ptr.hpp>
-#include <boost/logic/tribool.hpp>
+#include <boost/scoped_ptr.hpp>
 #include <boost/function.hpp>
 #include <vector>
 
@@ -25,7 +24,9 @@ namespace jag {
 namespace pdf {
 class DocWriterImpl;
 
+///
 /// pdf content stream implementation
+///
 class ContentStream
     : public IndirectObjectImpl
 {
@@ -38,7 +39,7 @@ public:
     ObjFmtBasic& object_writer();
     ObjFmtBasic const& object_writer() const;
     bool is_empty() const;
-    void copy_to(ContentStream& other) const;
+    void copy_to(ContentStream& other);
 
     /// allows to add data to stream dictionary
     typedef boost::function<void (ObjFmt& fmt)> callback_t;
@@ -49,22 +50,29 @@ private: // IndirectObjectImpl
     bool on_before_output_definition();
 
 private:
+    void close_filters();
+    void delete_filters();
     static char const*const s_filter_names[];
-    typedef std::pair<boost::shared_ptr<ISeqStreamOutputControl>, StreamFilter> FilterEntry;
 
     enum State
     {
         INITIAL =          0,
-        OUTPUTTED =        1U << 0,
-        NON_EMPTY_STREAM = 1U << 1,
+        CLOSED_FILTERS =   1U << 1,
+        OUTPUTTED =        1U << 2,
+        NON_EMPTY_STREAM = 1U << 3,
     };
 
-    jstd::MemoryStreamOutput          m_stream;
-    unsigned int                         m_state;
-    std::vector<FilterEntry>             m_filters;
-    boost::shared_ptr<ISeqStreamOutput>  m_top_stream;
+private:    
+    unsigned m_state;
+    // 'physical' stream with content data
+    jstd::MemoryStreamOutput m_stream;
+    // stream used to write data (top of the stream stack)
+    ISeqStreamOutput* m_top_stream;
+    // owns used filters
+    std::vector<ISeqStreamOutputControl*>  m_filters;
+    // ids of associated filters
     std::vector<StreamFilter>            m_filter_ids;
-    boost::shared_ptr<ObjFmtBasic>       m_object_writer;
+    boost::scoped_ptr<ObjFmtBasic>       m_object_writer;
     callback_t                           m_writer_callback;
 };
 

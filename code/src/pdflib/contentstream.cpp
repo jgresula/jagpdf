@@ -10,11 +10,11 @@
 #include "objfmt.h"
 #include "docwriterimpl.h"
 
-#include <core/generic/null_deleter.h>
 #include <core/jstd/zlib_stream.h>
 #include <core/jstd/file_stream.h>
 #include <core/jstd/memory_stream.h>
 #include <core/jstd/streamhelpers.h>
+#include <core/errlib/errlib.h>
 
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
@@ -37,7 +37,7 @@ char const*const ContentStream::s_filter_names[] = { "FlateDecode", "DCTDecode" 
 ContentStream::ContentStream(DocWriterImpl& doc, StreamFilter const* filters, int num_filters)
     : IndirectObjectImpl(doc)
     , m_state(INITIAL)
-    , m_top_stream(&m_stream, null_deleter)
+    , m_top_stream(&m_stream)
 {
     if (num_filters)
     {
@@ -45,22 +45,28 @@ ContentStream::ContentStream(DocWriterImpl& doc, StreamFilter const* filters, in
         m_filter_ids.reserve(num_filters);
         for(int i=num_filters-1; i>=0; --i)
         {
-            boost::shared_ptr<ISeqStreamOutputControl> new_filter;
+            std::auto_ptr<ISeqStreamOutputControl> new_filter;
             switch (filters[i])
             {
             case STREAM_FILTER_FLATE:
                 new_filter.reset(new ZLibStreamOutput(*m_top_stream));
                 break;
+                
+            case STREAM_FILTER_DCTDECODE:
+                // =JPEG, no actual filter is instantiated; the client sends
+                // already encoded data
+                break;
+                
             default:
-                ;
+                JAG_INTERNAL_ERROR;
             }
 
             m_filter_ids.push_back(filters[i]);
 
-            if (new_filter)
+            if (new_filter.get())
             {
-                m_top_stream = new_filter;
-                m_filters.push_back(std::make_pair<>(new_filter, filters[i]));
+                m_top_stream = new_filter.get();
+                m_filters.push_back(new_filter.release());
             }
         }
     }
@@ -74,14 +80,29 @@ ContentStream::ContentStream(DocWriterImpl& doc, StreamFilter const* filters, in
 //
 ContentStream::~ContentStream()
 {
-    // delete filters in reverse order as they are chained
-    m_top_stream.reset();
-    std::size_t cnt=m_filters.size();
-    if (cnt > 0 )
+    delete_filters();
+}
+
+//
+//
+//
+void ContentStream::delete_filters()
+{
+    // Delete filters in reverse order as they are chained and redirect
+    // m_top_stream to the physical stream.
+    //
+    // Upon finishing this function:
+    // - m_object_writer can't be used as it might be using a dangling pointer
+    // - data written to this content stream are not encoded
+    //
+    m_top_stream = &m_stream;
+    std::size_t cnt = m_filters.size();
+    if (cnt > 0)
     {
         while(cnt--)
-            m_filters[cnt].first.reset();
+            delete m_filters[cnt];
     }
+    m_filters.clear();
 }
 
 
@@ -115,20 +136,31 @@ bool ContentStream::on_before_output_definition()
     return false;
 }
 
+//
+//
+//
+void ContentStream::close_filters()
+{
+    if (!(m_state & CLOSED_FILTERS))
+    {
+        for (size_t i=0; i<m_filters.size(); ++i)
+            m_filters[i]->close();
+
+        m_state |= CLOSED_FILTERS;
+    }
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 void ContentStream::on_output_definition()
 {
     m_state |= OUTPUTTED;
 
-    ObjFmt& writer = IndirectObjectImpl::object_writer();
-
-    for (size_t i=0; i<m_filters.size(); ++i)
-        m_filters[i].first->close();
-
+    close_filters();
 
     int stream_length = static_cast<int>(m_stream.tell());
-
+    ObjFmt& writer = IndirectObjectImpl::object_writer();
+    
     writer.dict_start()
         .dict_key("Length").space().output(stream_length);
 
@@ -188,10 +220,28 @@ void ContentStream::set_writer_callback(callback_t const& writer)
 //
 // Copies the content stream bytes and the state of the object writer.
 //
-// This is intended for taking a *read-only* snapshot of the content stream.
+// This is intended for taking a *read-only* snapshot of the content
+// stream. Upon finishing 'this' becomes read-only as well.
+//
+// It is assumed that the other stream has the same filter stack.
 // 
-void ContentStream::copy_to(ContentStream& other) const
+void ContentStream::copy_to(ContentStream& other)
 {
+    JAG_PRECONDITION(m_filter_ids.size() == other.m_filter_ids.size());
+#ifdef JAG_DEBUG
+    for(size_t i=0; i<m_filter_ids.size(); ++i)
+        JAG_PRECONDITION(m_filter_ids[i] == other.m_filter_ids[i]);
+#endif
+    
+    // Close (i.e. flush) filters so the any pending data (e.g. in zlib) are
+    // writen to the physical stream.
+    close_filters();
+
+    // Delete the filter stack in the other content stream since we are going to
+    // copy raw data.
+    other.delete_filters();
+
+    // Copy stream data & object writer state
     MemoryStreamInput in_stream(m_stream.data(), m_stream.tell(), false);
     copy_stream(in_stream, other.stream());
     object_writer().copy_to(other.object_writer());

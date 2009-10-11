@@ -62,8 +62,7 @@ class ISeqStreamOutputControl : public ISeqStreamOutput
 public:
     virtual void close() = 0;
 
-protected:
-    ~ISeqStreamOutputControl() {}
+    virtual ~ISeqStreamOutputControl() {}
 };
 
 /**

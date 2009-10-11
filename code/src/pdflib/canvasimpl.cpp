@@ -848,7 +848,7 @@ void CanvasImpl::arc_to(Double x, Double y, Double rx, Double ry,
 //
 // This is intended for taking a *read-only* snapshot of the canvas.
 // 
-void CanvasImpl::copy_to(CanvasImpl& other) const
+void CanvasImpl::copy_to(CanvasImpl& other)
 {
     m_content_stream->copy_to(other.content_stream());
     other.m_resource_list = m_resource_list;
