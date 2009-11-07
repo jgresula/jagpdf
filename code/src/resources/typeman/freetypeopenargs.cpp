@@ -94,5 +94,11 @@ int FTOpenArgs::data_size(int index) const
     return m_data_size[index];
 }
 
+char const* FTOpenArgs::filename(int index) const
+{
+    JAG_PRECONDITION(index >=0 && index < m_num_records);
+    return m_filename[index].c_str();
+}
+
 
 }} // namespace jag::resources

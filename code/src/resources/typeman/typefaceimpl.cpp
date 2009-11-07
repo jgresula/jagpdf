@@ -382,16 +382,25 @@ TypefaceImpl::subset_font_program(UsedGlyphs const& glyphs,
 
     if (FACE_TRUE_TYPE == m_type)
     {
-        std::auto_ptr<IStreamInput> font_prg(font_program(0,options));
-        truetype::TTFont font(*font_prg);
+        try
+        {
+            std::auto_ptr<IStreamInput> font_prg(font_program(0,options));
+            truetype::TTFont font(*font_prg);
 
-        boost::shared_ptr<MemoryStreamOutput> mem_out(new MemoryStreamOutput);
-        bool include_cmap = !(options & DONT_INCLUDE_CMAP);
+            boost::shared_ptr<MemoryStreamOutput> mem_out(new MemoryStreamOutput);
+            bool include_cmap = !(options & DONT_INCLUDE_CMAP);
 
-        font.make_subset(*mem_out, glyphs, include_cmap);
-
-        return std::auto_ptr<IStreamInput>(
-            new MemoryStreamInputFromOutput(mem_out));
+            font.make_subset(*mem_out, glyphs, include_cmap);
+            
+            return std::auto_ptr<IStreamInput>(
+                new MemoryStreamInputFromOutput(mem_out));
+        }
+        catch(exception& exc)
+        {
+            // append the font file path to the exception
+            exc << io_object_info(m_open_args->filename(0));
+            throw;
+        }
     }
 
     JAG_INTERNAL_ERROR;

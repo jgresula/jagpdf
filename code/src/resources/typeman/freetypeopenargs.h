@@ -35,6 +35,7 @@ public:
     int num_records() const { return m_num_records; }
     FT_Open_Args* get_args(int index);
     int data_size(int index) const;
+    char const* filename(int index) const;
 
 private:
     void insert(int index, Char const* filename);
