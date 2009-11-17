@@ -121,7 +121,7 @@ void TTFont::make_subset(ISeqStreamOutput& subset_font,
     if (!font_maker.has_outlines())
     {
         // search through the first 255 glyph slots for one with glyph outlines
-        int i = 0;
+        UInt16 i = 0;
         for(; i<255; ++i)
         {
             m_ttparser.load_glyph(i);
