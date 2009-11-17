@@ -180,6 +180,7 @@ JAG_EXPORT jag_error JAG_CALLSPEC jag_Document_destination_define_reserved(jag_D
 JAG_EXPORT jag_error JAG_CALLSPEC jag_Document_finalize(jag_Document hobj);
 JAG_EXPORT jag_error JAG_CALLSPEC jag_Document_page_end(jag_Document hobj);
 JAG_EXPORT jag_error JAG_CALLSPEC jag_Document_page_start(jag_Document hobj, jag_Double width, jag_Double height);
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Document_title(jag_Document hobj, jag_Char const* title);
 JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_alternate_for_printing(jag_ImageDef hobj, jag_Image image);
 JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_bits_per_component(jag_ImageDef hobj, jag_UInt bpc);
 JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_color_key_mask(jag_ImageDef hobj, jag_UInt const* array_in, jag_UInt length);

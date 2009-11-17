@@ -90,6 +90,7 @@ set(tests
   glyph_index
   dark_reader
   compressed_pattern
+  doctitle
   # tickets
   symbolswidth
   t0068

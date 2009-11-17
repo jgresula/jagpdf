@@ -2360,7 +2360,7 @@ Metadata | Document Information Dictionary].
 [table
  [[Name][Description]]
  
- [[info.title][The document's title.]]
+ [[info.title][The document's title. See also [code_document_title].]]
  [[info.author][The name of the author of this document.]]
  [[info.subject][The subject of the document]]
  [[info.keywords][Keywords associated with the document.]]

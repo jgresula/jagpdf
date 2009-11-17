@@ -981,6 +981,15 @@ ICanvas* DocWriterImpl::canvas_create() const
 //
 //
 // 
+void DocWriterImpl::title(char const* title)
+{
+    IProfileInternal& profile = m_pimpl->m_exec_context.writable_config();
+    profile.set("info.title", title);
+}
+
+//
+//
+// 
 bool DocWriterImpl::is_topdown() const
 {
     return m_pimpl->m_is_topdown;

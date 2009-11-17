@@ -95,7 +95,7 @@ public: //IDocument
     ImageMaskID register_image_mask(boost::intrusive_ptr<IImageMask> image_mask);
     Int version() const;
     ICanvas* canvas_create() const;
-
+    void title(char const* title);
 public:
     DocWriterImpl(
         boost::shared_ptr<ISeqStreamOutputControl> out_stream

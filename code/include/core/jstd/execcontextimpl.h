@@ -19,6 +19,9 @@ class ExecContextImpl
 {
 public: //IExecContext
     IProfileInternal const& config() const { return *m_config;  }
+    
+    // use with care, profile should remain const for most of the options
+    IProfileInternal& writable_config() const { return *m_config;  }
 
 public:
     explicit ExecContextImpl(IProfileInternal const& cfg);

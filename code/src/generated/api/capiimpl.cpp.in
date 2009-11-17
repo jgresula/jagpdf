@@ -1348,6 +1348,18 @@ JAG_EXPORT jag_error JAG_CALLSPEC jag_Document_page_start(jag_Document hobj, jag
     }
 }
 
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Document_title(jag_Document hobj, jag_Char const* title)
+{
+    try {
+        jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
+        this__->title(title);
+        return 0;
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return exc.errcode();
+    }
+}
+
 JAG_EXPORT jag_error JAG_CALLSPEC jag_ImageDef_alternate_for_printing(jag_ImageDef hobj, jag_Image image)
 {
     try {

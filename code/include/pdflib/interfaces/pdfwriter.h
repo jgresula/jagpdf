@@ -545,6 +545,16 @@ public:
     /// @version 1.1
     virtual ICanvas* canvas_create() const = 0;
 
+    /// Sets a document title.
+    ///
+    /// It is an alternative to the info.title jag::IProfile option. Use this
+    /// function if the document title is unknown prior to document creation.
+    ///
+    /// @version 1.5
+    virtual void title(Char const* title) = 0;
+
+    
+
 
 protected:
     ~IDocument() {}
