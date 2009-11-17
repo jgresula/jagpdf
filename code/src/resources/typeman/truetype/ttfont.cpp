@@ -12,6 +12,7 @@
 #include <resources/interfaces/typeface.h>
 #include <core/generic/null_deleter.h>
 #include <core/generic/assert.h>
+#include <core/jstd/tracer.h>
 #include <map>
 
 using namespace boost::integer;
@@ -119,12 +120,25 @@ void TTFont::make_subset(ISeqStreamOutput& subset_font,
     // e.g. Reader or certain FreeType versions.
     if (!font_maker.has_outlines())
     {
-        m_ttparser.load_glyph(0);
-        font_maker.add_glyph(m_ttparser.current_glyph_data(),
-                             m_ttparser.current_glyph_size(),
-                             0);
-    }
+        // search through the first 255 glyph slots for one with glyph outlines
+        int i = 0;
+        for(; i<255; ++i)
+        {
+            m_ttparser.load_glyph(i);
+            if (m_ttparser.current_glyph_size())
+            {
+                font_maker.add_glyph(m_ttparser.current_glyph_data(),
+                                     m_ttparser.current_glyph_size(),
+                                     i);
+                break;
+            }
+        }
 
+        if (i > 255) {
+            TRACE_WRN << "font subset has an empty glyph table";
+        }
+    }
+    
 
     TTFontParser::TableData table_data(m_ttparser.load_table(TT_MAXP));
     font_maker.add_table(TT_MAXP, table_data.first, table_data.second);
