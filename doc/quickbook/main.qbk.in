@@ -1739,7 +1739,7 @@ page location and a zoom factor. It can be associated with outline
 items (see section [ref_guide_interactive_docoutline]) or annotations
 (see section [ref_guide_interactive_annots]).
 
-Functions working with destinations accepts two types of destination:
+Functions working with destinations accept two types of destination:
 
 * a text string defining the destination
 
