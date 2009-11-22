@@ -122,7 +122,8 @@ void TTFont::make_subset(ISeqStreamOutput& subset_font,
     {
         // search through the first 255 glyph slots for one with glyph outlines
         UInt16 i = 0;
-        for(; i<255; ++i)
+        const UInt16 NGLYPHS = 255;
+        for(; i < NGLYPHS; ++i)
         {
             m_ttparser.load_glyph(i);
             if (m_ttparser.current_glyph_size())
@@ -134,7 +135,7 @@ void TTFont::make_subset(ISeqStreamOutput& subset_font,
             }
         }
 
-        if (i > 255) {
+        if (i >= NGLYPHS) {
             TRACE_WRN << "font subset has an empty glyph table";
         }
     }
