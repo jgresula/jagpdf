@@ -49,6 +49,7 @@ namespace detail
           while(*++end) {}
           m_msg = new Char[end-start+1];
           memcpy(m_msg, start, end-start+1);
+          jag_error_reset();
       }
 
       void addref() {
