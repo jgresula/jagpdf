@@ -25,7 +25,7 @@
 #include <core/jstd/memory_stream.h>
 #include <interfaces/streams.h>
 #include <core/generic/minmax.h>
-
+#include <core/generic/checked_cast.h>
 #include <boost/scoped_array.hpp>
 
 #include <ctime>
@@ -363,6 +363,25 @@ bool is_ascii7(jag::Char const* txt, size_t length)
     return txt == end;
 }
 
+  void hexlify_data(ISeqStreamOutput& out_stream, Char const* txt, size_t length)
+  {
+      const int buffer_length = 128;
+      Char buffer[buffer_length+1];
+
+      for(size_t j=0; j<length;)
+      {
+          Char *buffer_next = buffer;
+          while((j<length) && (buffer+buffer_length!=buffer_next))
+          {
+              jstd::snprintf(buffer_next, 3, "%02x",
+                             static_cast<unsigned int>(
+                                 static_cast<unsigned char>(txt[j++])));
+              buffer_next+=2;
+          }
+          out_stream.write(buffer, static_cast<UInt>(buffer_next-buffer));
+      }
+  }
+
 } //namespace anonymous
 
 
@@ -392,20 +411,8 @@ void ObjFmtBasic::text_string_hex_internal(ISeqStreamOutput& out_stream, Char co
     if (!length)
         return;
 
-    const int buffer_length = 128;
-    Char buffer[buffer_length+1];
-
     m_stream->write("<", 1);
-    for(size_t j=0; j<length;)
-    {
-        Char *buffer_next = buffer;
-        while((j<length) && (buffer+buffer_length!=buffer_next))
-        {
-            jstd::snprintf(buffer_next, 3, "%02x", static_cast<unsigned int>(static_cast<unsigned char>(txt[j++])));
-            buffer_next+=2;
-        }
-        out_stream.write(buffer, static_cast<UInt>(buffer_next-buffer));
-    }
+    hexlify_data(out_stream, txt, length);
     m_stream->write(">", 1);
 }
 
@@ -871,22 +878,10 @@ ObjFmtBasic& ObjFmtBasic::text_string_hex(Char const* txt, size_t length)
 
 
         // hexlify encrypted data
-        const int buffer_length = 128;
-        Char buffer[buffer_length+1];
-        Byte const* encrypted = mem_stream.shared_data().get();
-
+        Char const* encrypted =
+            jag_reinterpret_cast<Char const*>(mem_stream.shared_data().get());
         m_stream->write("<", 1);
-        for(size_t j=0; j<length;)
-        {
-            Char *buffer_next = buffer;
-            while((j<length) && (buffer+buffer_length!=buffer_next))
-            {
-                jstd::snprintf(buffer_next, 3, "%02x",
-                               static_cast<unsigned int>(encrypted[j++]));
-                buffer_next+=2;
-            }
-            m_stream->write(buffer, static_cast<UInt>(buffer_next-buffer));
-        }
+        hexlify_data(*m_stream, encrypted, length);
         m_stream->write(">", 1);
     }
     return *this;
