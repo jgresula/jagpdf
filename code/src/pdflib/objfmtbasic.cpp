@@ -22,6 +22,7 @@
 #include <core/jstd/tracer.h>
 #include <core/jstd/transaffine.h>
 #include <core/generic/floatpointtools.h>
+#include <core/jstd/memory_stream.h>
 #include <interfaces/streams.h>
 #include <core/generic/minmax.h>
 
@@ -849,7 +850,45 @@ ObjFmtBasic& ObjFmtBasic::text_string(Char const* txt)
 */
 ObjFmtBasic& ObjFmtBasic::text_string_hex(Char const* txt, size_t length)
 {
-    text_string_hex_internal(*m_enc_stream, txt, length);
+    if (!length)
+        return *this;
+
+    if (!m_enc_stream_ctrl) {
+        text_string_hex_internal(*m_stream, txt, length);
+    }
+    else {
+        //
+        // encrypt the string to a temporary buffer and hexlify the buffer to
+        // the output strem as a byte string
+        //
+
+        // encrypt the string
+        MemoryStreamOutput mem_stream;
+        m_enc_stream_ctrl->push_stream(mem_stream);
+        ON_BLOCK_EXIT_OBJ(*m_enc_stream_ctrl, &EncryptionStream::pop_stream);
+        m_enc_stream_ctrl->write(txt, length);
+        JAG_ASSERT(length == mem_stream.tell());
+
+
+        // hexlify encrypted data
+        const int buffer_length = 128;
+        Char buffer[buffer_length+1];
+        Byte const* encrypted = mem_stream.shared_data().get();
+
+        m_stream->write("<", 1);
+        for(size_t j=0; j<length;)
+        {
+            Char *buffer_next = buffer;
+            while((j<length) && (buffer+buffer_length!=buffer_next))
+            {
+                jstd::snprintf(buffer_next, 3, "%02x",
+                               static_cast<unsigned int>(encrypted[j++]));
+                buffer_next+=2;
+            }
+            m_stream->write(buffer, static_cast<UInt>(buffer_next-buffer));
+        }
+        m_stream->write(">", 1);
+    }
     return *this;
 }
 

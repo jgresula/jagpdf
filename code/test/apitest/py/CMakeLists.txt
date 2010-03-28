@@ -95,6 +95,7 @@ set(tests
   symbolswidth
   t0068
   t0115
+  t0133
 )
 
 # add_test(api_py_check_remove ${CMAKE_COMMAND} -E remove ${TEST_PDF_OUTPUT_DIR}/*.pdf)
