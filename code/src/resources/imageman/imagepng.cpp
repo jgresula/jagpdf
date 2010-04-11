@@ -17,6 +17,7 @@
 #include <msg_resources.h>
 #include <core/jstd/memory_stream.h>
 #include <core/jstd/streamhelpers.h>
+#include <core/jstd/tracer.h>
 #include <core/errlib/msg_writer.h>
 #include <core/errlib/msgcodes.h>
 #include <core/errlib/errlib.h>
@@ -473,10 +474,6 @@ void ImagePNG::read_color_key_mask(png_uint_32 valid)
         png_color_16p trans_values=0;
         png_get_tRNS(m_png, m_png_info, &trans_entries, &num_trans, &trans_values);
 
-
-        if (num_trans > 1)
-            write_message(WRN_PNG_MORE_THEN_ONE_COLOR_KEY_MASK);
-
         if (num_trans)
         {
             UInt mask[ColorKeyMaskArray::MAX_ITEMS];
@@ -491,20 +488,50 @@ void ImagePNG::read_color_key_mask(png_uint_32 valid)
                 mask[mask_len++] = trans_values[0].green;
                 mask[mask_len++] = trans_values[0].blue;
                 mask[mask_len++] = trans_values[0].blue;
+                m_color_key_mask.reset(mask, mask_len);
                 break;
 
             case PNG_COLOR_TYPE_GRAY:
                 mask[mask_len++] = trans_values[0].gray;
                 mask[mask_len++] = trans_values[0].gray;
+                m_color_key_mask.reset(mask, mask_len);
                 break;
 
-            case PNG_COLOR_TYPE_PALETTE:
-                mask[mask_len++] = trans_values[0].index;
-                mask[mask_len++] = trans_values[0].index;
+            case PNG_COLOR_TYPE_PALETTE: {
+                // For each palette entry there is a value from {0,..,255}. 0
+                // means fully off, 255 means fully on. If there are multiple
+                // 0's or a value from {1,..,254} then a full alpha channel is
+                // needed (not implemented).
+                enum { INDEX_INIT = -1, NEEDS_ALPHA = -2 };
+                int index = INDEX_INIT;
+                for (int i=0; i<num_trans; ++i) {
+                    if (trans_entries[i] == 0) { // fully off
+                        if (index == INDEX_INIT) {
+                            index = i;
+                        }
+                        else {
+                            index = NEEDS_ALPHA;
+                            break;
+                        }
+                    } else if (trans_entries[i] != 255) { // not fully on
+                        index = NEEDS_ALPHA;
+                        break;
+                    }
+                }
+                if (index >= 0)
+                {
+                    // a color key mask can be used
+                    mask[mask_len++] = index;
+                    mask[mask_len++] = index;
+                    m_color_key_mask.reset(mask, mask_len);
+                }
+                else if (index == NEEDS_ALPHA)
+                {
+                    TRACE_WRN << "Not implemented: alpha channel from a color key mask.";
+                }
+            }
                 break;
             }
-
-            m_color_key_mask.reset(mask, mask_len);
         }
     }
 }
