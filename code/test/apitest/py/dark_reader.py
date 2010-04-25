@@ -25,8 +25,11 @@ def test_main(argv=None):
     profile.set("doc.topdown", "1")
     profile.set("doc.compressed", "0")
     doc = testlib.create_test_doc(argv, 'dark_reader.pdf', profile)
-    appleRGB = 'Apple RGB'
-    doc.add_output_intent(icc_path('AppleRGB.icc'), appleRGB, appleRGB, None, 3)
+
+    #http://www.microsoft.com/prophoto/downloads/colorcontrol.aspx
+    icc_str = 'sRGB'
+    doc.add_output_intent(icc_str, icc_path('sRGB Color Space Profile.icm'), icc_str, 3, None)
+    
     img = doc.image_load_file(image_path('logo.png'))
     doc.page_start(8.3 * 72.0, 11.7 * 72.0)
     canvas = doc.page().canvas()
