@@ -16,11 +16,17 @@ import jag.testlib as testlib
 def image_path(name):
     return os.path.expandvars('${JAG_TEST_RESOURCES_DIR}/images/') + name
 
+def icc_path(name):
+    return os.path.expandvars('${JAG_TEST_RESOURCES_DIR}/icc/') + name
+    
+
 def test_main(argv=None):
     profile = jagpdf.create_profile()
     profile.set("doc.topdown", "1")
     profile.set("doc.compressed", "0")
     doc = testlib.create_test_doc(argv, 'dark_reader.pdf', profile)
+    appleRGB = 'Apple RGB'
+    doc.add_output_intent(icc_path('AppleRGB.icc'), appleRGB, appleRGB, None, 3)
     img = doc.image_load_file(image_path('logo.png'))
     doc.page_start(8.3 * 72.0, 11.7 * 72.0)
     canvas = doc.page().canvas()

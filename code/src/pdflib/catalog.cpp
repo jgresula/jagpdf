@@ -114,7 +114,7 @@ void PDFCatalog::write_output_intent()
         fmt.dict_key("OutputCondition").text_string(m_output_intent->output_condition);
 
     if (is_valid(m_output_intent->profile_ref))
-        fmt.dict_key("DestOutputProfile").ref(m_output_intent->profile_ref);
+        fmt.dict_key("DestOutputProfile").space().ref(m_output_intent->profile_ref);
         
     fmt
         .dict_end()
