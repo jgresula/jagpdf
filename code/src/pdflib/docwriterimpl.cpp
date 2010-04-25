@@ -1008,8 +1008,8 @@ void DocWriterImpl::add_output_intent(Char const* iccpath,
     std::auto_ptr<output_intent_t> output_intent(new output_intent_t);
 
 
-    output_intent->icc_stream.reset(new FileStreamInput(iccpath));
-
+    if (!is_empty(iccpath))
+        output_intent->icc_stream.reset(new FileStreamInput(iccpath));
     
     output_intent->output_condition_id = output_condition_id;
     output_intent->ncomponents = ncomponents;

@@ -316,7 +316,7 @@ bool PDFCatalog::on_before_output_definition()
 
 
     // output intent
-    if (m_output_intent)
+    if (m_output_intent && m_output_intent->icc_stream)
         output_icc_profile(doc(), *m_output_intent);
 
     return true;
