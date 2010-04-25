@@ -12,14 +12,17 @@
 #include "docwriterimpl.h"
 #include "destination.h"
 #include "generic_dictionary.h"
+#include "genericcontentstream.h"
 #include <core/jstd/tracer.h>
 #include <boost/spirit/include/classic_symbols.hpp>
+#include <boost/bind.hpp>
 #include <interfaces/execcontext.h>
 #include <interfaces/configinternal.h>
 #include <core/errlib/except.h>
 #include <core/jstd/tracer.h>
 #include <core/jstd/optionsparser.h>
 #include <msg_jstd.h>
+#include <core/jstd/streamhelpers.h>
 
 using namespace boost;
 using namespace jag::jstd;
@@ -38,6 +41,24 @@ namespace
   {
       if (is_valid(dict))
           writer.dict_key(kwd).space().ref(dict);
+  }
+
+  void output_icc_dict(int ncomponents, ObjFmt& fmt)
+  {
+      // callback - enriches stream's dict by iccbased color space specifics
+      fmt.dict_key("N").space().output(ncomponents);
+  }
+  
+  void output_icc_profile(DocWriterImpl& doc, output_intent_t& intent)
+  {
+      // output the stream with icc profile
+      GenericContentStream cstream(
+          doc
+          , bind(&output_icc_dict, intent.ncomponents, _1));
+      
+      copy_stream(*intent.icc_stream, cstream.out_stream());
+      intent.profile_ref = IndirectObjectRef(cstream);
+      cstream.output_definition();
   }
 }
 
@@ -64,7 +85,40 @@ void PDFCatalog::on_output_definition()
     output_dict_ref(writer, m_viewer_prefs, "ViewerPreferences");
 
     initial_page_view();
+    write_output_intent();
     writer.dict_end();
+}
+
+//
+//
+// 
+void PDFCatalog::write_output_intent()
+{
+    if (!m_output_intent)
+        return;
+    
+    ObjFmt& fmt = object_writer();
+
+    fmt
+        .dict_key("OutputIntents")
+        .array_start()
+        .dict_start()
+        .dict_key("S").name("GTS_PDFX")
+        .dict_key("OutputConditionIdentifier")
+        .text_string(m_output_intent->output_condition_id);
+
+    if (!m_output_intent->info.empty())
+        fmt.dict_key("Info").text_string(m_output_intent->info);
+
+    if (!m_output_intent->output_condition.empty())
+        fmt.dict_key("OutputCondition").text_string(m_output_intent->output_condition);
+
+    if (is_valid(m_output_intent->profile_ref))
+        fmt.dict_key("DestOutputProfile").ref(m_output_intent->profile_ref);
+        
+    fmt
+        .dict_end()
+        .array_end();
 }
 
 namespace
@@ -260,8 +314,14 @@ bool PDFCatalog::on_before_output_definition()
     // viewer preferences
     write_viewer_prefs();
 
+
+    // output intent
+    if (m_output_intent)
+        output_icc_profile(doc(), *m_output_intent);
+
     return true;
 }
+
 
 //////////////////////////////////////////////////////////////////////////
 void PDFCatalog::add_page(std::auto_ptr<PageObject> page)
@@ -278,5 +338,11 @@ IndirectObjectRef PDFCatalog::page_ref(int page_num) const
     JAG_PRECONDITION(page_num < static_cast<int>(num_pages()));
     return IndirectObjectRef(m_pages[page_num]);
 }
+
+void PDFCatalog::add_output_intent(std::auto_ptr<output_intent_t> intent)
+{
+    m_output_intent.reset(intent.release());
+}
+
 
 }} //namespace jag::pdf

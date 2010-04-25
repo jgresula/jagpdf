@@ -44,6 +44,7 @@
 #include <core/jstd/unicode.h>
 #include <core/jstd/tracer.h>
 #include <core/jstd/icumain.h>
+#include <core/jstd/file_stream.h>
 #include <core/generic/macros.h>
 #include <core/generic/refcountedimpl.h>
 #include <core/errlib/errlib.h>
@@ -994,6 +995,34 @@ bool DocWriterImpl::is_topdown() const
 {
     return m_pimpl->m_is_topdown;
 }
+
+
+void DocWriterImpl::add_output_intent(Char const* iccpath,
+                                      Char const* output_condition_id,
+                                      Char const* info,
+                                      Char const* output_condition,
+                                      Int ncomponents)
+{
+    ensure_version(4, "Output Intents");
+
+    std::auto_ptr<output_intent_t> output_intent(new output_intent_t);
+
+
+    output_intent->icc_stream.reset(new FileStreamInput(iccpath));
+
+    
+    output_intent->output_condition_id = output_condition_id;
+    output_intent->ncomponents = ncomponents;
+    
+    if (!is_empty(info))
+        output_intent->info = info;
+    
+    if (!is_empty(output_condition))
+        output_intent->output_condition = output_condition;
+    
+    m_pimpl->m_catalog->add_output_intent(output_intent);
+}
+
 
 
 

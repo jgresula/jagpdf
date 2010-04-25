@@ -70,6 +70,7 @@ public:
     ObjFmt& stream_data(void const* data, size_t length) { m_fmt_basic.stream_data(data, length); return *this; }
 
     ObjFmt& text_string(Char const* txt, size_t length, bool is_utf8=true) { m_fmt_basic.text_string(txt, length, is_utf8); return *this; }
+    ObjFmt& text_string(std::string const& txt, bool is_utf8=true) { m_fmt_basic.text_string(txt, is_utf8); return *this; }
     ObjFmt& text_string(Char const* txt) { m_fmt_basic.text_string(txt); return *this; }
     ObjFmt& text_string_hex(Char const* txt, size_t length) { m_fmt_basic.text_string_hex(txt, length); return *this; }
 

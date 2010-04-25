@@ -96,6 +96,11 @@ public: //IDocument
     Int version() const;
     ICanvas* canvas_create() const;
     void title(char const* title);
+    void add_output_intent(Char const* iccpath,
+                           Char const* output_condition_id,
+                           Char const* info,
+                           Char const* output_condition,
+                           Int num_components);
 public:
     DocWriterImpl(
         boost::shared_ptr<ISeqStreamOutputControl> out_stream

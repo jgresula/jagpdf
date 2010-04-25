@@ -24,7 +24,16 @@ def test_main(argv=None):
     img = doc.image_load_file(image_path('logo.png'))
     doc.page_start(8.3 * 72.0, 11.7 * 72.0)
     canvas = doc.page().canvas()
-    
+
+    srgb = doc.color_space_load('srgb')
+    img_def = doc.image_definition()
+    img_def.file_name(image_path('logo.png'))
+    # - no effect
+    #img_def.rendering_intent(jagpdf.RI_PERCEPTUAL)
+    # - srgb makes it worse
+    #img_def.color_space(srgb)
+    img_srgb = doc.image_load(img_def)
+
     # 1 0 0 -1 0 842.4 cm 
     # 1 0 0 1 14.4 14.4 cm
     canvas.translate(14.4, 14.4)
@@ -44,6 +53,11 @@ def test_main(argv=None):
     canvas.rectangle(0, 0, 2963, 159)
     #   f
     canvas.path_paint('f')
+
+    for i, c in enumerate([(1,0,0), (0,1,0), (0,0,1)]):
+        canvas.color('f', *c)
+        canvas.rectangle((i+2) * 170, 10, 160, 160)
+        canvas.path_paint('f')
     
     #  q
     canvas.state_save()
@@ -54,7 +68,7 @@ def test_main(argv=None):
     #    /im1 Do
     #   Q
     #  Q
-    canvas.image(img, 0, 0)
+    canvas.image(img_srgb, 0, 0)
     canvas.state_restore()
     # Q
     canvas.state_restore()

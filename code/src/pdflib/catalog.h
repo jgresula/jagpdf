@@ -17,8 +17,21 @@
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/spirit/include/classic_symbols_fwd.hpp>
 
-namespace jag { namespace pdf
+namespace jag {
+namespace pdf {
+
+// output intent
+struct output_intent_t
+    : public boost::noncopyable
 {
+    boost::scoped_ptr<ISeqStreamInput> icc_stream;
+    std::string output_condition_id;
+    std::string info;
+    std::string output_condition;
+    int ncomponents;
+    IndirectObjectRef profile_ref;
+};
+
 
 class PDFCatalog
     : public IndirectObjectImpl
@@ -32,6 +45,7 @@ public:
     size_t num_pages() const { return m_pages.size(); }
     IndirectObjectRef page_ref(int page_num) const;
     Pages const& pages() const { return m_pages; }
+    void add_output_intent(std::auto_ptr<output_intent_t> intent);
 
 private:
     void initial_page_view();
@@ -39,6 +53,7 @@ private:
                            Char const* option,
                            Char const* pdf_kwd);
     void write_viewer_prefs();
+    void write_output_intent();
 
 private: // IndirectObjectImpl
     void on_output_definition();
@@ -49,6 +64,8 @@ private:
     IndirectObjectRef                           m_doc_outline;
     IndirectObjectRef                           m_page_tree_root;
     IndirectObjectRef                           m_viewer_prefs;
+    
+    boost::scoped_ptr<output_intent_t> m_output_intent;
 };
 
 }} //namespace jag::pdf

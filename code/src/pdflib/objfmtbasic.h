@@ -13,6 +13,7 @@
 #include <interfaces/stdtypes.h>
 #include <core/generic/noncopyable.h>
 #include <core/jstd/unicode.h>
+#include <string>
 
 #ifdef JAG_DEBUG
 # include <stack>
@@ -171,6 +172,7 @@ public:
     ObjFmtBasic& stream_data(void const* data, size_t length);
 
     ObjFmtBasic& text_string(Char const* txt, size_t length, bool is_utf8=true);
+    ObjFmtBasic& text_string(std::string const& txt, bool is_utf8=true);
     ObjFmtBasic& text_string(Char const* txt);
     ObjFmtBasic& text_string_hex(Char const* txt, size_t length);
 

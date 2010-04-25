@@ -846,6 +846,11 @@ ObjFmtBasic& ObjFmtBasic::text_string(Char const* txt)
     return text_string(txt, static_cast<int>(strlen(txt)));
 }
 
+ObjFmtBasic& ObjFmtBasic::text_string(std::string const& txt, bool is_utf8)
+{
+    return text_string(txt.c_str(), txt.size(), is_utf8);
+}
+
 
 /**
 * @brief writes a hexadecimal string
