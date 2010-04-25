@@ -1300,11 +1300,11 @@ JAG_EXPORT jag_error JAG_CALLSPEC jag_DocumentOutline_style(jag_DocumentOutline 
     }
 }
 
-JAG_EXPORT jag_error JAG_CALLSPEC jag_Document_add_output_intent(jag_Document hobj, jag_Char const* iccpath, jag_Char const* output_condition_id, jag_Char const* info, jag_Char const* output_condition, jag_Int num_components)
+JAG_EXPORT jag_error JAG_CALLSPEC jag_Document_add_output_intent(jag_Document hobj, jag_Char const* output_condition_id, jag_Char const* iccpath, jag_Char const* info, jag_Int num_components, jag_Char const* output_condition)
 {
     try {
         jag::IDocument* this__(handle2ptr<jag::IDocument>(hobj));
-        this__->add_output_intent(iccpath, output_condition_id, info, output_condition, num_components);
+        this__->add_output_intent(output_condition_id, iccpath, info, num_components, output_condition);
         return 0;
     } catch (jag::exception const& exc) {
         jag::tls_set_error_info( exc );

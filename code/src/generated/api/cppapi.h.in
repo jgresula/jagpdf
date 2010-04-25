@@ -1899,13 +1899,13 @@ public:
 #endif
     }
 
-    Result add_output_intent(Char const* iccpath, Char const* output_condition_id, Char const* info, Char const* output_condition, Int num_components)
+    Result add_output_intent(Char const* output_condition_id, Char const* iccpath, Char const* info, Int num_components, Char const* output_condition)
     {
 #ifndef JAG_DO_NOT_USE_EXCEPTIONS
-        if (jag_Document_add_output_intent(m_obj, iccpath, output_condition_id, info, output_condition, num_components))
+        if (jag_Document_add_output_intent(m_obj, output_condition_id, iccpath, info, num_components, output_condition))
             throw Exception();
 #else
-        return jag_Document_add_output_intent(m_obj, iccpath, output_condition_id, info, output_condition, num_components);
+        return jag_Document_add_output_intent(m_obj, output_condition_id, iccpath, info, num_components, output_condition);
 #endif
     }
 
