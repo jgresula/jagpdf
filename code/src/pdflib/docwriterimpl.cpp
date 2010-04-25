@@ -997,22 +997,21 @@ bool DocWriterImpl::is_topdown() const
 }
 
 
-void DocWriterImpl::add_output_intent(Char const* iccpath,
-                                      Char const* output_condition_id,
+void DocWriterImpl::add_output_intent(Char const* output_condition_id,
+                                      Char const* iccpath,
                                       Char const* info,
-                                      Char const* output_condition,
-                                      Int ncomponents)
+                                      Int ncomponents,
+                                      Char const* output_condition)
 {
     ensure_version(4, "Output Intents");
 
     std::auto_ptr<output_intent_t> output_intent(new output_intent_t);
 
+    output_intent->output_condition_id = output_condition_id;
+    output_intent->ncomponents = ncomponents;
 
     if (!is_empty(iccpath))
         output_intent->icc_stream.reset(new FileStreamInput(iccpath));
-    
-    output_intent->output_condition_id = output_condition_id;
-    output_intent->ncomponents = ncomponents;
     
     if (!is_empty(info))
         output_intent->info = info;

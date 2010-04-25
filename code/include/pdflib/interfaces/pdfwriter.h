@@ -568,11 +568,11 @@ public: // masks
     virtual boost::intrusive_ptr<IImageMask> define_image_mask() const API_ATTR("undocumented") = 0;
     virtual ImageMaskID register_image_mask(boost::intrusive_ptr<IImageMask> image_mask) API_ATTR("undocumented") = 0;
 
-    virtual void add_output_intent(Char const* iccpath,
-                                   Char const* output_condition_id,
+    virtual void add_output_intent(Char const* output_condition_id,
+                                   Char const* iccpath,
                                    Char const* info,
-                                   Char const* output_condition,
-                                   Int num_components) API_ATTR("undocumented") = 0;
+                                   Int num_components,
+                                   Char const* output_condition) API_ATTR("undocumented") = 0;
 };
 
 
