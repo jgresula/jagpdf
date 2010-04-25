@@ -95,7 +95,7 @@ void CanvasImpl::line_to(jag::Double x, jag::Double y)
 //////////////////////////////////////////////////////////////////////////
 void CanvasImpl::state_save()
 {
-    m_graphics_state.save();
+    write_graphics_state(m_graphics_state.save());
     m_fmt.graphics_op(OP_q);
 }
 
@@ -494,7 +494,11 @@ ResourceList& CanvasImpl::ensure_resource_list()
  */
 void CanvasImpl::commit_graphics_state()
 {
-    GraphicsStateHandle handle = m_graphics_state.commit();
+    write_graphics_state(m_graphics_state.commit());
+}
+
+void CanvasImpl::write_graphics_state(GraphicsStateHandle handle)
+{
     if (is_valid(handle))
     {
         ensure_resource_list().add_graphics_state(handle);

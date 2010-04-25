@@ -154,6 +154,8 @@ private:
     void start_path_construction();
     void end_path_construction();
 
+    void write_graphics_state(GraphicsStateHandle gshandle);
+
     PDFFont const* current_font();
     template<class PRE_ACTION, class POST_ACTION>
     void text_show_generic(Char const* start, Char const* end,

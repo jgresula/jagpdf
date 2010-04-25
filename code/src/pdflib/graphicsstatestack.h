@@ -29,7 +29,7 @@ class GraphicsStateStack
 {
 public:
     GraphicsStateStack(DocWriterImpl& doc, ObjFmtBasic& fmt);
-    void save();
+    GraphicsStateHandle save();
     void restore();
     GraphicsStateHandle commit();
     bool is_empty();

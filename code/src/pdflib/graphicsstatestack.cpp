@@ -27,7 +27,7 @@ GraphicsStateStack::GraphicsStateStack(
 }
 
 //////////////////////////////////////////////////////////////////////////
-void GraphicsStateStack::save()
+GraphicsStateHandle GraphicsStateStack::save()
 {
     // two important notes here
     // - the top is always committed before pushing another item
@@ -35,8 +35,9 @@ void GraphicsStateStack::save()
     //    item and if so it is the top
     // - copy of the current top is pushed, which enables managing
     //    of incremental output of graphics state efficiently
-    commit();
+    GraphicsStateHandle result(commit());
     m_stack.push_back(m_stack.back());
+    return result;
 }
 
 //////////////////////////////////////////////////////////////////////////
