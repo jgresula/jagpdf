@@ -510,7 +510,7 @@ void ImagePNG::read_color_key_mask(png_uint_32 valid)
                             index = i;
                         }
                         else {
-                            index = NEEDS_ALPHA;
+                            TRACE_WRN << "Not implemented: alpha channel from a color key mask.";
                             break;
                         }
                     } else if (trans_entries[i] != 255) { // not fully on
@@ -524,10 +524,6 @@ void ImagePNG::read_color_key_mask(png_uint_32 valid)
                     mask[mask_len++] = index;
                     mask[mask_len++] = index;
                     m_color_key_mask.reset(mask, mask_len);
-                }
-                else if (index == NEEDS_ALPHA)
-                {
-                    TRACE_WRN << "Not implemented: alpha channel from a color key mask.";
                 }
             }
                 break;
