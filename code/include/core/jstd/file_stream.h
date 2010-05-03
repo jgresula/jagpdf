@@ -53,7 +53,7 @@ public:
 public: //ISeqStreamInputControl
     bool read(void* data, ULong size, ULong* read = 0);
     ULong tell() const;
-    void seek(UInt offset, StreamOffsetOrigin origin);
+    void seek(Int offset, StreamOffsetOrigin origin);
 
 public:
     void close();

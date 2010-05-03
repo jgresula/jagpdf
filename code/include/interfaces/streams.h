@@ -103,7 +103,7 @@ class IStreamInput
     : public ISeqStreamInput
 {
 public:
-    virtual void seek(UInt offset, StreamOffsetOrigin origin) = 0;
+    virtual void seek(Int offset, StreamOffsetOrigin origin) = 0;
 
     virtual ~IStreamInput() {}
 };

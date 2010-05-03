@@ -83,7 +83,7 @@ public: // ISeqStreamInput
     bool read(void* data, ULong size, ULong* read);
     ULong tell() const;
     void close();
-    void seek(UInt offset, StreamOffsetOrigin origin);
+    void seek(Int offset, StreamOffsetOrigin origin);
 
 private:
     void const* m_data;
@@ -116,7 +116,7 @@ public: // ISeqStreamInput
         m_in.close();
     }
 
-    void seek(UInt offset, StreamOffsetOrigin origin) {
+    void seek(Int offset, StreamOffsetOrigin origin) {
         m_in.seek(offset, origin);
     }
 };

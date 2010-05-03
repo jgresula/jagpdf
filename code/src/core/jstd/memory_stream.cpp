@@ -124,7 +124,7 @@ MemoryStreamInput::~MemoryStreamInput()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void MemoryStreamInput::seek(UInt offset, StreamOffsetOrigin origin)
+void MemoryStreamInput::seek(Int offset, StreamOffsetOrigin origin)
 {
     switch(origin)
     {

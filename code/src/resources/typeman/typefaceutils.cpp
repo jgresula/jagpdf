@@ -42,7 +42,7 @@ public: //IStreamInput
         return m_current != m_stream->size;
     }
 
-    void seek(UInt offset, StreamOffsetOrigin origin)
+    void seek(Int offset, StreamOffsetOrigin origin)
     {
         switch(origin)
         {

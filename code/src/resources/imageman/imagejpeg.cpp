@@ -216,7 +216,7 @@ void ImageJPEG::finish_exif_marker(int seek_offset, int size)
     if (ifd_offset)
     {
         m_in_stream->seek(ifd_offset, OFFSET_FROM_CURRENT);
-        seek_offset-=sizeof(ifd_offset);
+        seek_offset -= ifd_offset;
     }
 
     // read the number of fields and iterate over them
@@ -262,7 +262,6 @@ void ImageJPEG::finish_exif_marker(int seek_offset, int size)
             case 0x11b: // yres
             {
                 int offset = tiff_start_offset + static_cast<Int>(*jag_reinterpret_cast<my_int32_t*>(&interops[i].val_offset));
-                JAG_ASSERT(offset > 0);
                 m_in_stream->seek(offset, OFFSET_FROM_CURRENT);
                 my_uint32_t val[2]; // 0..numerator, 1..denominator
                 m_in_stream->read(val, 2*sizeof(my_uint32_t));

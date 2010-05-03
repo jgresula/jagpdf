@@ -93,7 +93,7 @@ void FileStreamInput::close()
     m_closed = true;
 }
 
-void FileStreamInput::seek(UInt offset, StreamOffsetOrigin origin)
+void FileStreamInput::seek(Int offset, StreamOffsetOrigin origin)
 {
     JAG_PRECONDITION(!m_closed);
     m_file.seek(offset, origin);
