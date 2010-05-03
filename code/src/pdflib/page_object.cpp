@@ -15,6 +15,7 @@
 #include "resource_dictionary.h"
 #include "annotationimpl.h"
 #include "destination.h"
+#include <core/errlib/errlib.h>
 #include <core/jstd/tracer.h>
 #include <core/generic/floatpointtools.h>
 #include <core/generic/containerhelpers.h>
@@ -156,6 +157,9 @@ void PageObject::annotation_uri(
     Char const* uri,
     Char const* style)
 {
+    if (x < 0 || y < 0)
+        throw exception_invalid_value(msg_invalid_argument()) << JAGLOC;
+
     create_annotation<AnnotationURI>(x, y, width, height, style, uri);
 }
 
