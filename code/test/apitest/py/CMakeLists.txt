@@ -91,6 +91,7 @@ set(tests
   dark_reader
   compressed_pattern
   doctitle
+  jpeg_icc_gray
   # tickets
   symbolswidth
   t0068

@@ -587,7 +587,9 @@ void ImageJPEG::prepare_color_space()
     boost::shared_ptr<IResourceCtx> res_ctx(m_res_ctx);
 
     // register icc profile (if any was found)
-    if (m_info.icc)
+
+    // Do not output icc profile when the jpeg has only one color component (#137)
+    if (m_info.icc && m_info.nr_components != 1)
     {
         intrusive_ptr<IICCBased> spec(
             res_ctx->color_space_man()->define_iccbased());
