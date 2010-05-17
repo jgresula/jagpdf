@@ -1921,6 +1921,16 @@ public:
 #endif
     }
 
+    Result author(Char const* author)
+    {
+#ifndef JAG_DO_NOT_USE_EXCEPTIONS
+        if (jag_Document_author(m_obj, author))
+            throw Exception();
+#else
+        return jag_Document_author(m_obj, author);
+#endif
+    }
+
     Result destination_define_reserved(Destination id, Char const* dest)
     {
 #ifndef JAG_DO_NOT_USE_EXCEPTIONS

@@ -992,6 +992,16 @@ void DocWriterImpl::title(char const* title)
 //
 //
 // 
+void DocWriterImpl::author(char const* author)
+{
+    IProfileInternal& profile = m_pimpl->m_exec_context.writable_config();
+    profile.set("info.author", author);
+}
+
+
+//
+//
+// 
 bool DocWriterImpl::is_topdown() const
 {
     return m_pimpl->m_is_topdown;

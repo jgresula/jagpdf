@@ -553,6 +553,14 @@ public:
     /// @version 1.5
     virtual void title(Char const* title) = 0;
 
+    /// Sets a document author.
+    ///
+    /// It is an alternative to the info.author jag::IProfile option. Use this
+    /// function if the author is unknown prior to document creation.
+    ///
+    /// @version 1.5
+    virtual void author(Char const* author) = 0;
+    
     
 
 

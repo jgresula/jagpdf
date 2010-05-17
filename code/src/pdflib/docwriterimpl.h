@@ -96,6 +96,7 @@ public: //IDocument
     Int version() const;
     ICanvas* canvas_create() const;
     void title(char const* title);
+    void author(char const* author);
     void add_output_intent(Char const* output_condition_id,
                            Char const* iccpath,
                            Char const* info,
