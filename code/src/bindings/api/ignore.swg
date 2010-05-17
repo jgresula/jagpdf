@@ -21,3 +21,5 @@
 %ignore jag::ICanvas::text_ro;
 %ignore jag::ICanvas::text_simple_r;
 %ignore jag::ICanvas::text_simple_ro;
+%ignore jag::ICanvas::text_simple_ro;
+%ignore jag::IFont::advance_r;

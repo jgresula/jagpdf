@@ -46,6 +46,7 @@ public:
     Char const* family_name() const { return m_typeface.family_name(); }
     Char const* style_name() const { return m_typeface.style_name(); }
     Double advance(Char const* text) const;
+    Double advance_r(jag::Char const* start, jag::Char const* end) const;
     Double glyph_width(UInt16 glyph_index) const;
     Double height() const;
     Double ascender() const { return m_coef*m_typeface.metrics().ascent; }
@@ -121,6 +122,7 @@ public: // IFont
     Char const* family_name() const { return m_typeface->family_name(); }
     Char const* style_name() const { return m_typeface->style_name(); }
     Double advance(jag::Char const* text) const;
+    Double advance_r(jag::Char const* start, jag::Char const* end) const;
     Double glyph_width(UInt16 glyph_index) const;
 
     Double height() const {

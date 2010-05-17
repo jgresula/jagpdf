@@ -34,6 +34,11 @@ public:
     /// If kerning is turned on then the kerning offsets are counted in.
     virtual Double advance(Char const* txt_u) const = 0;
 
+    /// Retrieves width of the passed string in user space units.
+    ///
+    /// If kerning is turned on then the kerning offsets are counted in.
+    virtual Double advance_r(jag::Char const* begin, jag::Char const* end) const = 0;
+
     /// Retrieves width of the given glyph.
     ///
     /// @version 1.4

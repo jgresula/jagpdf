@@ -80,6 +80,7 @@ JAG_EXPORT jag_Destination JAG_CALLSPEC jag_Document_destination_define(jag_Docu
 JAG_EXPORT jag_Destination JAG_CALLSPEC jag_Document_destination_reserve(jag_Document hobj);
 JAG_EXPORT jag_DocumentOutline JAG_CALLSPEC jag_Document_outline(jag_Document hobj);
 JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_advance(jag_Font hobj, jag_Char const* txt_u);
+JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_advance_r(jag_Font hobj, jag_Char const* begin, jag_Char const* end);
 JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_ascender(jag_Font hobj);
 JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_bbox_xmax(jag_Font hobj);
 JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_bbox_xmin(jag_Font hobj);

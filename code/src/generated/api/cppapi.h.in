@@ -71,6 +71,18 @@ public:
 #endif
     }
 
+    Double advance(Char const* begin, Char const* end) const
+    {
+#ifndef JAG_DO_NOT_USE_EXCEPTIONS
+        Double result_ = jag_Font_advance_r(m_obj, begin, end);
+        if (jag_error_code())
+            throw Exception();
+        return result_;
+#else
+        return jag_Font_advance_r(m_obj, begin, end);
+#endif
+    }
+
     Double advance(Char const* txt_u) const
     {
 #ifndef JAG_DO_NOT_USE_EXCEPTIONS

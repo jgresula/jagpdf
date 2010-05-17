@@ -40,3 +40,5 @@
 
 // IPage
 %rename(annotation_goto) jag::IPage::annotation_goto_obj;
+
+%rename(advance) jag::IFont::advance_r;

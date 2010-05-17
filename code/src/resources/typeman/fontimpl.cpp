@@ -156,6 +156,14 @@ Double FontImpl::advance(jag::Char const* text) const
     return horizontal_advance_dbg(text, strlen(text));
 }
 
+///
+///
+///
+Double FontImpl::advance_r(jag::Char const* start, jag::Char const* end) const
+{
+    return horizontal_advance_dbg(start, end-start);
+}
+
 
 
 
@@ -276,10 +284,19 @@ MultiEncFontImpl::font_for_encoding(EnumCharacterEncoding enc) const
 //
 Double MultiEncFontImpl::advance(jag::Char const* text) const
 {
+    return advance_r(text, text + strlen(text));
+}
+
+
+//
+//
+//
+Double MultiEncFontImpl::advance_r(jag::Char const* start, jag::Char const* end) const
+{
     Double result = 0.0;
     std::vector<Char> str;
     UnicodeToCPIterator it(
-        m_from_unicode->create_iterator(text, text + strlen(text)));
+        m_from_unicode->create_iterator(start, end));
 
     for(;;)
     {

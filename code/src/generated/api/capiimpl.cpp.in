@@ -167,6 +167,17 @@ JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_advance(jag_Font hobj, jag_Char cons
     }
 }
 
+JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_advance_r(jag_Font hobj, jag_Char const* begin, jag_Char const* end)
+{
+    try {
+        jag::IFont* this__(handle2ptr<jag::IFont>(hobj));
+        return static_cast<jag_Double>(this__->advance_r(begin, end));
+    } catch (jag::exception const& exc) {
+        jag::tls_set_error_info( exc );
+        return jag_Double();
+    }
+}
+
 JAG_EXPORT jag_Double JAG_CALLSPEC jag_Font_ascender(jag_Font hobj)
 {
     try {
