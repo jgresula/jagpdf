@@ -295,16 +295,22 @@ FontDictionary::UsedCodepoints::get_used_cids() const
 // 
 void FontDictionary::UsedCodepoints::output_dictionary(FontDictionary& dict)
 {
-    dict.object_writer()
+    ObjFmt& writer = dict.object_writer();
+
+    writer
         .dict_start()
         .dict_key("Type").output("Font")
         .dict_key("Subtype").output("Type0")
         .dict_key("BaseFont").name(dict.m_font_descriptor->basename())
         .dict_key("Encoding").output("Identity-H")
         .dict_key("DescendantFonts").array_start().ref(m_cid_font).array_end()
-        .dict_key("ToUnicode").space().ref(m_to_unicode)
-        .dict_end()
         ;
+
+    // ToUnicode object could end up empty
+    if (is_valid(m_to_unicode))
+        writer.dict_key("ToUnicode").space().ref(m_to_unicode);
+
+    writer.dict_end();
 }
 
 

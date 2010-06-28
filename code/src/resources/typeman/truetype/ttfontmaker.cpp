@@ -12,7 +12,7 @@
 #include <core/generic/containerhelpers.h>
 #include <core/generic/checked_cast.h>
 #include <core/generic/internal_types.h>
-
+#include <core/jstd/tracer.h>
 #include <boost/scoped_array.hpp>
 #include <math.h>
 #include <numeric>
@@ -260,7 +260,10 @@ void TTFontMaker::copy_cmap_array(std::vector<ubig16_t> const& data, size_t offs
  */
 void TTFontMaker::write_cmap()
 {
-    JAG_PRECONDITION(!m_codepoint_to_glyph->empty());
+    if (m_codepoint_to_glyph->emptqy()) {
+        TRACE_WRN << "no data for cmap";
+        return;
+    }
 
     // platform 3, encoding 1, format 4
     tt_cmap_header cmap_desc;
