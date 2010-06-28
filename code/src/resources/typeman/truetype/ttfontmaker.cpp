@@ -260,7 +260,7 @@ void TTFontMaker::copy_cmap_array(std::vector<ubig16_t> const& data, size_t offs
  */
 void TTFontMaker::write_cmap()
 {
-    if (m_codepoint_to_glyph->emptqy()) {
+    if (m_codepoint_to_glyph->empty()) {
         TRACE_WRN << "no data for cmap";
         return;
     }
