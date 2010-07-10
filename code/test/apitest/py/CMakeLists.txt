@@ -92,6 +92,7 @@ set(tests
   compressed_pattern
   doctitle
   jpeg_icc_gray
+  nosubset
   # tickets
   symbolswidth
   t0068

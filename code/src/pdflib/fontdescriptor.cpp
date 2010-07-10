@@ -289,7 +289,7 @@ bool FontDescriptor::on_before_output_definition()
 
     // we need to get the font program stream (or possibly its subset)
     std::auto_ptr<IStreamInput> font_program;
-    if (typeface.can_subset())
+    if (is_subset() && typeface.can_subset())
     {
         unsigned subset_options = 0;
 #if 0
