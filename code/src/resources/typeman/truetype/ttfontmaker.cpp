@@ -205,21 +205,24 @@ void TTFontMaker::write_glyphs()
 
 
     // horizontal metrics
+    // http://developer.apple.com/fonts/ttrefman/RM06/Chap6hmtx.html
     tt_horizontal_header* hhea = jag_reinterpret_cast<tt_horizontal_header*>(
         &m_tables[m_table_records[TT_HHEA].first]
        );
     JAG_ASSERT(m_table_records[TT_HHEA].second == sizeof(tt_horizontal_header));
 
     size_t hmtx_bytes = 0;
-    if (max_glyph_index <= static_cast<UInt16>(hhea->m_num_hmetrics))
+    const UInt num_glyhphs = max_glyph_index + 1;
+    if (num_glyhphs <= static_cast<UInt16>(hhea->m_num_hmetrics))
     {
-        hhea->m_num_hmetrics = max_glyph_index;
-        hmtx_bytes = max_glyph_index*sizeof(tt_hor_metrics);
+        hhea->m_num_hmetrics = num_glyhphs;
+        hmtx_bytes = num_glyhphs * sizeof(tt_hor_metrics);
     }
     else
     {
-        hmtx_bytes = static_cast<UInt16>(hhea->m_num_hmetrics)*sizeof(tt_hor_metrics) +
-                    2*(max_glyph_index-static_cast<UInt16>(hhea->m_num_hmetrics));
+        // leftSideBearing array length = #glyphs - hhea->m_num_hmetrics
+        hmtx_bytes = static_cast<UInt16>(hhea->m_num_hmetrics) * sizeof(tt_hor_metrics) +
+            2*(num_glyhphs - static_cast<UInt16>(hhea->m_num_hmetrics));
         hmtx_bytes = std::min(hmtx_bytes, m_hmtx.size());
     }
 
