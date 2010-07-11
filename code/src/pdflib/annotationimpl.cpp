@@ -42,12 +42,15 @@ void AnnotationImpl::on_output_definition()
     fmt.dict_key("Type").output("Annot"); // optional
     fmt.dict_key("Rect").rectangle(m_llx, m_lly, m_urx, m_ury);
 
-    // todo: process style
-    fmt.dict_key("BS");
+    // use Border instead of BS as it seems more compatible (e.g. the
+    // Preview.app ignores BS)
+    fmt.dict_key("Border");
     fmt
-        .dict_start()
-        .dict_key("W").space().output(0)
-        .dict_end();
+        .array_start()
+        .output(0).space()
+        .output(0).space()
+        .output(0)
+        .array_end();
 
 
     m_worker->output(fmt);
