@@ -31,6 +31,7 @@ class IStreamInput;
 class ISeqStreamOutput;
 class IResourceCtx;
 class IImageData;
+class IExecContext;
 
 // PNG image type       Colour type     Allowed bit depths     Interpretation
 // Greyscale               0         1, 2, 4, 8, 16       Each pixel is a greyscale sample
@@ -71,7 +72,9 @@ class ImagePNG
     : public IImageFilter
 {
 public:
-    ImagePNG(IImageData const* img_spec, boost::shared_ptr<IResourceCtx> res_ctx);
+    ImagePNG(IImageData const* img_spec,
+             boost::shared_ptr<IResourceCtx> res_ctx,
+             IExecContext const& exec_ctx);
     ~ImagePNG();
     static bool ping(IStreamInput& in_stream);
 
@@ -153,6 +156,7 @@ private:
 private:
     boost::shared_ptr<IStreamInput>    m_in_stream;
     boost::weak_ptr<IResourceCtx> m_res_ctx;
+    IExecContext const&  m_exec_ctx;
 
     std::string                   m_error;
     mutable boost::scoped_ptr<exception>  m_exception;

@@ -181,6 +181,7 @@ std::auto_ptr<IImageFilter>
 create_image_filter(
     IImageData const* img_data
     , shared_ptr<IResourceCtx> resource_ctx
+    , IExecContext const& exec_context
 )
 {
     JAG_ASSERT(img_data->format() != IMAGE_FORMAT_AUTO);
@@ -188,7 +189,7 @@ create_image_filter(
     switch (img_data->format())
     {
     case IMAGE_FORMAT_PNG:
-        return std::auto_ptr<IImageFilter>(new ImagePNG(img_data, resource_ctx));
+        return std::auto_ptr<IImageFilter>(new ImagePNG(img_data, resource_ctx, exec_context));
 
     case IMAGE_FORMAT_JPEG:
         return std::auto_ptr<IImageFilter>(new ImageJPEG(img_data, resource_ctx));

@@ -65,6 +65,7 @@ ImageFormat recognize_image_format(IStreamInput& img_stream);
 std::auto_ptr<IImageFilter> create_image_filter(
       IImageData const* img_spec
     , boost::shared_ptr<IResourceCtx> resource_ctx
+    , IExecContext const& exec_context      
 );
 
 

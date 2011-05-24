@@ -26,7 +26,7 @@ ImageFilterData::ImageFilterData(
     , shared_ptr<IResourceCtx> res_ctx
     , IExecContext const& exec_ctx
 )
-    : m_img_filter(create_image_filter(img_data, res_ctx).release())
+    : m_img_filter(create_image_filter(img_data, res_ctx, exec_ctx).release())
     , m_width(m_img_filter->width())
     , m_height(m_img_filter->height())
     , m_color_space(is_valid(img_data->color_space()) ? img_data->color_space() : m_img_filter->color_space())

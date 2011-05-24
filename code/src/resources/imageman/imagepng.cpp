@@ -24,6 +24,8 @@
 #include <core/generic/refcountedimpl.h>
 #include <core/generic/floatpointtools.h>
 #include <interfaces/streams.h>
+#include <interfaces/execcontext.h>
+#include <interfaces/configinternal.h>
 
 #include <boost/scoped_array.hpp>
 #include <utility>
@@ -176,7 +178,9 @@ void SoftMaskPNG::output_alpha(ISeqStreamOutput& dest, void const* data, int cha
 //
 //
 //
-ImagePNG::ImagePNG(IImageData const* img_data, shared_ptr<IResourceCtx> res_ctx)
+ImagePNG::ImagePNG(IImageData const* img_data,
+                   shared_ptr<IResourceCtx> res_ctx,
+                   IExecContext const& exec_ctx)
     : m_png(0)
     , m_png_info(0)
     , m_number_of_passes(1)
@@ -185,6 +189,7 @@ ImagePNG::ImagePNG(IImageData const* img_data, shared_ptr<IResourceCtx> res_ctx)
     , m_png_data(new PNGData)
     , m_in_stream(img_data->data_stream())
     , m_res_ctx(res_ctx)
+    , m_exec_ctx(exec_ctx)
 {
     {
         JAG_PRECONDITION(img_data->format() == IMAGE_FORMAT_PNG);
@@ -391,16 +396,18 @@ void ImagePNG::read_color_space()
     // read color space type from PNG here, iccp detection relies on it
     m_png_color_type= png_get_color_type(m_png, m_png_info);
 
-
-    // gAMA, cHRM, sRGB and iCCP chunk processing is done according to spec
-    // any of read_color_space_xxx() sets m_color_space if the chunk is found
-    read_color_space_srgb();
-
-    if (!is_valid(m_color_space))
-        read_color_space_iccp();
-
-    if (!is_valid(m_color_space))
-        read_color_space_chrm();
+    IProfileInternal const& cfg = m_exec_ctx.config();
+    if (cfg.get_int("images.png_advanced_color")) {
+        // gAMA, cHRM, sRGB and iCCP chunk processing is done according to spec
+        // any of read_color_space_xxx() sets m_color_space if the chunk is found
+        read_color_space_srgb();
+        
+        if (!is_valid(m_color_space))
+            read_color_space_iccp();
+        
+        if (!is_valid(m_color_space))
+            read_color_space_chrm();
+    }
 
     switch(m_png_color_type)
     {

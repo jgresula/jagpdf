@@ -49,6 +49,7 @@ namespace
       {"images.intent"             , "-1"}, // not-documented
       {"images.default_dpi"        , "72"},
       {"images.softmask_16_to_8"   , "1"},  // not-documented
+      {"images.png_advanced_color" , "1"},  // not-documented
 
       // info
       {"info.title"                , ""},
