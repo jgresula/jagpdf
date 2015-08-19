@@ -46,9 +46,7 @@
  Support
  --------
 
- If you have a question, want to report a bug, or submit a patch, please use the
- JagPDF mailing list <jagpdf@googlegroups.com>. Visit
- <http://groups.google.com/group/jagpdf> for more details.
+ The library is currently unmaintained.
 
 
  Author
