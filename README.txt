@@ -1,5 +1,8 @@
                         JagPDF Library
                        ================
+                       
+ IMPORTANT: The repository has been archived and the library is no longer maintained.
+                       
 
  What is it?
  -----------
